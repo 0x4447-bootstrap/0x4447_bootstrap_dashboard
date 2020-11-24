@@ -29,9 +29,7 @@ export default {
   beforeMount () {
     onAuthUIStateChange(async (nextAuthStatus) => {
       if (nextAuthStatus === AuthState.SignedIn) {
-        await this.setAuthState({
-          isLoggedIn: true
-        })
+        await this.checkUserAuthentication()
 
         await this.$router.replace(this.$routes.dashboard.route)
       }
@@ -44,7 +42,7 @@ export default {
 
   methods: {
     ...mapActions({
-      setAuthState: 'auth/setAuthState'
+      checkUserAuthentication: 'auth/checkUserAuthentication'
     })
   },
 
