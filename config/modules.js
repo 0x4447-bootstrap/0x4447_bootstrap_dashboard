@@ -1,6 +1,8 @@
 export const buildModules = [
   // https://go.nuxtjs.dev/eslint
-  '@nuxtjs/eslint-module'
+  '@nuxtjs/eslint-module',
+  // https://github.com/nuxt-community/vuetify-module
+  '@nuxtjs/vuetify'
 ]
 
 export const modules = [
