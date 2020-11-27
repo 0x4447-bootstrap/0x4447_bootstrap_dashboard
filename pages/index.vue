@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    Dashboard
+    Welcome!
   </div>
 </template>
 

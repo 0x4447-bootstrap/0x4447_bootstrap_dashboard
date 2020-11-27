@@ -1,6 +1,6 @@
 <template>
   <div>
-    Payment
+    Coming soon
   </div>
 </template>
 

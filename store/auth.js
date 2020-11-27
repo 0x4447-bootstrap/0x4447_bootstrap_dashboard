@@ -17,22 +17,27 @@ export const getters = {
 export const actions = {
   async checkUserAuthentication ({ dispatch }) {
     const user = await Auth.currentUserInfo()
-    console.log(user)
+
     if (!user) {
       return
     }
 
-    await dispatch('setAuthState', {
-      isLoggedIn: true
-    })
-    await dispatch('user/profileSet', {
-      profile: {
-        id: user.attributes.sub,
-        email: user.attributes.email,
-        givenName: user.attributes.given_name,
-        familyName: user.attributes.family_name
-      }
-    }, { root: true })
+    await Promise.all([
+      dispatch('setAuthState', {
+        isLoggedIn: true
+      }),
+      dispatch('user/profileSet', {
+        profile: {
+          id: user.attributes.sub,
+          email: user.attributes.email,
+          givenName: user.attributes.given_name,
+          familyName: user.attributes.family_name
+        }
+      }, { root: true }),
+      dispatch('user/fetchProfilePhoto', {
+        key: user.attributes.sub
+      }, { root: true })
+    ])
   },
 
   setAuthState ({ commit }, { isLoggedIn = false }) {

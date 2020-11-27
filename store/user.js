@@ -42,14 +42,20 @@ export const actions = {
   },
 
   async profilePhotoUpdate ({ getters, dispatch }, { file }) {
-    const key = `${new Date().getTime()}-${getters.profile.id}-${file.name}`
+    const key = getters.profile.id
 
-    const uploadResult = await Storage.put(key, file)
-    const photoUrl = await Storage.get(uploadResult.key)
+    await Storage.put(key, file)
+    await dispatch('fetchProfilePhoto', { key })
+  },
 
-    await dispatch('profileUpdate', {
-      picture: photoUrl
+  async fetchProfilePhoto ({ dispatch }, { key }) {
+    const profilePictureUrl = await Storage.get(key)
+
+    await dispatch('profileStateUpdate', {
+      picture: profilePictureUrl
     })
+
+    return profilePictureUrl
   },
 
   profileStateUpdate ({ commit }, updatedFields) {
