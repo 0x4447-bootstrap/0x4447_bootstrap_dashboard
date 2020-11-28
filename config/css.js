@@ -1,1 +1,3 @@
-export const css = []
+export const css = [
+  'cropperjs/dist/cropper.css'
+]

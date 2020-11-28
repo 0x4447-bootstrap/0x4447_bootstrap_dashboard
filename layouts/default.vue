@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <v-navigation-drawer
+      v-model="isSidebarOpen"
       app
-      permanent
       clipped
     >
       <v-list
@@ -30,11 +30,33 @@
     <v-app-bar
       app
       clipped-left
-    />
+    >
+      <v-app-bar-nav-icon
+        @click.stop="onSidebarToggle"
+      />
+
+      <v-spacer />
+
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon
+            v-bind="attrs"
+            v-on="on"
+            @click="onSignOut"
+          >
+            <v-icon>mdi-logout</v-icon>
+          </v-btn>
+        </template>
+        <span>Sing out</span>
+      </v-tooltip>
+    </v-app-bar>
 
     <v-main>
       <v-container fluid>
-        <nuxt />
+        <v-fade-transition>
+          <nuxt />
+        </v-fade-transition>
       </v-container>
     </v-main>
 
@@ -51,6 +73,12 @@ export default {
 
   components: {
     AppNotifications
+  },
+
+  data () {
+    return {
+      isSidebarOpen: false
+    }
   },
 
   computed: {
@@ -75,10 +103,20 @@ export default {
     }
   },
 
+  beforeMount () {
+    if (this.$vuetify.breakpoint.lgAndUp) {
+      this.isSidebarOpen = true
+    }
+  },
+
   methods: {
     ...mapActions({
       signOut: 'auth/signOut'
     }),
+
+    onSidebarToggle () {
+      this.isSidebarOpen = !this.isSidebarOpen
+    },
 
     async onSignOut () {
       try {

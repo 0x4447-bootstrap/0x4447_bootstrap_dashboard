@@ -12,7 +12,8 @@ export const state = () => ({
     email: '',
     givenName: '',
     familyName: '',
-    picture: ''
+    picture: '',
+    address: '' // It is currently stored as JSON string in Cognito and requires parsing before saving
   }
 })
 
@@ -24,7 +25,10 @@ export const getters = {
 
 export const actions = {
   profileSet ({ commit }, { profile }) {
-    commit(types.PROFILE_SET, profile)
+    commit(types.PROFILE_SET, {
+      ...profile,
+      address: profile.address ? JSON.parse(profile.address) : {}
+    })
   },
 
   async profileUpdate ({ dispatch }, profilePayload) {
@@ -34,7 +38,8 @@ export const actions = {
       pickBy({
         given_name: profilePayload.givenName,
         family_name: profilePayload.familyName,
-        picture: profilePayload.picture
+        picture: profilePayload.picture,
+        address: JSON.stringify(profilePayload.address)
       })
     )
 

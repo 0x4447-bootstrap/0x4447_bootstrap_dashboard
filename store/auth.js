@@ -31,7 +31,8 @@ export const actions = {
           id: user.attributes.sub,
           email: user.attributes.email,
           givenName: user.attributes.given_name,
-          familyName: user.attributes.family_name
+          familyName: user.attributes.family_name,
+          address: user.attributes.address
         }
       }, { root: true }),
       dispatch('user/fetchProfilePhoto', {
