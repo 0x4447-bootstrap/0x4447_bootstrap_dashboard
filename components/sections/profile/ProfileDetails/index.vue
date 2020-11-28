@@ -1,0 +1,241 @@
+<template>
+  <v-row class="mb-5">
+    <v-col
+      cols="12"
+    >
+      <h3 class="text-h5">
+        Identity
+      </h3>
+    </v-col>
+
+    <v-col
+      cols="12"
+      sm="12"
+      md="6"
+      lg="auto"
+    >
+      <div class="d-flex justify-center justify-lg-start mb-2 px-6">
+        <v-avatar
+          v-if="profile.picture"
+          color="accent"
+          size="160"
+          class="mb-5"
+        >
+          <v-img
+            :src="profile.picture"
+            alt="Profile photo"
+          />
+        </v-avatar>
+      </div>
+
+      <div class="d-flex justify-center">
+        <input
+          ref="photoSelect"
+          type="file"
+          accept="image/*"
+          hidden
+          @input="onPhotoSelected"
+        >
+
+        <v-btn
+          :loading="isLoadingPhoto"
+          color="primary"
+          small
+          @click="onSelectPhoto"
+        >
+          {{ profile.picture ? 'Change' : 'Set' }} avatar
+        </v-btn>
+      </div>
+
+      <modal-image-crop
+        :is-open.sync="isModalCropOpen"
+        :image-src.sync="selectedImageFile"
+        @done="onProfilePhotoUpdate"
+      />
+    </v-col>
+
+    <v-col
+      xs="12"
+      md="6"
+      lg="4"
+    >
+      <form
+        @submit.prevent="onUpdateProfile"
+      >
+        <v-text-field
+          v-model="profile.email"
+          label="Email"
+          disabled
+        />
+
+        <a-validation
+          v-slot="{ hasError, errorMessage }"
+          :error="$v.userData.givenName"
+        >
+          <v-text-field
+            v-model="userData.givenName"
+            :error="hasError"
+            :error-messages="errorMessage"
+            label="First name"
+          />
+        </a-validation>
+
+        <a-validation
+          v-slot="{ hasError, errorMessage }"
+          :error="$v.userData.familyName"
+        >
+          <v-text-field
+            v-model="userData.familyName"
+            :error="hasError"
+            :error-messages="errorMessage"
+            label="Last name"
+          />
+        </a-validation>
+
+        <v-btn
+          :loading="isLoading"
+          type="submit"
+          color="primary"
+        >
+          Save
+        </v-btn>
+      </form>
+    </v-col>
+  </v-row>
+</template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex'
+import { pick } from 'lodash'
+import { required } from 'vuelidate/lib/validators'
+import ModalImageCrop from '~/components/modals/ModalImageCrop/index'
+
+export default {
+  name: 'ProfileDetails',
+
+  components: {
+    ModalImageCrop
+  },
+
+  data () {
+    return {
+      isLoading: false,
+      isLoadingPhoto: false,
+
+      userData: {
+        givenName: '',
+        familyName: ''
+      },
+
+      selectedImageFile: '',
+      isModalCropOpen: false
+    }
+  },
+
+  computed: {
+    ...mapGetters({
+      profile: 'user/profile'
+    })
+  },
+
+  watch: {
+    profile: {
+      immediate: true,
+      handler (profile) {
+        this.userData = pick(profile, [
+          'givenName',
+          'familyName'
+        ])
+      }
+    }
+  },
+
+  methods: {
+    ...mapActions({
+      profileUpdate: 'user/profileUpdate',
+      profilePhotoUpdate: 'user/profilePhotoUpdate',
+      notificationShow: 'notifications/show'
+    }),
+
+    async onUpdateProfile () {
+      this.isLoading = true
+
+      try {
+        if (this.$v.userData.$invalid) {
+          return this.$v.userData.$touch()
+        }
+
+        await this.profileUpdate({
+          ...this.userData
+        })
+
+        this.notificationShow({
+          type: 'success',
+          message: 'Profile updated!'
+        })
+      } catch (err) {
+        this.notificationShow({
+          type: 'error',
+          message: 'Unable to update profile'
+        })
+
+        throw err
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    onSelectPhoto () {
+      this.$refs.photoSelect?.click()
+    },
+
+    onPhotoSelected (e) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        this.selectedImageFile = event.target.result
+        this.isModalCropOpen = true
+      }
+
+      reader.readAsDataURL(file)
+    },
+
+    async onProfilePhotoUpdate (file) {
+      this.isLoadingPhoto = true
+
+      try {
+        await this.profilePhotoUpdate({
+          file
+        })
+
+        this.notificationShow({
+          type: 'success',
+          message: 'Profile photo updated!'
+        })
+      } catch (err) {
+        this.notificationShow({
+          type: 'error',
+          message: 'Unable to update profile photo'
+        })
+
+        throw err
+      } finally {
+        this.isLoadingPhoto = false
+      }
+    }
+  },
+
+  validations () {
+    return {
+      userData: {
+        givenName: {
+          required
+        },
+        familyName: {
+          required
+        }
+      }
+    }
+  }
+}
+</script>
