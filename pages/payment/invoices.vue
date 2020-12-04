@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>
         <h1 class="display-1 mb-3">
-          Payment
+          Invoices
         </h1>
       </v-card-title>
 
@@ -23,11 +23,11 @@
 
 <script>
 export default {
-  name: 'ViewPayment',
+  name: 'ViewPaymentIndex',
 
   head () {
     return {
-      title: this.$routes.payment.title
+      title: this.$routes.paymentInvoices.title
     }
   }
 }

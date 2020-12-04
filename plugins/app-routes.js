@@ -30,6 +30,12 @@ export default function appRoutesPlugin (context, inject) {
         name: 'payment'
       },
       title: 'Payment'
+    },
+    paymentInvoices: {
+      route: {
+        name: 'payment-invoices'
+      },
+      title: 'Invoices'
     }
   }
 
