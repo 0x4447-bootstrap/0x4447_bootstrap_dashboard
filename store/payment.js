@@ -10,25 +10,20 @@ export const actions = {
     const dbClient = await AwsClient.dynamoDb()
     const { identityId } = await AwsClient.credentials()
 
-    return new Promise((resolve, reject) => {
-      dbClient.query({
-        TableName: 'Payment',
-        KeyConditionExpression: '#id = :id AND begins_with(#type, :type)',
-        ExpressionAttributeNames: {
-          '#id': 'id',
-          '#type': 'type'
-        },
-        ExpressionAttributeValues: {
-          ':id': identityId,
-          ':type': 'user#payment#'
-        }
-      }, (err, res) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(res.Items[0])
-      })
-    })
+    const response = await dbClient.query({
+      TableName: 'Payment',
+      KeyConditionExpression: '#id = :id AND begins_with(#type, :type)',
+      ExpressionAttributeNames: {
+        '#id': 'id',
+        '#type': 'type'
+      },
+      ExpressionAttributeValues: {
+        ':id': identityId,
+        ':type': 'user#payment#'
+      }
+    }).promise()
+
+    return response.Items[0]
   },
 
   async paymentDetailsCreate (context, paymentDetails) {
@@ -56,38 +51,23 @@ export const actions = {
       timestamp_created: Math.floor(Date.now() / 1000)
     }
 
-    return new Promise((resolve, reject) => {
-      dbClient.put({
-        TableName: 'Payment',
-        Item: documentPayload
-      }, (err) => {
-        if (err) {
-          reject(err)
-        }
-
-        resolve()
-      })
-    })
+    await dbClient.put({
+      TableName: 'Payment',
+      Item: documentPayload
+    }).promise()
   },
 
   async paymentDetailsRemove (context, { last4 }) {
     const dbClient = await AwsClient.dynamoDb()
     const { identityId } = await AwsClient.credentials()
 
-    return new Promise((resolve, reject) => {
-      dbClient.delete({
-        TableName: 'Payment',
-        Key: {
-          id: identityId,
-          type: 'user#payment#' + last4
-        }
-      }, (err) => {
-        if (err) {
-          reject(err)
-        }
-        resolve()
-      })
-    })
+    await dbClient.delete({
+      TableName: 'Payment',
+      Key: {
+        id: identityId,
+        type: 'user#payment#' + last4
+      }
+    }).promise()
   }
 }
 

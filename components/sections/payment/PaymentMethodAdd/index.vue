@@ -183,6 +183,10 @@ export default {
     },
 
     async onSave () {
+      if (this.$v.paymentDetails.$invalid) {
+        return this.$v.paymentDetails.$touch()
+      }
+
       const { token } = await this.stripeClient.createToken(this.stripeCardField)
 
       if (!token) {
@@ -190,10 +194,6 @@ export default {
       }
 
       const { card } = token
-
-      if (this.$v.paymentDetails.$invalid) {
-        return this.$v.paymentDetails.$touch()
-      }
 
       this.$emit('payment-method:create', {
         ...this.paymentDetails,

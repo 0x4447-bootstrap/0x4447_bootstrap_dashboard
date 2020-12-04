@@ -5,7 +5,7 @@
       md="6"
       lg="4"
     >
-      <div class="mb-5">
+      <div class="mb-6">
         <v-simple-table
           dense
         >
@@ -26,6 +26,7 @@
       <v-btn
         :loading="loading"
         color="error"
+        small
         @click="onRemove"
       >
         <v-icon>
