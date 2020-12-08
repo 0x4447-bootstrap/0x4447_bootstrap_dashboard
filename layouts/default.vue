@@ -9,21 +9,49 @@
         dense
         nav
       >
-        <v-list-item
+        <template
           v-for="menuItem in navigationMenu"
-          :key="menuItem.title"
-          :to="menuItem.route"
-          exact
-          link
         >
-          <v-list-item-icon>
-            <v-icon>{{ menuItem.icon }}</v-icon>
-          </v-list-item-icon>
+          <v-list-item
+            v-if="!menuItem.subNav"
+            :key="menuItem.title"
+            :to="menuItem.route"
+            exact
+            link
+          >
+            <v-list-item-icon>
+              <v-icon>{{ menuItem.icon }}</v-icon>
+            </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-group
+            v-else
+            :key="menuItem.title"
+            :prepend-icon="menuItem.icon"
+          >
+            <template #activator>
+              <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
+            </template>
+
+            <v-list-item
+              v-for="subMenuItem in menuItem.subNav"
+              :key="subMenuItem.title"
+              :to="subMenuItem.route"
+              exact
+              link
+            >
+              <v-list-item-title v-text="subMenuItem.title" />
+
+              <v-list-item-icon>
+                <v-icon v-text="subMenuItem.icon" />
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list-group>
+        </template>
       </v-list>
     </v-navigation-drawer>
 
@@ -96,8 +124,19 @@ export default {
         },
         {
           title: 'Payment',
-          icon: 'mdi-credit-card-outline',
-          route: this.$routes.payment.route
+          icon: 'mdi-credit-card-settings-outline',
+          subNav: [
+            {
+              title: 'Payment method',
+              icon: 'mdi-credit-card-plus-outline',
+              route: this.$routes.payment.route
+            },
+            {
+              title: 'Invoices',
+              icon: 'mdi-receipt',
+              route: this.$routes.paymentInvoices.route
+            }
+          ]
         }
       ]
     }

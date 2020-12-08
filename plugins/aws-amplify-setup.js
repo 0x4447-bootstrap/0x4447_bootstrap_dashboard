@@ -1,5 +1,5 @@
 import '@aws-amplify/ui-vue'
-import { Amplify, Auth } from 'aws-amplify'
+import { Amplify } from 'aws-amplify'
 
 const awsConfig = {
   Auth: {
@@ -14,19 +14,12 @@ const awsConfig = {
   }
 }
 
-export default async function pluginAmplifyConfigure ({ redirect, store }) {
+export default async function pluginAmplifyConfigure ({ store }) {
   Amplify.configure(awsConfig)
 
   if (process.env.NODE_ENV === 'development') {
     Amplify.Logger.LOG_LEVEL = 'DEBUG'
   }
 
-  try {
-    await store.dispatch('auth/checkUserAuthentication')
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error(err)
-    redirect('/auth')
-    await Auth.signOut()
-  }
+  await store.dispatch('auth/checkUserAuthentication')
 }
