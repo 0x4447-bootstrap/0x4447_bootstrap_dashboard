@@ -62,11 +62,17 @@
       <form
         @submit.prevent="onUpdateProfile"
       >
-        <v-text-field
-          v-model="profile.email"
-          label="Email"
-          disabled
-        />
+        <a-validation
+          v-slot="{ hasError, errorMessage }"
+          :error="$v.userData.email"
+        >
+          <v-text-field
+            v-model="userData.email"
+            :error="hasError"
+            :error-messages="errorMessage"
+            label="Email"
+          />
+        </a-validation>
 
         <a-validation
           v-slot="{ hasError, errorMessage }"
@@ -107,7 +113,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { pick } from 'lodash'
-import { required } from 'vuelidate/lib/validators'
+import { required, email } from 'vuelidate/lib/validators'
 import ModalImageCrop from '~/components/modals/ModalImageCrop/index'
 
 export default {
@@ -143,6 +149,7 @@ export default {
       immediate: true,
       handler (profile) {
         this.userData = pick(profile, [
+          'email',
           'givenName',
           'familyName'
         ])
@@ -176,10 +183,8 @@ export default {
       } catch (err) {
         this.notificationShow({
           type: 'error',
-          message: 'Unable to update profile'
+          message: err.message || 'Unable to update profile'
         })
-
-        throw err
       } finally {
         this.isLoading = false
       }
@@ -215,10 +220,8 @@ export default {
       } catch (err) {
         this.notificationShow({
           type: 'error',
-          message: 'Unable to update profile photo'
+          message: err.message || 'Unable to update profile photo'
         })
-
-        throw err
       } finally {
         this.isLoadingPhoto = false
       }
@@ -228,6 +231,10 @@ export default {
   validations () {
     return {
       userData: {
+        email: {
+          required,
+          email
+        },
         givenName: {
           required
         },
