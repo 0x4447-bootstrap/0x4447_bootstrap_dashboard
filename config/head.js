@@ -1,5 +1,5 @@
 export const head = {
-  title: 'Dashboard',
+  title: 'Home',
   titleTemplate: '%s | Bootstrap WebApp',
 
   meta: [

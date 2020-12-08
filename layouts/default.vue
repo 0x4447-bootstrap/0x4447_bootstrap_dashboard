@@ -113,7 +113,7 @@ export default {
     navigationMenu () {
       return [
         {
-          title: 'Dashboard',
+          title: 'Home',
           icon: 'mdi-view-dashboard',
           route: this.$routes.dashboard.route
         },
