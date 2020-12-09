@@ -65,19 +65,12 @@
 
       <v-spacer />
 
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            icon
-            v-bind="attrs"
-            v-on="on"
-            @click="onSignOut"
-          >
-            <v-icon>mdi-logout</v-icon>
-          </v-btn>
-        </template>
-        <span>Sing out</span>
-      </v-tooltip>
+      <v-btn
+        small
+        @click="onSignOut"
+      >
+        Sign out
+      </v-btn>
     </v-app-bar>
 
     <v-main>
