@@ -11,7 +11,7 @@ export default function appRoutesPlugin (context, inject) {
       route: {
         name: 'index'
       },
-      title: 'Dashboard'
+      title: 'Home'
     },
     auth: {
       route: {

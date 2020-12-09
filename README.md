@@ -29,7 +29,7 @@ dashboard: {
   route: {
     name: 'index'
   },
-  title: 'Dashboard'
+  title: 'Home'
 }
 ```
 
@@ -37,7 +37,7 @@ Example usage via `nuxt-link`:
 
 ```vue
 <nuxt-link :to="$routes.dashboard.route">
-  Dashboard
+  Home
 </nuxt-link>
 ```
 
