@@ -60,8 +60,23 @@
       clipped-left
     >
       <v-app-bar-nav-icon
+        class="d-lg-none"
         @click.stop="onSidebarToggle"
       />
+
+      <v-spacer class="d-lg-none" />
+
+      <router-link
+        :to="$routes.dashboard.route"
+        class="d-flex py-1"
+        style="height: 100%;"
+      >
+        <img
+          :src="logoImage"
+          height="100%"
+          alt="Logo"
+        >
+      </router-link>
 
       <v-spacer />
 
@@ -88,6 +103,7 @@
 <script>
 import { mapActions } from 'vuex'
 import AppNotifications from '~/components/general/AppNotifications'
+import { logo } from '~/assets/images'
 
 export default {
   name: 'LayoutDefault',
@@ -98,7 +114,9 @@ export default {
 
   data () {
     return {
-      isSidebarOpen: false
+      isSidebarOpen: false,
+
+      logoImage: logo
     }
   },
 
