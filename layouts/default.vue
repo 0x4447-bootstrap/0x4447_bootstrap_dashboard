@@ -129,14 +129,14 @@ export default {
           route: this.$routes.dashboard.route
         },
         {
-          title: 'Profile',
-          icon: 'mdi-account',
-          route: this.$routes.profile.route
-        },
-        {
-          title: 'Payment',
-          icon: 'mdi-credit-card-settings-outline',
+          title: 'Settings',
+          icon: 'mdi-cog',
           subNav: [
+            {
+              title: 'Profile',
+              icon: 'mdi-account',
+              route: this.$routes.profile.route
+            },
             {
               title: 'Payment method',
               icon: 'mdi-credit-card-plus-outline',
