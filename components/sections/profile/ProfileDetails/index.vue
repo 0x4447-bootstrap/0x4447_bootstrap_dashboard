@@ -106,6 +106,10 @@
           Save
         </v-btn>
       </form>
+
+      <modal-verify-email
+        :is-open.sync="isModalVerifyEmailOpen"
+      />
     </v-col>
   </v-row>
 </template>
@@ -114,12 +118,14 @@
 import { mapActions, mapGetters } from 'vuex'
 import { pick } from 'lodash'
 import { required, email } from 'vuelidate/lib/validators'
-import ModalImageCrop from '~/components/modals/ModalImageCrop/index'
+import ModalImageCrop from '~/components/modals/ModalImageCrop'
+import ModalVerifyEmail from '~/components/modals/ModalVerifyEmail'
 
 export default {
   name: 'ProfileDetails',
 
   components: {
+    ModalVerifyEmail,
     ModalImageCrop
   },
 
@@ -134,7 +140,8 @@ export default {
       },
 
       selectedImageFile: '',
-      isModalCropOpen: false
+      isModalCropOpen: false,
+      isModalVerifyEmailOpen: false
     }
   },
 
@@ -159,6 +166,7 @@ export default {
 
   methods: {
     ...mapActions({
+      requestEmailVerification: 'auth/requestEmailVerification',
       profileUpdate: 'user/profileUpdate',
       profilePhotoUpdate: 'user/profilePhotoUpdate',
       notificationShow: 'notifications/show'
@@ -172,6 +180,8 @@ export default {
           return this.$v.userData.$touch()
         }
 
+        const hasEmailChanged = this.userData.email.toLowerCase() !== this.profile.email.toLowerCase()
+
         await this.profileUpdate({
           ...this.userData
         })
@@ -180,6 +190,11 @@ export default {
           type: 'success',
           message: 'Profile updated!'
         })
+
+        if (hasEmailChanged) {
+          await this.requestEmailVerification()
+          this.isModalVerifyEmailOpen = true
+        }
       } catch (err) {
         this.notificationShow({
           type: 'error',
