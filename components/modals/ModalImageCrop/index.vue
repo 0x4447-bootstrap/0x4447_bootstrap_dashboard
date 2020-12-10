@@ -24,7 +24,6 @@
                 ref="imageCropper"
                 style="max-height: 500px"
                 v-bind="optionsCropper"
-                @crop="onCrop"
               />
             </v-col>
 
@@ -119,9 +118,6 @@ export default {
 
     resetImage () {
       this.$refs.imageCropper?.reset()
-    },
-
-    onCrop (e) {
     },
 
     onCancel () {
