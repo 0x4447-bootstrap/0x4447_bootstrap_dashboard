@@ -130,13 +130,13 @@ export default {
               title: 'Payment method',
               icon: 'mdi-credit-card-plus-outline',
               route: this.$routes.payment.route
+            },
+            {
+              title: 'Invoices',
+              icon: 'mdi-receipt',
+              route: this.$routes.paymentInvoices.route
             }
           ]
-        },
-        {
-          title: 'Invoices',
-          icon: 'mdi-receipt',
-          route: this.$routes.paymentInvoices.route
         }
       ]
     }
