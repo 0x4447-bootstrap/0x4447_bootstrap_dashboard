@@ -53,6 +53,42 @@
           </v-list-group>
         </template>
       </v-list>
+
+      <template #append>
+        <v-list
+          dense
+        >
+          <v-list-item
+            href="#"
+            link
+          >
+            <v-list-item-content>
+              <v-list-item-title class="text-center">
+                Privacy Policy <v-icon small>mdi-open-in-new</v-icon>
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item
+            href="#"
+            link
+          >
+            <v-list-item-content>
+              <v-list-item-title class="text-center">
+                Terms of Service <v-icon small>mdi-open-in-new</v-icon>
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="text-center">
+                Est.2016, Copr.0x4447™ LLC.
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </template>
     </v-navigation-drawer>
 
     <v-app-bar
