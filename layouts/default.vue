@@ -55,39 +55,34 @@
       </v-list>
 
       <template #append>
-        <v-list
-          dense
-        >
-          <v-list-item
-            href="#"
-            link
-          >
-            <v-list-item-content>
-              <v-list-item-title class="text-center">
-                Privacy Policy <v-icon small>mdi-open-in-new</v-icon>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+        <v-divider />
+        <div class="sidebar-footer__container">
+          <div class="sidebar-footer__links">
+            <a
+              class="sidebar-footer__link grey--text"
+              href="/docs/privacy-policy.pdf"
+              target="_blank"
+            >
+              Privacy Policy
+            </a>
 
-          <v-list-item
-            href="#"
-            link
-          >
-            <v-list-item-content>
-              <v-list-item-title class="text-center">
-                Terms of Service <v-icon small>mdi-open-in-new</v-icon>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+            <a
+              class="sidebar-footer__link grey--text"
+              href="/docs/terms-of-service.pdf"
+              target="_blank"
+            >
+              Terms of Service
+            </a>
+          </div>
 
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="text-center">
-                Est.2016, Copr.0x4447™ LLC.
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+          <div class="sidebar-footer__copyright grey--text text-center">
+            Est.2016, Copr.0x4447™ LLC.
+          </div>
+        </div>
+
+        <v-divider
+          class="py-3"
+        />
       </template>
     </v-navigation-drawer>
 
@@ -218,3 +213,44 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.sidebar-footer {
+  &__container {
+    padding: 1rem 1rem 0;
+    font-size: 12px;
+  }
+
+  &__links {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  &__link {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      width: 1px;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.12);
+    }
+
+    &:last-child {
+      &:after {
+        display: none;
+      }
+    }
+  }
+
+  &__copyright {
+    margin-bottom: 1rem;
+  }
+}
+</style>
