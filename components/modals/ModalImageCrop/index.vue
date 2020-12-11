@@ -11,11 +11,33 @@
 
       <v-card-text>
         <div class="py-6">
-          <vue-cropper
-            ref="imageCropper"
-            style="max-height: 500px"
-            v-bind="optionsCropper"
-          />
+          <v-row>
+            <v-col
+              cols="12"
+              md="9"
+            >
+              <h3 class="text-h6">
+                Select area to crop
+              </h3>
+
+              <vue-cropper
+                ref="imageCropper"
+                style="max-height: 500px"
+                v-bind="optionsCropper"
+              />
+            </v-col>
+
+            <v-col>
+              <h3 class="text-h6 text-center">
+                Preview
+              </h3>
+
+              <div
+                style="width: 160px; height: 160px; overflow: hidden; border-radius: 50%; margin: 0 auto;"
+                id="imageCropPreview"
+              />
+            </v-col>
+          </v-row>
         </div>
       </v-card-text>
 
@@ -68,7 +90,8 @@ export default {
   computed: {
     optionsCropper () {
       return {
-        aspectRation: '16 / 9'
+        aspectRatio: 1,
+        preview: '#imageCropPreview'
       }
     }
   },
