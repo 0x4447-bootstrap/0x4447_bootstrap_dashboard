@@ -19,11 +19,17 @@ export default function appRoutesPlugin (context, inject) {
       },
       title: 'Authenticate'
     },
-    profile: {
+    profileIdentity: {
       route: {
-        name: 'profile'
+        name: 'profile-identity'
       },
-      title: 'Profile'
+      title: 'Identity'
+    },
+    profileAddress: {
+      route: {
+        name: 'profile-address'
+      },
+      title: 'Address'
     },
     payment: {
       route: {

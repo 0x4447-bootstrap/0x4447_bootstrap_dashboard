@@ -1,0 +1,33 @@
+<template>
+  <v-layout column>
+    <v-card>
+      <v-card-title>
+        <h1 class="display-1 mb-3">
+          Identity
+        </h1>
+      </v-card-title>
+
+      <v-card-text>
+        <profile-details />
+      </v-card-text>
+    </v-card>
+  </v-layout>
+</template>
+
+<script>
+import ProfileDetails from '~/components/sections/profile/ProfileDetails'
+
+export default {
+  name: 'ViewProfile',
+
+  components: {
+    ProfileDetails
+  },
+
+  head () {
+    return {
+      title: this.$routes.profileIdentity.title
+    }
+  }
+}
+</script>
