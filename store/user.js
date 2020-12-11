@@ -36,6 +36,7 @@ export const actions = {
     await Auth.updateUserAttributes(
       currentUser,
       pickBy({
+        email: profilePayload.email,
         given_name: profilePayload.givenName,
         family_name: profilePayload.familyName,
         picture: profilePayload.picture,

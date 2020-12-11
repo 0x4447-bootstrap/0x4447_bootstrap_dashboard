@@ -8,7 +8,7 @@ export default [
   },
   {
     validator: 'email',
-    message: 'Should be an email address'
+    message: 'Should be a valid email address'
   },
   {
     validator: 'minLengthWithParam',

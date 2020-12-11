@@ -62,11 +62,17 @@
       <form
         @submit.prevent="onUpdateProfile"
       >
-        <v-text-field
-          v-model="profile.email"
-          label="Email"
-          disabled
-        />
+        <a-validation
+          v-slot="{ hasError, errorMessage }"
+          :error="$v.userData.email"
+        >
+          <v-text-field
+            v-model="userData.email"
+            :error="hasError"
+            :error-messages="errorMessage"
+            label="Email"
+          />
+        </a-validation>
 
         <a-validation
           v-slot="{ hasError, errorMessage }"
@@ -100,6 +106,10 @@
           Save
         </v-btn>
       </form>
+
+      <modal-verify-email
+        :is-open.sync="isModalVerifyEmailOpen"
+      />
     </v-col>
   </v-row>
 </template>
@@ -107,13 +117,15 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { pick } from 'lodash'
-import { required } from 'vuelidate/lib/validators'
-import ModalImageCrop from '~/components/modals/ModalImageCrop/index'
+import { required, email } from 'vuelidate/lib/validators'
+import ModalImageCrop from '~/components/modals/ModalImageCrop'
+import ModalVerifyEmail from '~/components/modals/ModalVerifyEmail'
 
 export default {
   name: 'ProfileDetails',
 
   components: {
+    ModalVerifyEmail,
     ModalImageCrop
   },
 
@@ -128,7 +140,8 @@ export default {
       },
 
       selectedImageFile: '',
-      isModalCropOpen: false
+      isModalCropOpen: false,
+      isModalVerifyEmailOpen: false
     }
   },
 
@@ -143,6 +156,7 @@ export default {
       immediate: true,
       handler (profile) {
         this.userData = pick(profile, [
+          'email',
           'givenName',
           'familyName'
         ])
@@ -152,6 +166,7 @@ export default {
 
   methods: {
     ...mapActions({
+      requestEmailVerification: 'auth/requestEmailVerification',
       profileUpdate: 'user/profileUpdate',
       profilePhotoUpdate: 'user/profilePhotoUpdate',
       notificationShow: 'notifications/show'
@@ -165,6 +180,8 @@ export default {
           return this.$v.userData.$touch()
         }
 
+        const hasEmailChanged = this.userData.email.toLowerCase() !== this.profile.email.toLowerCase()
+
         await this.profileUpdate({
           ...this.userData
         })
@@ -173,13 +190,16 @@ export default {
           type: 'success',
           message: 'Profile updated!'
         })
+
+        if (hasEmailChanged) {
+          await this.requestEmailVerification()
+          this.isModalVerifyEmailOpen = true
+        }
       } catch (err) {
         this.notificationShow({
           type: 'error',
-          message: 'Unable to update profile'
+          message: err.message || 'Unable to update profile'
         })
-
-        throw err
       } finally {
         this.isLoading = false
       }
@@ -215,10 +235,8 @@ export default {
       } catch (err) {
         this.notificationShow({
           type: 'error',
-          message: 'Unable to update profile photo'
+          message: err.message || 'Unable to update profile photo'
         })
-
-        throw err
       } finally {
         this.isLoadingPhoto = false
       }
@@ -228,6 +246,10 @@ export default {
   validations () {
     return {
       userData: {
+        email: {
+          required,
+          email
+        },
         givenName: {
           required
         },

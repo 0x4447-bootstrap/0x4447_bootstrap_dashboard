@@ -54,6 +54,25 @@ export const actions = {
     })
 
     // TODO reset user profile
+  },
+
+  /**
+   * Send confirmation code to user email
+   * @returns {Promise<void>}
+   */
+  async emailVerificationRequest () {
+    const user = await Auth.currentUserPoolUser()
+    await Auth.verifyUserAttribute(user, 'email')
+  },
+
+  /**
+   * Submit email confirmation code to verify user's email
+   * @param store
+   * @param code {String}
+   * @returns {Promise<void>}
+   */
+  async emailVerificationConfirm (store, { code }) {
+    await Auth.verifyCurrentUserAttributeSubmit('email', code)
   }
 }
 
