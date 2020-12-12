@@ -53,6 +53,37 @@
           </v-list-group>
         </template>
       </v-list>
+
+      <template #append>
+        <v-divider />
+        <div class="sidebar-footer__container">
+          <div class="sidebar-footer__links">
+            <a
+              class="sidebar-footer__link grey--text"
+              href="/docs/privacy-policy.pdf"
+              target="_blank"
+            >
+              Privacy Policy
+            </a>
+
+            <a
+              class="sidebar-footer__link grey--text"
+              href="/docs/terms-of-service.pdf"
+              target="_blank"
+            >
+              Terms of Service
+            </a>
+          </div>
+
+          <div class="sidebar-footer__copyright grey--text text-center">
+            Est.2016, Copr.0x4447™ LLC.
+          </div>
+        </div>
+
+        <v-divider
+          class="py-3"
+        />
+      </template>
     </v-navigation-drawer>
 
     <v-app-bar
@@ -182,3 +213,44 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.sidebar-footer {
+  &__container {
+    padding: 1rem 1rem 0;
+    font-size: 12px;
+  }
+
+  &__links {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  &__link {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      width: 1px;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.12);
+    }
+
+    &:last-child {
+      &:after {
+        display: none;
+      }
+    }
+  }
+
+  &__copyright {
+    margin-bottom: 1rem;
+  }
+}
+</style>
