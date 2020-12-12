@@ -4,10 +4,6 @@
       cols="12"
       md="4"
     >
-      <h3 class="text-h5">
-        Address
-      </h3>
-
       <form
         @submit.prevent="onUpdateAddress"
       >

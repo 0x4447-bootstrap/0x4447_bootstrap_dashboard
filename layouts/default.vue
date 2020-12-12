@@ -164,9 +164,14 @@ export default {
           icon: 'mdi-cog',
           subNav: [
             {
-              title: 'Profile',
+              title: 'Identity',
               icon: 'mdi-account',
-              route: this.$routes.profile.route
+              route: this.$routes.profileIdentity.route
+            },
+            {
+              title: 'Address',
+              icon: 'mdi-home',
+              route: this.$routes.profileAddress.route
             },
             {
               title: 'Payment method',

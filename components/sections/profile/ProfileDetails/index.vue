@@ -2,14 +2,6 @@
   <v-row class="mb-5">
     <v-col
       cols="12"
-    >
-      <h3 class="text-h5">
-        Identity
-      </h3>
-    </v-col>
-
-    <v-col
-      cols="12"
       sm="12"
       md="6"
       lg="auto"
