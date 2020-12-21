@@ -79,10 +79,6 @@
             Est.2016, Copr.0x4447™ LLC.
           </div>
         </div>
-
-        <v-divider
-          class="py-3"
-        />
       </template>
     </v-navigation-drawer>
 
@@ -99,7 +95,7 @@
 
       <router-link
         :to="$routes.dashboard.route"
-        class="d-flex py-1"
+        class="d-flex py-1 app-bar__logo"
         style="height: 100%;"
       >
         <img
@@ -111,7 +107,60 @@
 
       <v-spacer />
 
+      <v-menu
+        bottom
+        left
+        offset-y
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn
+            icon
+            v-on="on"
+          >
+            <v-avatar
+              color="brown"
+              size="48"
+            >
+              <span
+                v-if="!profile.picture"
+                class="white--text headline"
+              >
+                {{ profile.givenName }} {{ profile.familyName }}
+              </span>
+
+              <img
+                v-else
+                :src="profile.picture"
+                alt="Profile picture"
+              >
+            </v-avatar>
+          </v-btn>
+        </template>
+
+        <v-list
+          dense
+        >
+          <v-list-item
+            v-for="menuItem in toolbarMenu"
+            :key="menuItem.title"
+            :to="menuItem.route"
+            link
+            exact
+            dense
+          >
+            <v-list-item-icon>
+              <v-icon>{{ menuItem.icon }}</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
       <v-btn
+        class="ml-5"
         small
         @click="onSignOut"
       >
@@ -132,7 +181,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import AppNotifications from '~/components/general/AppNotifications'
 import { logo } from '~/assets/images'
 
@@ -152,44 +201,49 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      profile: 'user/profile'
+    }),
+
     navigationMenu () {
       return [
         {
           title: 'Home',
           icon: 'mdi-view-dashboard',
           route: this.$routes.dashboard.route
+        }
+      ]
+    },
+
+    toolbarMenu () {
+      return [
+        {
+          title: 'Identity',
+          icon: 'mdi-account',
+          route: this.$routes.profileIdentity.route
         },
         {
-          title: 'Settings',
-          icon: 'mdi-cog',
-          subNav: [
-            {
-              title: 'Identity',
-              icon: 'mdi-account',
-              route: this.$routes.profileIdentity.route
-            },
-            {
-              title: 'Address',
-              icon: 'mdi-home',
-              route: this.$routes.profileAddress.route
-            },
-            {
-              title: 'Payment method',
-              icon: 'mdi-credit-card-plus-outline',
-              route: this.$routes.payment.route
-            },
-            {
-              title: 'Invoices',
-              icon: 'mdi-receipt',
-              route: this.$routes.paymentInvoices.route
-            }
-          ]
+          title: 'Address',
+          icon: 'mdi-home',
+          route: this.$routes.profileAddress.route
+        },
+        {
+          title: 'Payment method',
+          icon: 'mdi-credit-card-plus-outline',
+          route: this.$routes.payment.route
+        },
+        {
+          title: 'Invoices',
+          icon: 'mdi-receipt',
+          route: this.$routes.paymentInvoices.route
         }
       ]
     }
   },
 
   beforeMount () {
+    this.$vuetify.theme.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+
     if (this.$vuetify.breakpoint.lgAndUp) {
       this.isSidebarOpen = true
     }
@@ -220,6 +274,13 @@ export default {
 </script>
 
 <style lang="scss">
+.app-bar {
+  &__logo {
+    position: relative;
+    left: -8px;
+  }
+}
+
 .sidebar-footer {
   &__container {
     padding: 1rem 1rem 0;
