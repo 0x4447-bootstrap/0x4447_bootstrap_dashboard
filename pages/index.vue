@@ -1,12 +1,10 @@
 <template>
   <v-layout column>
-    <v-card>
-      <v-card-title>
-        <h1 class="display-1 mb-3">
-          Dashboard
-        </h1>
-      </v-card-title>
+    <h1 class="display-1 mb-3">
+      Dashboard
+    </h1>
 
+    <v-card>
       <v-card-text>
         <v-row>
           <v-col
