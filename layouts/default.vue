@@ -118,7 +118,6 @@
             v-on="on"
           >
             <v-avatar
-              color="brown"
               size="48"
             >
               <span

@@ -9,7 +9,6 @@
       <div class="d-flex justify-center justify-lg-start mb-2 px-6">
         <v-avatar
           v-if="profile.picture"
-          color="accent"
           size="160"
           class="mb-5"
         >
