@@ -1,6 +1,6 @@
 <template>
   <v-layout column>
-    <h1 class="display-1 mb-3">
+    <h1 class="display-1 mb-3 px-3">
       Dashboard
     </h1>
 
@@ -10,6 +10,7 @@
           <v-col
             sm="12"
             md="auto"
+            class="py-0"
           >
             Welcome!
           </v-col>

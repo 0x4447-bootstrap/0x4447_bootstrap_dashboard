@@ -2,6 +2,7 @@
   <v-row>
     <v-col
       cols="12"
+      class="py-0"
     >
       <form
         @submit.prevent="onSave"
@@ -30,6 +31,7 @@
             cols="12"
             md="6"
             lg="4"
+            class="py-0"
           >
             <div class="mb-5">
               <a-validation

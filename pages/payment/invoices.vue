@@ -1,6 +1,6 @@
 <template>
   <v-layout column>
-    <h1 class="display-1 mb-3">
+    <h1 class="display-1 mb-3 px-3">
       Invoices
     </h1>
 
@@ -9,6 +9,7 @@
         <v-row>
           <v-col
             cols="12"
+            class="py-0"
           >
             <v-data-table
               :headers="headers"

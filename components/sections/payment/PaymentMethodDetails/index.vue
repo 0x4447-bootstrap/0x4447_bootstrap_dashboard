@@ -4,6 +4,7 @@
       cols="12"
       md="6"
       lg="4"
+      class="py-0"
     >
       <div class="mb-6">
         <v-simple-table
