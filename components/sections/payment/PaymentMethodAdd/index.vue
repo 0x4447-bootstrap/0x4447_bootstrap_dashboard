@@ -4,6 +4,24 @@
       cols="12"
       class="py-0"
     >
+      <v-tabs
+        v-if="!isProfileEmpty"
+        class="mb-5"
+        left
+      >
+        <v-tab
+          @click="setFormFromProfile"
+        >
+          From profile
+        </v-tab>
+
+        <v-tab
+          @click="resetForm"
+        >
+          Different than profile
+        </v-tab>
+      </v-tabs>
+
       <form
         @submit.prevent="onSave"
       >
@@ -120,8 +138,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { loadStripe } from '@stripe/stripe-js'
 import { required } from 'vuelidate/lib/validators'
+
+const initialForm = {
+  firstName: '',
+  lastName: '',
+  streetAddress: '',
+  city: '',
+  state: '',
+  postalCode: '',
+  country: ''
+}
 
 export default {
   name: 'PaymentMethodAdd',
@@ -139,19 +168,24 @@ export default {
       stripeCardField: null,
 
       paymentDetails: {
-        firstName: '',
-        lastName: '',
-        streetAddress: '',
-        city: '',
-        state: '',
-        postalCode: '',
-        country: ''
+        ...initialForm
       }
     }
   },
 
+  computed: {
+    ...mapGetters({
+      isProfileEmpty: 'user/isProfileEmpty',
+      profile: 'user/profile'
+    })
+  },
+
   mounted () {
     this.initStripe()
+
+    if (!this.isProfileEmpty) {
+      this.setFormFromProfile()
+    }
   },
 
   methods: {
@@ -207,6 +241,19 @@ export default {
         expMonth: card.exp_month,
         expYear: card.exp_year
       })
+    },
+
+    setFormFromProfile () {
+      const { familyName = '', givenName = '', address = {} } = this.profile
+      this.paymentDetails = {
+        firstName: familyName,
+        lastName: givenName,
+        ...address
+      }
+    },
+
+    resetForm () {
+      this.paymentDetails = { ...initialForm }
     }
   },
 

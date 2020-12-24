@@ -13,13 +13,34 @@ export const state = () => ({
     givenName: '',
     familyName: '',
     picture: '',
-    address: '' // It is currently stored as JSON string in Cognito and requires parsing before saving
+    // It is currently stored as JSON string in Cognito and requires parsing before saving to Cognito
+    address: {
+      city: '',
+      country: '',
+      postalCode: '',
+      state: '',
+      streetAddress: ''
+    }
   }
 })
 
 export const getters = {
   profile (state) {
     return state.profile
+  },
+
+  /**
+   * Check if profile fields haven't been updated yet
+   * @returns {*}
+   */
+  isProfileEmpty (state) {
+    const {
+      givenName,
+      familyName,
+      address
+    } = state.profile
+    return !givenName || !familyName || !address ||
+      Object.values(address).every(addressField => !addressField)
   }
 }
 
@@ -47,7 +68,10 @@ export const actions = {
     dispatch('profileStateUpdate', profilePayload)
   },
 
-  async profilePhotoUpdate ({ getters, dispatch }, { file }) {
+  async profilePhotoUpdate ({
+    getters,
+    dispatch
+  }, { file }) {
     const key = getters.profile.id
 
     await Storage.put(key, file)
