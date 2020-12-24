@@ -3,6 +3,7 @@
     <v-navigation-drawer
       v-model="isSidebarOpen"
       :mini-variant="isSidebarMinimized"
+      mini-variant-width="64"
       app
     >
       <div class="navbar__logo">
@@ -337,7 +338,7 @@ export default {
 .navbar {
   &__logo {
     height: 63px;
-    padding: 0.3rem 0.5rem;
+    padding: 8px;
     display: flex;
     justify-content: center;
   }
@@ -348,7 +349,7 @@ export default {
   }
 
   &__logo__image {
-    height: 100%;
+    width: 100%;
   }
 }
 
