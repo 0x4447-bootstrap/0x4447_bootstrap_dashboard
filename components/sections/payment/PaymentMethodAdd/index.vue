@@ -14,7 +14,7 @@
             <div>
               <div
                 id="cardForm"
-                class="mb-3"
+                class="mb-5"
                 style="max-width: 380px"
               />
 
@@ -156,10 +156,12 @@ export default {
     async initStripe () {
       this.stripeClient = await loadStripe(this.$config.STRIPE_PUBLIC_KEY)
 
+      const isDarkTheme = this.$vuetify.theme.dark
+
       this.stripeCardField = this.stripeClient.elements().create('card', {
         style: {
           base: {
-            color: '#32325d',
+            color: isDarkTheme ? '#fff' : '#32325d',
             fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
             fontSmoothing: 'antialiased',
             fontSize: '16px',
