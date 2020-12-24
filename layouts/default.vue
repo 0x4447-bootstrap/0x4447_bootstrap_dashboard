@@ -2,9 +2,30 @@
   <v-app>
     <v-navigation-drawer
       v-model="isSidebarOpen"
+      :mini-variant="isSidebarMinimized"
+      mini-variant-width="64"
       app
-      clipped
     >
+      <div class="navbar__logo">
+        <router-link
+          :to="$routes.dashboard.route"
+          class="navbar__logo__link"
+        >
+          <v-fade-transition
+            mode="out-in"
+          >
+            <img
+              :key="logoImage"
+              :src="logoImage"
+              class="navbar__logo__image"
+              alt="Logo"
+            >
+          </v-fade-transition>
+        </router-link>
+      </div>
+
+      <v-divider />
+
       <v-list
         dense
         nav
@@ -54,56 +75,55 @@
         </template>
       </v-list>
 
-      <template #append>
-        <v-divider />
-        <div class="sidebar-footer__container">
-          <div class="sidebar-footer__links">
-            <a
-              class="sidebar-footer__link grey--text"
-              href="/docs/privacy-policy.pdf"
-              target="_blank"
-            >
-              Privacy Policy
-            </a>
+      <template
+        #append
+      >
+        <v-fade-transition
+          mode="out-in"
+          hide-on-leave
+        >
+          <div
+            v-if="isSidebarFooterVisible"
+            class="sidebar-footer__container"
+          >
+            <v-divider />
 
-            <a
-              class="sidebar-footer__link grey--text"
-              href="/docs/terms-of-service.pdf"
-              target="_blank"
-            >
-              Terms of Service
-            </a>
-          </div>
+            <div class="sidebar-footer__inner">
+              <div class="sidebar-footer__links">
+                <a
+                  class="sidebar-footer__link grey--text"
+                  href="/docs/privacy-policy.pdf"
+                  target="_blank"
+                >
+                  Privacy Policy
+                </a>
 
-          <div class="sidebar-footer__copyright grey--text text-center">
-            Est.2016, Copr.0x4447™ LLC.
+                <a
+                  class="sidebar-footer__link grey--text"
+                  href="/docs/terms-of-service.pdf"
+                  target="_blank"
+                >
+                  Terms of Service
+                </a>
+              </div>
+            </div>
+
+            <div class="sidebar-footer__copyright grey--text text-center">
+              Est.2016, Copr.0x4447™ LLC.
+            </div>
           </div>
-        </div>
+        </v-fade-transition>
       </template>
     </v-navigation-drawer>
 
     <v-app-bar
       app
-      clipped-left
     >
       <v-app-bar-nav-icon
-        class="d-lg-none"
         @click.stop="onSidebarToggle"
       />
 
       <v-spacer class="d-lg-none" />
-
-      <router-link
-        :to="$routes.dashboard.route"
-        class="d-flex py-1 app-bar__logo"
-        style="height: 100%;"
-      >
-        <img
-          :src="logoImage"
-          height="100%"
-          alt="Logo"
-        >
-      </router-link>
 
       <v-spacer />
 
@@ -182,7 +202,14 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import AppNotifications from '~/components/general/AppNotifications'
-import { logo } from '~/assets/images'
+import { logo, logoDark, logoSquare, logoSquareDark } from '~/assets/images'
+
+const logosMap = new Map([
+  ['light-expanded', logo],
+  ['dark-expanded', logoDark],
+  ['light-minimized', logoSquare],
+  ['dark-minimized', logoSquareDark]
+])
 
 export default {
   name: 'LayoutDefault',
@@ -194,8 +221,8 @@ export default {
   data () {
     return {
       isSidebarOpen: false,
-
-      logoImage: logo
+      isSidebarMinimized: false,
+      isSidebarFooterVisible: true
     }
   },
 
@@ -203,6 +230,18 @@ export default {
     ...mapGetters({
       profile: 'user/profile'
     }),
+
+    logoImage () {
+      const isDarkMode = this.$vuetify.theme.dark
+      const isMinimized = this.isSidebarMinimized
+
+      const logoSetting = [
+        `${isDarkMode ? 'dark' : 'light'}`,
+        `${isMinimized ? 'minimized' : 'expanded'}`
+      ].join('-')
+
+      return logosMap.get(logoSetting)
+    },
 
     navigationMenu () {
       return [
@@ -240,6 +279,24 @@ export default {
     }
   },
 
+  watch: {
+    '$vuetify.breakpoint.lgAndUp' (nextValue) {
+      if (!nextValue) {
+        this.isSidebarMinimized = false
+      }
+    },
+
+    isSidebarMinimized (isMinimized) {
+      if (isMinimized) {
+        this.isSidebarFooterVisible = false
+      } else {
+        setTimeout(() => {
+          this.isSidebarFooterVisible = !isMinimized
+        }, 300)
+      }
+    }
+  },
+
   beforeMount () {
     this.$vuetify.theme.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
@@ -254,7 +311,11 @@ export default {
     }),
 
     onSidebarToggle () {
-      this.isSidebarOpen = !this.isSidebarOpen
+      if (this.$vuetify.breakpoint.lgAndUp) {
+        this.isSidebarMinimized = !this.isSidebarMinimized
+      } else {
+        this.isSidebarOpen = !this.isSidebarOpen
+      }
     },
 
     async onSignOut () {
@@ -273,15 +334,30 @@ export default {
 </script>
 
 <style lang="scss">
-.app-bar {
+.navbar {
   &__logo {
-    position: relative;
-    left: -8px;
+    height: 63px;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__logo__link {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__logo__image {
+    width: 100%;
   }
 }
 
 .sidebar-footer {
   &__container {
+
+  }
+
+  &__inner {
     padding: 1rem 1rem 0;
     font-size: 12px;
   }
