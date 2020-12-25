@@ -1,16 +1,15 @@
 <template>
   <v-layout column>
-    <v-card>
-      <v-card-title>
-        <h1 class="display-1 mb-3">
-          Invoices
-        </h1>
-      </v-card-title>
+    <h1 class="display-1 mb-3 px-4">
+      Invoices
+    </h1>
 
+    <v-card>
       <v-card-text>
         <v-row>
           <v-col
             cols="12"
+            class="py-0"
           >
             <v-data-table
               :headers="headers"

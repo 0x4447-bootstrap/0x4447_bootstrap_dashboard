@@ -1,12 +1,10 @@
 <template>
   <v-layout column>
-    <v-card>
-      <v-card-title>
-        <h1 class="display-1 mb-3">
-          Address
-        </h1>
-      </v-card-title>
+    <h1 class="display-1 mb-3 px-4">
+      Address
+    </h1>
 
+    <v-card>
       <v-card-text>
         <profile-address />
       </v-card-text>

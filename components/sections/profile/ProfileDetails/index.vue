@@ -1,10 +1,11 @@
 <template>
-  <v-row class="mb-5">
+  <v-row>
     <v-col
       cols="12"
       sm="12"
       md="6"
       lg="auto"
+      class="py-0"
     >
       <div class="d-flex justify-center justify-lg-start mb-2 px-6">
         <v-avatar

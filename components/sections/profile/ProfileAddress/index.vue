@@ -3,6 +3,7 @@
     <v-col
       cols="12"
       md="4"
+      class="py-0"
     >
       <form
         @submit.prevent="onUpdateAddress"
