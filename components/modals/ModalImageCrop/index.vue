@@ -33,8 +33,8 @@
               </h3>
 
               <div
-                style="width: 160px; height: 160px; overflow: hidden; border-radius: 50%; margin: 0 auto;"
                 id="imageCropPreview"
+                style="width: 160px; height: 160px; overflow: hidden; border-radius: 50%; margin: 0 auto;"
               />
             </v-col>
           </v-row>
