@@ -1,6 +1,6 @@
 <template>
   <v-layout column>
-    <h1 class="display-1 mb-3 px-3">
+    <h1 class="display-1 mb-3 px-4">
       Invoices
     </h1>
 
