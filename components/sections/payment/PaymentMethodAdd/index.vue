@@ -4,24 +4,6 @@
       cols="12"
       class="py-0"
     >
-      <v-tabs
-        v-if="!isProfileEmpty"
-        class="mb-5"
-        left
-      >
-        <v-tab
-          @click="setFormFromProfile"
-        >
-          From profile
-        </v-tab>
-
-        <v-tab
-          @click="resetForm"
-        >
-          Different than profile
-        </v-tab>
-      </v-tabs>
-
       <form
         @submit.prevent="onSave"
       >
@@ -51,6 +33,24 @@
             lg="4"
             class="py-0"
           >
+            <v-tabs
+              v-if="!isProfileEmpty"
+              class="mb-5"
+              left
+            >
+              <v-tab
+                @click="setFormFromProfile"
+              >
+                From profile
+              </v-tab>
+
+              <v-tab
+                @click="resetForm"
+              >
+                Different than profile
+              </v-tab>
+            </v-tabs>
+
             <div class="mb-5">
               <a-validation
                 v-slot="{ hasError, errorMessage }"
