@@ -345,7 +345,7 @@ export default {
     },
 
     listenColorThemeChange () {
-      const setAppDarkTheme = (mediaQuery) => {
+      const setAppColorScheme = (mediaQuery) => {
         this.$vuetify.theme.dark = mediaQuery?.matches
       }
 
@@ -355,12 +355,12 @@ export default {
         return
       }
 
-      setAppDarkTheme(media)
+      setAppColorScheme(media)
 
       if (media.addEventListener) {
-        media.addEventListener('change', setAppDarkTheme)
+        media.addEventListener('change', setAppColorScheme)
       } else {
-        media.addListener(setAppDarkTheme)
+        media.addListener(setAppColorScheme)
       }
     }
   }
