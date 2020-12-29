@@ -3,9 +3,13 @@ export const buildModules = [
   '@nuxtjs/eslint-module',
   // https://github.com/nuxt-community/vuetify-module
   '@nuxtjs/vuetify'
+  // https://go.nuxtjs.dev/pwa
 ]
 
 export const modules = [
-  // https://go.nuxtjs.dev/pwa
-  // '@nuxtjs/pwa'
+  ['@nuxtjs/pwa', {
+    icon: {
+      source: 'static/logo-icon.png'
+    }
+  }]
 ]
