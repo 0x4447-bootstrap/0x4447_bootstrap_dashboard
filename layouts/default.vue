@@ -370,7 +370,7 @@ export default {
 <style lang="scss">
 .navbar {
   &__logo {
-    height: 63px;
+    height: 64px;
     padding: 8px;
     display: flex;
     justify-content: center;
