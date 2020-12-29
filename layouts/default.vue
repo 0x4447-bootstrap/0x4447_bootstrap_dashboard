@@ -113,6 +113,19 @@
             </div>
           </div>
         </v-fade-transition>
+
+        <div
+          v-if="isSidebarMinimized"
+          class="sidebar-footer-minimized__container"
+        >
+          <a
+            href="#"
+            class="sidebar-footer-minimized__logo grey--text text--darken-2"
+            @click.prevent="onSidebarToggle"
+          >
+            {{ company.name }}
+          </a>
+        </div>
       </template>
     </v-navigation-drawer>
 
@@ -228,7 +241,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      profile: 'user/profile'
+      profile: 'user/profile',
+      company: 'app/company'
     }),
 
     logoImage () {
@@ -392,6 +406,23 @@ export default {
 
   &__copyright {
     margin-bottom: 1rem;
+  }
+}
+
+.sidebar-footer-minimized {
+  &__container {
+    position: relative;
+  }
+
+  &__logo {
+    position: absolute;
+    left: 50%;
+    bottom: 20px;
+    writing-mode: tb-rl;
+    transform: rotate(-180deg) translateX(50%);
+    font-size: 2.2rem;
+    text-decoration: none;
+    user-select: none;
   }
 }
 </style>
