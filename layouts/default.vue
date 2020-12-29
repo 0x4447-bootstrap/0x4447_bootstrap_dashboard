@@ -312,7 +312,7 @@ export default {
   },
 
   beforeMount () {
-    this.$vuetify.theme.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    this.listenColorThemeChange()
 
     if (this.$vuetify.breakpoint.lgAndUp) {
       this.isSidebarOpen = true
@@ -341,6 +341,26 @@ export default {
         console.error(err)
         // TODO handle error
         throw err
+      }
+    },
+
+    listenColorThemeChange () {
+      const setAppColorScheme = (mediaQuery) => {
+        this.$vuetify.theme.dark = mediaQuery?.matches
+      }
+
+      const media = window.matchMedia('(prefers-color-scheme: dark)')
+
+      if (!media) {
+        return
+      }
+
+      setAppColorScheme(media)
+
+      if (media.addEventListener) {
+        media.addEventListener('change', setAppColorScheme)
+      } else {
+        media.addListener(setAppColorScheme)
       }
     }
   }
