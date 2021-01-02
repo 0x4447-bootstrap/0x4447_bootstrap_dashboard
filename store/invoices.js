@@ -24,15 +24,15 @@ export const actions = {
     const startKey = getters.paginationKeys[page]
 
     const { Items = [], LastEvaluatedKey = null, Count = 0 } = await dbClient.query({
-      TableName: 'Payment',
-      KeyConditionExpression: '#id = :id AND begins_with(#type, :type)',
+      TableName: 'default',
+      KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
       ExpressionAttributeNames: {
-        '#id': 'id',
-        '#type': 'type'
+        '#pk': 'pk',
+        '#sk': 'sk'
       },
       ExpressionAttributeValues: {
-        ':id': identityId,
-        ':type': 'user#invoice#'
+        ':pk': identityId,
+        ':sk': 'user#invoice#'
       },
       Limit: perPage,
       ScanIndexForward: false,

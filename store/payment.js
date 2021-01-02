@@ -11,15 +11,15 @@ export const actions = {
     const { identityId } = await AwsClient.credentials()
 
     const response = await dbClient.query({
-      TableName: 'Payment',
-      KeyConditionExpression: '#id = :id AND begins_with(#type, :type)',
+      TableName: 'default',
+      KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
       ExpressionAttributeNames: {
-        '#id': 'id',
-        '#type': 'type'
+        '#pk': 'pk',
+        '#sk': 'sk'
       },
       ExpressionAttributeValues: {
-        ':id': identityId,
-        ':type': 'user#payment#'
+        ':pk': identityId,
+        ':sk': 'user#payment#'
       }
     }).promise()
 
@@ -31,8 +31,8 @@ export const actions = {
     const { identityId } = await AwsClient.credentials()
 
     const documentPayload = {
-      id: identityId,
-      type: `user#payment#${paymentDetails.last4}`,
+      pk: identityId,
+      sk: `user#payment#${paymentDetails.last4}`,
       card_token: paymentDetails.cardToken,
       card_id: paymentDetails.cardId,
       first_name: paymentDetails.firstName,
@@ -52,7 +52,7 @@ export const actions = {
     }
 
     await dbClient.put({
-      TableName: 'Payment',
+      TableName: 'default',
       Item: documentPayload
     }).promise()
   },
@@ -62,10 +62,10 @@ export const actions = {
     const { identityId } = await AwsClient.credentials()
 
     await dbClient.delete({
-      TableName: 'Payment',
+      TableName: 'default',
       Key: {
-        id: identityId,
-        type: 'user#payment#' + last4
+        pk: identityId,
+        sk: 'user#payment#' + last4
       }
     }).promise()
   }
