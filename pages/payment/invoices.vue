@@ -1,8 +1,12 @@
 <template>
   <v-layout column>
-    <h1 class="display-1 mb-3 px-4">
-      Invoices
-    </h1>
+    <title-anchored
+      anchor="invoices"
+    >
+      <h1 class="display-1 mb-3 px-4">
+        Invoices
+      </h1>
+    </title-anchored>
 
     <v-card>
       <v-card-text>
@@ -33,9 +37,14 @@
 import { mapActions } from 'vuex'
 import fromUnixTime from 'date-fns/fromUnixTime'
 import format from 'date-fns/format'
+import TitleAnchored from '~/components/general/TitleAnchored'
 
 export default {
   name: 'ViewPaymentIndex',
+
+  components: {
+    TitleAnchored
+  },
 
   data () {
     return {
@@ -99,11 +108,17 @@ export default {
       invoicesLoad: 'invoices/invoicesLoad'
     }),
 
-    async loadInvoices ({ page, perPage }) {
+    async loadInvoices ({
+      page,
+      perPage
+    }) {
       this.loadingList = true
 
       try {
-        const { invoices, total } = await this.invoicesLoad({
+        const {
+          invoices,
+          total
+        } = await this.invoicesLoad({
           page,
           perPage
         })
