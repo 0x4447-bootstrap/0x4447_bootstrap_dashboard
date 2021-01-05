@@ -229,12 +229,15 @@
     </v-main>
 
     <app-notifications />
+
+    <app-loading />
   </v-app>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import AppNotifications from '~/components/general/AppNotifications'
+import AppLoading from '~/components/general/AppLoading'
 import { logo, logoDark, logoSquare, logoSquareDark } from '~/assets/images'
 
 const logosMap = new Map([
@@ -248,6 +251,7 @@ export default {
   name: 'LayoutDefault',
 
   components: {
+    AppLoading,
     AppNotifications
   },
 
