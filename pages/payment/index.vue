@@ -1,44 +1,58 @@
 <template>
   <v-layout column>
-    <h1 class="display-1 mb-3 px-4">
-      {{ pageTitle }}
-    </h1>
+    <v-fade-transition
+      mode="out-in"
+    >
+      <div
+        v-if="isFetching"
+        key="payment-fetching"
+        class="text-center py-5"
+      >
+        <v-progress-circular
+          :size="48"
+          :width="5"
+          color="primary"
+          indeterminate
+        />
+      </div>
 
-    <v-card>
-      <v-card-text>
-        <v-fade-transition
-          mode="out-in"
-        >
-          <div
-            v-if="isFetching"
-            key="payment-fetching"
-            class="text-center py-5"
-          >
-            <v-progress-circular
-              :size="48"
-              :width="5"
-              color="primary"
-              indeterminate
+      <div
+        v-else-if="hasPaymentMethod"
+        key="payment-details"
+      >
+        <h1 class="display-1 mb-3 px-4">
+          Payment method
+        </h1>
+
+        <v-card>
+          <v-card-text>
+            <payment-method-details
+              :payment-details="paymentDetails"
+              :loading="loadingRemove"
+              @payment-method:remove="onPaymentMethodRemove"
             />
-          </div>
+          </v-card-text>
+        </v-card>
+      </div>
 
-          <payment-method-details
-            v-else-if="hasPaymentMethod"
-            key="payment-details"
-            :payment-details="paymentDetails"
-            :loading="loadingRemove"
-            @payment-method:remove="onPaymentMethodRemove"
-          />
+      <div
+        v-else
+        key="payment-create"
+      >
+        <h1 class="display-1 mb-3 px-4">
+          Add payment method
+        </h1>
 
-          <payment-method-add
-            v-else
-            key="payment-create"
-            :loading="loadingCreate"
-            @payment-method:create="onPaymentMethodCreate"
-          />
-        </v-fade-transition>
-      </v-card-text>
-    </v-card>
+        <v-card>
+          <v-card-text>
+            <payment-method-add
+              :loading="loadingCreate"
+              @payment-method:create="onPaymentMethodCreate"
+            />
+          </v-card-text>
+        </v-card>
+      </div>
+    </v-fade-transition>
   </v-layout>
 </template>
 
@@ -68,10 +82,6 @@ export default {
   computed: {
     hasPaymentMethod () {
       return !!this.paymentDetails?.card_token
-    },
-
-    pageTitle () {
-      return (this.hasPaymentMethod || this.isFetching) ? 'Payment method' : 'Add payment method'
     }
   },
 
