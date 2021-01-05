@@ -173,7 +173,7 @@
           dense
         >
           <v-list-item
-            v-for="menuItem in toolbarMenu"
+            v-for="menuItem in accountMenu"
             :key="menuItem.title"
             :to="menuItem.route"
             link
@@ -198,6 +198,26 @@
       >
         Sign out
       </v-btn>
+
+      <template
+        v-if="showAccountMenu"
+        #extension
+      >
+        <v-tabs
+          align-with-title
+        >
+          <v-tabs-slider />
+
+          <v-tab
+            v-for="(tab, index) in accountMenu"
+            :key="index"
+            :to="tab.route"
+            exact
+          >
+            {{ tab.title }}
+          </v-tab>
+        </v-tabs>
+      </template>
     </v-app-bar>
 
     <v-main>
@@ -213,7 +233,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import AppNotifications from '~/components/general/AppNotifications'
 import { logo, logoDark, logoSquare, logoSquareDark } from '~/assets/images'
 
@@ -240,6 +260,9 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      route: 'route'
+    }),
     ...mapGetters({
       profile: 'user/profile',
       company: 'app/company'
@@ -267,29 +290,34 @@ export default {
       ]
     },
 
-    toolbarMenu () {
+    accountMenu () {
       return [
         {
-          title: 'Identity',
+          title: this.$routes.profileIdentity.title,
           icon: 'mdi-account',
           route: this.$routes.profileIdentity.route
         },
         {
-          title: 'Address',
+          title: this.$routes.profileAddress.title,
           icon: 'mdi-home',
           route: this.$routes.profileAddress.route
         },
         {
-          title: 'Payment method',
+          title: this.$routes.payment.title,
           icon: 'mdi-credit-card-plus-outline',
           route: this.$routes.payment.route
         },
         {
-          title: 'Invoices',
+          title: this.$routes.paymentInvoices.title,
           icon: 'mdi-receipt',
           route: this.$routes.paymentInvoices.route
         }
       ]
+    },
+
+    showAccountMenu () {
+      const routeName = this.route.name
+      return this.accountMenu.findIndex(menuItem => menuItem.route?.name === routeName) > -1
     }
   },
 
