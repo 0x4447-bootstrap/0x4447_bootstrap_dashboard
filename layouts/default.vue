@@ -147,13 +147,52 @@
       <v-spacer />
 
       <v-menu
+        v-if="hasNotifications"
         bottom
         left
         offset-y
       >
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-btn
             icon
+            v-on="on"
+          >
+            <v-icon>mdi-bell</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <template
+            v-for="(notification, index) in notifications"
+          >
+            <v-list-item
+              :key="index"
+              :class="notification.type"
+              two-line
+            >
+              <v-list-item-content>
+                <v-list-item-title v-html="notification.message" />
+                <v-list-item-subtitle v-html="notification.createdOnPretty" />
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-divider
+              :key="`${index}-divider`"
+              inset
+            />
+          </template>
+        </v-list>
+      </v-menu>
+
+      <v-menu
+        bottom
+        left
+        offset-y
+      >
+        <template #activator="{ on }">
+          <v-btn
+            icon
+            class="ml-5"
             v-on="on"
           >
             <v-avatar
@@ -271,7 +310,9 @@ export default {
     }),
     ...mapGetters({
       profile: 'user/profile',
-      company: 'app/company'
+      company: 'app/company',
+      notifications: 'notifications/history',
+      hasNotifications: 'notifications/hasHistory'
     }),
 
     logoImage () {
