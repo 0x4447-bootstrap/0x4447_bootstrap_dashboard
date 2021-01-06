@@ -58,6 +58,12 @@ export default function appRoutesPlugin (context, inject) {
           }
         }
       }
+    },
+    support: {
+      route: {
+        name: 'support'
+      },
+      title: 'Support'
     }
   }
 
