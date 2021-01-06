@@ -233,6 +233,11 @@ export default {
 
       const { card } = token
 
+      if (this.$nuxt.context.isDev) {
+        // eslint-disable-next-line no-console
+        console.warn('Stripe card details', card)
+      }
+
       this.$emit('payment-method:create', {
         ...this.paymentDetails,
         postalCode: this.paymentDetails.postalCode || card.address_zip,
