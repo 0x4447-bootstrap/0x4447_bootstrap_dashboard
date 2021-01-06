@@ -20,9 +20,13 @@
         v-else-if="hasPaymentMethod"
         key="payment-details"
       >
-        <h1 class="display-1 mb-3 px-4">
-          Payment method
-        </h1>
+        <title-anchored
+          anchor="payment-method"
+        >
+          <h1 class="display-1 mb-3 px-4">
+            Payment method
+          </h1>
+        </title-anchored>
 
         <v-card>
           <v-card-text>
@@ -39,9 +43,13 @@
         v-else
         key="payment-create"
       >
-        <h1 class="display-1 mb-3 px-4">
-          Add payment method
-        </h1>
+        <title-anchored
+          anchor="add-payment-method"
+        >
+          <h1 class="display-1 mb-3 px-4">
+            Add payment method
+          </h1>
+        </title-anchored>
 
         <v-card>
           <v-card-text>
@@ -60,13 +68,15 @@
 import { mapActions } from 'vuex'
 import PaymentMethodDetails from '~/components/sections/payment/PaymentMethodDetails'
 import PaymentMethodAdd from '~/components/sections/payment/PaymentMethodAdd'
+import TitleAnchored from '~/components/general/TitleAnchored'
 
 export default {
   name: 'ViewPayment',
 
   components: {
     PaymentMethodAdd,
-    PaymentMethodDetails
+    PaymentMethodDetails,
+    TitleAnchored
   },
 
   data () {
