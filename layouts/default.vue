@@ -300,6 +300,11 @@ export default {
           title: this.$routes.help.title,
           icon: 'mdi-help',
           route: this.$routes.help.route
+        },
+        {
+          title: this.$routes.support.title,
+          icon: 'mdi-lifebuoy',
+          route: this.$routes.support.route
         }
       ]
     },
