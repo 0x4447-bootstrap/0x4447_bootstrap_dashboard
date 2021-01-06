@@ -46,7 +46,7 @@ export default {
 }
 
 .title-anchored--active {
-  animation: text-pulse 1s infinite linear;
+  animation: text-pulse 1s 3 linear;
 }
 
 @keyframes text-pulse {
