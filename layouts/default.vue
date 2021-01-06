@@ -31,10 +31,16 @@
         nav
       >
         <template
-          v-for="menuItem in navigationMenu"
+          v-for="(menuItem, index) in navigationMenu"
         >
+          <v-divider
+            v-if="menuItem.divider"
+            :key="index"
+            class="my-2"
+          />
+
           <v-list-item
-            v-if="!menuItem.subNav"
+            v-else-if="!menuItem.subNav"
             :key="menuItem.title"
             :to="menuItem.route"
             exact
@@ -286,6 +292,14 @@ export default {
           title: 'Home',
           icon: 'mdi-view-dashboard',
           route: this.$routes.dashboard.route
+        },
+        {
+          divider: true
+        },
+        {
+          title: this.$routes.help.title,
+          icon: 'mdi-help',
+          route: this.$routes.help.route
         }
       ]
     },

@@ -7,6 +7,7 @@
         Dashboard
       </h1>
     </title-anchored>
+
     <v-card>
       <v-card-text>
         <v-row>
