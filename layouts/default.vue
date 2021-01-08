@@ -191,26 +191,11 @@
       >
         <template #activator="{ on }">
           <v-btn
-            icon
             class="ml-5"
+            small
             v-on="on"
           >
-            <v-avatar
-              size="48"
-            >
-              <span
-                v-if="!profile.picture"
-                class="white--text headline"
-              >
-                {{ profile.givenName }} {{ profile.familyName }}
-              </span>
-
-              <img
-                v-else
-                :src="profile.picture"
-                alt="Profile picture"
-              >
-            </v-avatar>
+            Menu
           </v-btn>
         </template>
 
@@ -235,6 +220,24 @@
           </v-list-item>
         </v-list>
       </v-menu>
+
+      <v-avatar
+        size="48"
+        class="ml-5"
+      >
+        <span
+          v-if="!profile.picture"
+          class="white--text headline"
+        >
+          {{ profile.givenName }} {{ profile.familyName }}
+        </span>
+
+        <img
+          v-else
+          :src="profile.picture"
+          alt="Profile picture"
+        >
+      </v-avatar>
 
       <v-btn
         class="ml-5"
