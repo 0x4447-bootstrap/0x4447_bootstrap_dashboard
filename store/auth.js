@@ -37,7 +37,8 @@ export const actions = {
       }, { root: true }),
       dispatch('user/fetchProfilePhoto', {
         key: user.attributes.sub
-      }, { root: true })
+      }, { root: true }),
+      dispatch('user/settingsFetch', {}, { root: true })
     ])
   },
 
