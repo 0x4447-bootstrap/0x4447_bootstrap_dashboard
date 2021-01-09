@@ -310,6 +310,7 @@ export default {
     }),
     ...mapGetters({
       profile: 'user/profile',
+      settings: 'user/settings',
       company: 'app/company',
       notifications: 'notifications/history',
       hasNotifications: 'notifications/hasHistory'
@@ -405,16 +406,29 @@ export default {
     if (this.$vuetify.breakpoint.lgAndUp) {
       this.isSidebarOpen = true
     }
+
+    this.isSidebarMinimized = this.settings.sidebarMinimized
   },
 
   methods: {
     ...mapActions({
-      signOut: 'auth/signOut'
+      signOut: 'auth/signOut',
+      settingsFetch: 'user/settingsFetch',
+      settingsSave: 'user/settingsSave'
     }),
+
+    toggleSidebarMinimized (value = false) {
+      this.isSidebarMinimized = value
+
+      this.settingsSave({
+        key: 'sidebarMinimized',
+        value
+      })
+    },
 
     onSidebarToggle () {
       if (this.$vuetify.breakpoint.lgAndUp) {
-        this.isSidebarMinimized = !this.isSidebarMinimized
+        this.toggleSidebarMinimized(!this.isSidebarMinimized)
       } else {
         this.isSidebarOpen = !this.isSidebarOpen
       }
