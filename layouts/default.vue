@@ -313,6 +313,7 @@ export default {
     }),
     ...mapGetters({
       profile: 'user/profile',
+      settings: 'user/settings',
       company: 'app/company',
       notifications: 'notifications/history',
       hasNotifications: 'notifications/hasHistory'
@@ -409,20 +410,29 @@ export default {
       this.isSidebarOpen = true
     }
 
-    this.checkUserRecordExists({
-      sub: this.profile.id
-    })
+    this.isSidebarMinimized = this.settings.sidebarMinimized
   },
 
   methods: {
     ...mapActions({
       signOut: 'auth/signOut',
-      checkUserRecordExists: 'auth/checkUserRecordExists'
+      checkUserRecordExists: 'auth/checkUserRecordExists',
+      settingsFetch: 'user/settingsFetch',
+      settingsSave: 'user/settingsSave'
     }),
+
+    toggleSidebarMinimized (value = false) {
+      this.isSidebarMinimized = value
+
+      this.settingsSave({
+        key: 'sidebarMinimized',
+        value
+      })
+    },
 
     onSidebarToggle () {
       if (this.$vuetify.breakpoint.lgAndUp) {
-        this.isSidebarMinimized = !this.isSidebarMinimized
+        this.toggleSidebarMinimized(!this.isSidebarMinimized)
       } else {
         this.isSidebarOpen = !this.isSidebarOpen
       }

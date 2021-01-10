@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk'
 import { Auth } from 'aws-amplify'
 
-const awsConfig = {
+export const awsConfig = {
   apiVersion: '2012-08-10',
   cognitoIdentityPoolId: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
   cognitoUserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
@@ -12,6 +12,7 @@ AWS.config.region = awsConfig.region
 
 let credentials = null
 let dynamoDbClient = null
+let cognitoSync = null
 
 export default class AwsClient {
   static async dynamoDb () {
@@ -20,6 +21,14 @@ export default class AwsClient {
     }
 
     return dynamoDbClient
+  }
+
+  static async cognitoSync () {
+    if (!cognitoSync) {
+      await this.buildInstance()
+    }
+
+    return cognitoSync
   }
 
   static async credentials () {
@@ -44,5 +53,6 @@ export default class AwsClient {
     dynamoDbClient = new AWS.DynamoDB.DocumentClient({
       apiVersion: awsConfig.apiVersion
     })
+    cognitoSync = new AWS.CognitoSync()
   }
 }
