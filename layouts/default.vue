@@ -408,11 +408,16 @@ export default {
     if (this.$vuetify.breakpoint.lgAndUp) {
       this.isSidebarOpen = true
     }
+
+    this.checkUserRecordExists({
+      sub: this.profile.id
+    })
   },
 
   methods: {
     ...mapActions({
-      signOut: 'auth/signOut'
+      signOut: 'auth/signOut',
+      checkUserRecordExists: 'auth/checkUserRecordExists'
     }),
 
     onSidebarToggle () {

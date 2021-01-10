@@ -39,7 +39,7 @@ export const actions = {
       ...(startKey && {
         ExclusiveStartKey: startKey
       })
-    })
+    }).promise()
 
     if (LastEvaluatedKey) {
       // Store pagination key for the next page

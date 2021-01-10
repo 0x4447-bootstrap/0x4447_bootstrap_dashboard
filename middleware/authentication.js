@@ -13,11 +13,7 @@ export default function ({ store, redirect, route }) {
   const meta = isArray(route.meta) &&
     route.meta.find(meta => isArray(meta.auth))
 
-  if (!meta) {
-    return
-  }
-
-  const { auth } = meta
+  const { auth } = meta || {}
 
   const loggedIn = store.getters['auth/isLoggedIn']
 
@@ -27,7 +23,7 @@ export default function ({ store, redirect, route }) {
   }
 
   // Allowed only for not authenticated users, but user is authenticated
-  if (auth.includes(authStatus.NOT_AUTHENTICATED) && loggedIn) {
+  if (auth && auth.includes(authStatus.NOT_AUTHENTICATED) && loggedIn) {
     return redirect(302, '/')
   }
 }
