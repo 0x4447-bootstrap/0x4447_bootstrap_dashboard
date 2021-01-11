@@ -416,6 +416,7 @@ export default {
   methods: {
     ...mapActions({
       signOut: 'auth/signOut',
+      checkUserRecordExists: 'auth/checkUserRecordExists',
       settingsFetch: 'user/settingsFetch',
       settingsSave: 'user/settingsSave'
     }),
