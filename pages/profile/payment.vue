@@ -3,18 +3,10 @@
     <v-fade-transition
       mode="out-in"
     >
-      <div
+      <progress-content
         v-if="isFetching"
         key="payment-fetching"
-        class="text-center py-5"
-      >
-        <v-progress-circular
-          :size="48"
-          :width="5"
-          color="primary"
-          indeterminate
-        />
-      </div>
+      />
 
       <div
         v-else-if="hasPaymentMethod"
@@ -69,6 +61,7 @@ import { mapActions } from 'vuex'
 import PaymentMethodDetails from '~/components/sections/payment/PaymentMethodDetails'
 import PaymentMethodAdd from '~/components/sections/payment/PaymentMethodAdd'
 import TitleAnchored from '~/components/general/TitleAnchored'
+import ProgressContent from '~/components/general/ProgressContent'
 
 export default {
   name: 'ViewPayment',
@@ -76,7 +69,8 @@ export default {
   components: {
     PaymentMethodAdd,
     PaymentMethodDetails,
-    TitleAnchored
+    TitleAnchored,
+    ProgressContent
   },
 
   data () {
