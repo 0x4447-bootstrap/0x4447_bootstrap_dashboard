@@ -1,4 +1,3 @@
-// const types = {}
 import AwsClient from '~/services/aws/AWSClient'
 
 export const state = () => ({})

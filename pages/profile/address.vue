@@ -1,8 +1,12 @@
 <template>
   <v-layout column>
-    <h1 class="display-1 mb-3 px-4">
-      Address
-    </h1>
+    <title-anchored
+      anchor="address"
+    >
+      <h1 class="display-1 mb-3 px-4">
+        Address
+      </h1>
+    </title-anchored>
 
     <v-card>
       <v-card-text>
@@ -14,12 +18,14 @@
 
 <script>
 import ProfileAddress from '~/components/sections/profile/ProfileAddress'
+import TitleAnchored from '~/components/general/TitleAnchored'
 
 export default {
   name: 'ViewProfile',
 
   components: {
-    ProfileAddress
+    ProfileAddress,
+    TitleAnchored
   },
 
   head () {

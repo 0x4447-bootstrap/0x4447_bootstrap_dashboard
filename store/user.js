@@ -1,9 +1,11 @@
 import { Auth, Storage } from 'aws-amplify'
 import { pickBy } from 'lodash'
+import CognitoSyncClient from '~/services/aws/CognitoSync'
 
 const types = {
   PROFILE_SET: 'PROFILE_SET',
-  PROFILE_UPDATE: 'PROFILE_UPDATE'
+  PROFILE_UPDATE: 'PROFILE_UPDATE',
+  SETTINGS_SET: 'SETTINGS_SET'
 }
 
 export const state = () => ({
@@ -21,6 +23,10 @@ export const state = () => ({
       state: '',
       streetAddress: ''
     }
+  },
+
+  settings: {
+    sidebarMinimized: false
   }
 })
 
@@ -41,6 +47,10 @@ export const getters = {
     } = state.profile
     return !givenName || !familyName || !address ||
       Object.values(address).every(addressField => !addressField)
+  },
+
+  settings (state) {
+    return state.settings
   }
 }
 
@@ -90,6 +100,22 @@ export const actions = {
 
   profileStateUpdate ({ commit }, updatedFields) {
     commit(types.PROFILE_UPDATE, updatedFields)
+  },
+
+  async settingsFetch ({ commit }) {
+    const records = await CognitoSyncClient.getRecords({
+      datasetName: 'settings_dashboard'
+    })
+
+    const settings = CognitoSyncClient.parseCognitoSyncRecords(records)
+
+    commit(types.SETTINGS_SET, settings)
+  },
+
+  async settingsSave ({ dispatch }, { key, value }) {
+    await CognitoSyncClient.updateRecords({ key, value })
+
+    await dispatch('settingsFetch')
   }
 }
 
@@ -105,5 +131,9 @@ export const mutations = {
       ...state.profile,
       ...updatedProfile
     }
+  },
+
+  [types.SETTINGS_SET] (state, settings) {
+    state.settings = { ...settings }
   }
 }

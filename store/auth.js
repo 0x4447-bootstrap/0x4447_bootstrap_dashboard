@@ -1,4 +1,5 @@
 import { Auth } from 'aws-amplify'
+import AwsClient from '~/services/aws/AWSClient'
 
 const types = {
   AUTH_SET: 'AUTH_SET'
@@ -19,7 +20,9 @@ export const actions = {
     const user = await Auth.currentUserInfo()
 
     if (!user) {
-      return
+      return dispatch('setAuthState', {
+        isLoggedIn: false
+      })
     }
 
     await Promise.all([
@@ -37,8 +40,52 @@ export const actions = {
       }, { root: true }),
       dispatch('user/fetchProfilePhoto', {
         key: user.attributes.sub
-      }, { root: true })
+      }, { root: true }),
+      dispatch('user/settingsFetch', {}, { root: true })
     ])
+  },
+
+  async checkUserRecordExists (store, { sub }) {
+    const dbClient = await AwsClient.dynamoDb()
+    const { identityId } = await AwsClient.credentials()
+
+    const { Items } = await dbClient.query({
+      TableName: 'default',
+      KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
+      ExpressionAttributeNames: {
+        '#pk': 'pk',
+        '#sk': 'sk',
+        '#sub': 'sub'
+      },
+      FilterExpression: '#sub = :sub',
+      ExpressionAttributeValues: {
+        ':pk': identityId,
+        ':sk': 'user#basic',
+        ':sub': sub
+      }
+    }).promise()
+
+    return Items?.length > 0
+  },
+
+  async createUserRecord (store, {
+    sub,
+    email
+  }) {
+    const dbClient = await AwsClient.dynamoDb()
+    const { identityId } = await AwsClient.credentials()
+
+    const documentPayload = {
+      pk: identityId,
+      sk: 'user#basic',
+      sub,
+      email
+    }
+
+    await dbClient.put({
+      TableName: 'default',
+      Item: documentPayload
+    }).promise()
   },
 
   setAuthState ({ commit }, { isLoggedIn = false }) {

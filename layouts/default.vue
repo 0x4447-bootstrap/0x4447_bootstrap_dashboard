@@ -31,10 +31,16 @@
         nav
       >
         <template
-          v-for="menuItem in navigationMenu"
+          v-for="(menuItem, index) in navigationMenu"
         >
+          <v-divider
+            v-if="menuItem.divider"
+            :key="index"
+            class="my-2"
+          />
+
           <v-list-item
-            v-if="!menuItem.subNav"
+            v-else-if="!menuItem.subNav"
             :key="menuItem.title"
             :to="menuItem.route"
             exact
@@ -141,31 +147,55 @@
       <v-spacer />
 
       <v-menu
+        v-if="hasNotifications"
         bottom
         left
         offset-y
       >
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-btn
             icon
             v-on="on"
           >
-            <v-avatar
-              size="48"
-            >
-              <span
-                v-if="!profile.picture"
-                class="white--text headline"
-              >
-                {{ profile.givenName }} {{ profile.familyName }}
-              </span>
+            <v-icon>mdi-bell</v-icon>
+          </v-btn>
+        </template>
 
-              <img
-                v-else
-                :src="profile.picture"
-                alt="Profile picture"
-              >
-            </v-avatar>
+        <v-list>
+          <template
+            v-for="(notification, index) in notifications"
+          >
+            <v-list-item
+              :key="index"
+              :class="notification.type"
+              two-line
+            >
+              <v-list-item-content>
+                <v-list-item-title v-html="notification.message" />
+                <v-list-item-subtitle v-html="notification.createdOnPretty" />
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-divider
+              :key="`${index}-divider`"
+              inset
+            />
+          </template>
+        </v-list>
+      </v-menu>
+
+      <v-menu
+        bottom
+        left
+        offset-y
+      >
+        <template #activator="{ on }">
+          <v-btn
+            class="ml-5"
+            small
+            v-on="on"
+          >
+            Menu
           </v-btn>
         </template>
 
@@ -190,6 +220,24 @@
           </v-list-item>
         </v-list>
       </v-menu>
+
+      <v-avatar
+        size="48"
+        class="ml-5"
+      >
+        <span
+          v-if="!profile.picture"
+          class="white--text headline"
+        >
+          {{ profile.givenName }} {{ profile.familyName }}
+        </span>
+
+        <img
+          v-else
+          :src="profile.picture"
+          alt="Profile picture"
+        >
+      </v-avatar>
 
       <v-btn
         class="ml-5"
@@ -269,7 +317,10 @@ export default {
     }),
     ...mapGetters({
       profile: 'user/profile',
-      company: 'app/company'
+      settings: 'user/settings',
+      company: 'app/company',
+      notifications: 'notifications/history',
+      hasNotifications: 'notifications/hasHistory'
     }),
 
     logoImage () {
@@ -290,6 +341,19 @@ export default {
           title: 'Home',
           icon: 'mdi-view-dashboard',
           route: this.$routes.dashboard.route
+        },
+        {
+          divider: true
+        },
+        {
+          title: this.$routes.help.title,
+          icon: 'mdi-help',
+          route: this.$routes.help.route
+        },
+        {
+          title: this.$routes.support.title,
+          icon: 'mdi-lifebuoy',
+          route: this.$routes.support.route
         }
       ]
     },
@@ -349,16 +413,30 @@ export default {
     if (this.$vuetify.breakpoint.lgAndUp) {
       this.isSidebarOpen = true
     }
+
+    this.isSidebarMinimized = this.settings.sidebarMinimized
   },
 
   methods: {
     ...mapActions({
-      signOut: 'auth/signOut'
+      signOut: 'auth/signOut',
+      checkUserRecordExists: 'auth/checkUserRecordExists',
+      settingsFetch: 'user/settingsFetch',
+      settingsSave: 'user/settingsSave'
     }),
+
+    toggleSidebarMinimized (value = false) {
+      this.isSidebarMinimized = value
+
+      this.settingsSave({
+        key: 'sidebarMinimized',
+        value
+      })
+    },
 
     onSidebarToggle () {
       if (this.$vuetify.breakpoint.lgAndUp) {
-        this.isSidebarMinimized = !this.isSidebarMinimized
+        this.toggleSidebarMinimized(!this.isSidebarMinimized)
       } else {
         this.isSidebarOpen = !this.isSidebarOpen
       }

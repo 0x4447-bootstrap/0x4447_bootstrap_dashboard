@@ -33,15 +33,37 @@ export default function appRoutesPlugin (context, inject) {
     },
     payment: {
       route: {
-        name: 'payment'
+        name: 'profile-payment'
       },
       title: 'Payment'
     },
     paymentInvoices: {
       route: {
-        name: 'payment-invoices'
+        name: 'profile-invoices'
       },
       title: 'Invoices'
+    },
+    help: {
+      route: {
+        name: 'help'
+      },
+      title: 'Help'
+    },
+    helpArticle (slug) {
+      return {
+        route: {
+          name: 'help-slug',
+          params: {
+            slug
+          }
+        }
+      }
+    },
+    support: {
+      route: {
+        name: 'support'
+      },
+      title: 'Support'
     }
   }
 

@@ -4,6 +4,10 @@
       slot="sign-up"
       :form-fields.prop="signUpFields"
     />
+
+    <amplify-confirm-sign-up
+      slot="confirm-sign-up"
+    />
   </amplify-authenticator>
 </template>
 
@@ -27,9 +31,25 @@ export default {
   },
 
   beforeMount () {
-    onAuthUIStateChange(async (nextAuthStatus) => {
+    let prevAuthState
+    onAuthUIStateChange(async (nextAuthStatus, user) => {
+      // Prevent double callback trigger
+      if (prevAuthState === nextAuthStatus) {
+        return
+      }
+
+      prevAuthState = nextAuthStatus
+
       if (nextAuthStatus === AuthState.SignedIn) {
         await this.checkUserAuthentication()
+
+        const userRecordExists = await this.checkUserRecordExists({ sub: user.attributes.sub })
+        if (!userRecordExists) {
+          await this.createUserRecord({
+            sub: user.attributes.sub,
+            email: user.attributes.email
+          })
+        }
 
         await this.$router.replace(this.$routes.dashboard.route)
       }
@@ -42,7 +62,9 @@ export default {
 
   methods: {
     ...mapActions({
-      checkUserAuthentication: 'auth/checkUserAuthentication'
+      checkUserAuthentication: 'auth/checkUserAuthentication',
+      checkUserRecordExists: 'auth/checkUserRecordExists',
+      createUserRecord: 'auth/createUserRecord'
     })
   },
 
