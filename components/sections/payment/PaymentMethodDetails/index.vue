@@ -1,10 +1,9 @@
 <template>
   <v-row>
-    <v-col
+    <a-column
       cols="12"
       md="6"
       lg="4"
-      class="py-0"
     >
       <div class="mb-6">
         <v-simple-table
@@ -35,7 +34,7 @@
         </v-icon>
         Remove payment method
       </v-btn>
-    </v-col>
+    </a-column>
   </v-row>
 </template>
 

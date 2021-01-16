@@ -7,11 +7,11 @@
     <v-card>
       <v-card-text>
         <v-row>
-          <v-col
+          <a-column
             cols="12"
             md="4"
             lg="3"
-            class="py-0 mb-5 mb-md-0"
+            class="mb-5 mb-md-0"
           >
             <v-list class="py-0">
               <v-list-item
@@ -30,15 +30,15 @@
                 </v-list-item-icon>
               </v-list-item>
             </v-list>
-          </v-col>
+          </a-column>
 
-          <v-col class="py-0">
+          <a-column>
             <v-fade-transition
               mode="out-in"
             >
               <nuxt-child />
             </v-fade-transition>
-          </v-col>
+          </a-column>
         </v-row>
       </v-card-text>
     </v-card>
