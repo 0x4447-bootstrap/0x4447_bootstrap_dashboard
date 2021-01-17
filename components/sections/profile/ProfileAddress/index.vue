@@ -1,9 +1,8 @@
 <template>
   <v-row>
-    <v-col
+    <a-column
       cols="12"
       md="4"
-      class="py-0"
     >
       <form
         @submit.prevent="onUpdateAddress"
@@ -76,7 +75,7 @@
           Save
         </v-btn>
       </form>
-    </v-col>
+    </a-column>
   </v-row>
 </template>
 
@@ -125,11 +124,13 @@ export default {
   methods: {
     ...mapActions({
       profileUpdate: 'user/profileUpdate',
-      notificationShow: 'notifications/show'
+      notificationShow: 'notifications/show',
+      loaderSet: 'loader/set'
     }),
 
     async onUpdateAddress () {
       this.isLoading = true
+      this.loaderSet(true)
 
       try {
         if (this.$v.userAddress.$invalid) {
@@ -155,6 +156,7 @@ export default {
         throw err
       } finally {
         this.isLoading = false
+        this.loaderSet(false)
       }
     }
   },

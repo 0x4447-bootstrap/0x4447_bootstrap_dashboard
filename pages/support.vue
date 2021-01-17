@@ -11,7 +11,7 @@
     <v-card>
       <v-card-text>
         <v-row>
-          <v-col
+          <a-column
             cols="12"
             md="6"
           >
@@ -20,15 +20,28 @@
             >
               <a-validation
                 v-slot="{ hasError, errorMessage }"
-                :error="$v.supportForm.message"
+                :error="$v.supportForm.issue"
               >
                 <v-textarea
-                  v-model="supportForm.message"
+                  v-model="supportForm.issue"
                   :error="hasError"
                   :error-messages="errorMessage"
-                  name="support-message"
-                  label="Message"
-                  placeholder="Enter your message"
+                  name="support-issue"
+                  label="Describe your problem"
+                />
+              </a-validation>
+
+              <a-validation
+                v-slot="{ hasError, errorMessage }"
+                :error="$v.supportForm.expectation"
+              >
+                <v-textarea
+                  v-model="supportForm.expectation"
+                  :error="hasError"
+                  :error-messages="errorMessage"
+                  :disabled="$v.supportForm.issue.$invalid"
+                  name="support-expectation"
+                  label="Describe your expectation"
                 />
               </a-validation>
 
@@ -40,7 +53,7 @@
                 Send
               </v-btn>
             </v-form>
-          </v-col>
+          </a-column>
         </v-row>
       </v-card-text>
     </v-card>
@@ -52,6 +65,14 @@ import { mapActions } from 'vuex'
 import { required, helpers } from 'vuelidate/lib/validators'
 import TitleAnchored from '~/components/general/TitleAnchored'
 
+function minWordsValidator (minWords = 10) {
+  return helpers.withParams({
+    message: `Should have at least ${minWords} words`
+  }, (value) => {
+    return value && `${value}`.split(' ').length >= minWords
+  })
+}
+
 export default {
   name: 'ViewSupport',
 
@@ -62,7 +83,8 @@ export default {
   data () {
     return {
       supportForm: {
-        message: ''
+        issue: '',
+        expectation: ''
       },
 
       loading: false
@@ -98,22 +120,22 @@ export default {
     },
 
     resetForm () {
-      this.supportForm.message = ''
+      this.supportForm.issue = ''
+      this.supportForm.expectation = ''
       this.$v.supportForm.$reset()
     }
   },
 
   validations () {
-    const MESSAGE_MIN_WORDS = 10
     return {
       supportForm: {
-        message: {
+        issue: {
           required,
-          minLengthWords: helpers.withParams({
-            message: `Should have at least ${MESSAGE_MIN_WORDS} words`
-          }, (value) => {
-            return value && `${value}`.split(' ').length >= MESSAGE_MIN_WORDS
-          })
+          minLengthWords: minWordsValidator(10)
+        },
+        expectation: {
+          required,
+          minLengthWords: minWordsValidator(10)
         }
       }
     }
