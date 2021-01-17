@@ -1,8 +1,12 @@
 <template>
   <div>
-    <h2 class="display-1 mb-3">
-      {{ article.title }}
-    </h2>
+    <title-anchored
+      :anchor="article.slug"
+    >
+      <h2 class="display-1 mb-3">
+        {{ article.title }}
+      </h2>
+    </title-anchored>
 
     <div
       class="article-slug__content"
@@ -12,8 +16,14 @@
 </template>
 
 <script>
+import TitleAnchored from '~/components/general/TitleAnchored'
+
 export default {
   name: 'ViewHelpSlug',
+
+  components: {
+    TitleAnchored
+  },
 
   asyncData ({
     params,
