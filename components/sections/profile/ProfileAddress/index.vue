@@ -124,13 +124,11 @@ export default {
   methods: {
     ...mapActions({
       profileUpdate: 'user/profileUpdate',
-      notificationShow: 'notifications/show',
-      loaderSet: 'loader/set'
+      notificationShow: 'notifications/show'
     }),
 
     async onUpdateAddress () {
       this.isLoading = true
-      this.loaderSet(true)
 
       try {
         if (this.$v.userAddress.$invalid) {
@@ -156,7 +154,6 @@ export default {
         throw err
       } finally {
         this.isLoading = false
-        this.loaderSet(false)
       }
     }
   },

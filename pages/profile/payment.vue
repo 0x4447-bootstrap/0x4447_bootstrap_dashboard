@@ -98,13 +98,11 @@ export default {
       paymentDetailsLoad: 'payment/paymentDetailsLoad',
       paymentDetailsCreate: 'payment/paymentDetailsCreate',
       paymentDetailsRemove: 'payment/paymentDetailsRemove',
-      notificationShow: 'notifications/show',
-      loaderSet: 'loader/set'
+      notificationShow: 'notifications/show'
     }),
 
     async fetchPaymentDetails () {
       this.isFetching = true
-      this.loaderSet(true)
 
       try {
         this.paymentDetails = await this.paymentDetailsLoad()
@@ -115,7 +113,6 @@ export default {
         })
       } finally {
         this.isFetching = false
-        this.loaderSet(false)
       }
     },
 

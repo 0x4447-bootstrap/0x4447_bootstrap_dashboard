@@ -84,7 +84,10 @@ export const actions = {
   }, { file }) {
     const key = getters.profile.id
 
-    await Storage.put(key, file)
+    await Storage.put(key, file, {
+      cacheControl: 'public, max-age=365000000',
+      contentType: file.type
+    })
     await dispatch('fetchProfilePhoto', { key })
   },
 
