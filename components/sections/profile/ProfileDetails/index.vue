@@ -1,11 +1,10 @@
 <template>
   <v-row>
-    <v-col
+    <a-column
       cols="12"
       sm="12"
       md="6"
       lg="auto"
-      class="py-0"
     >
       <div class="d-flex justify-center justify-lg-start mb-2 px-6">
         <v-avatar
@@ -44,9 +43,9 @@
         :image-src.sync="selectedImageFile"
         @done="onProfilePhotoUpdate"
       />
-    </v-col>
+    </a-column>
 
-    <v-col
+    <a-column
       xs="12"
       md="6"
       lg="4"
@@ -102,7 +101,7 @@
       <modal-verify-email
         :is-open.sync="isModalVerifyEmailOpen"
       />
-    </v-col>
+    </a-column>
   </v-row>
 </template>
 

@@ -1,8 +1,7 @@
 <template>
   <v-row>
-    <v-col
+    <a-column
       cols="12"
-      class="py-0"
     >
       <form
         @submit.prevent="onSave"
@@ -27,11 +26,10 @@
             </div>
           </v-col>
 
-          <v-col
+          <a-column
             cols="12"
             md="6"
             lg="4"
-            class="py-0"
           >
             <v-tabs
               v-if="!isProfileEmpty"
@@ -130,10 +128,10 @@
             >
               Save
             </v-btn>
-          </v-col>
+          </a-column>
         </v-row>
       </form>
-    </v-col>
+    </a-column>
   </v-row>
 </template>
 

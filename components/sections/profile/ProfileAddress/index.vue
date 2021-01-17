@@ -1,9 +1,8 @@
 <template>
   <v-row>
-    <v-col
+    <a-column
       cols="12"
       md="4"
-      class="py-0"
     >
       <form
         @submit.prevent="onUpdateAddress"
@@ -76,7 +75,7 @@
           Save
         </v-btn>
       </form>
-    </v-col>
+    </a-column>
   </v-row>
 </template>
 

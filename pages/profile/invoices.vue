@@ -11,9 +11,8 @@
     <v-card>
       <v-card-text>
         <v-row>
-          <v-col
+          <a-column
             cols="12"
-            class="py-0"
           >
             <v-data-table
               :headers="headers"
@@ -26,7 +25,7 @@
               @update:page="onPageChange"
               @update:items-per-page="onPerPageChange"
             />
-          </v-col>
+          </a-column>
         </v-row>
       </v-card-text>
     </v-card>

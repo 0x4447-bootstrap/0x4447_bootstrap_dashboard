@@ -11,7 +11,7 @@
     <v-card>
       <v-card-text>
         <v-row>
-          <v-col
+          <a-column
             cols="12"
             md="6"
           >
@@ -53,7 +53,7 @@
                 Send
               </v-btn>
             </v-form>
-          </v-col>
+          </a-column>
         </v-row>
       </v-card-text>
     </v-card>
