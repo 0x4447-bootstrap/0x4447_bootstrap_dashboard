@@ -1,48 +1,52 @@
 <template>
-  <v-row>
+  <v-row class="px-3">
     <a-column
       cols="12"
       sm="12"
       md="6"
       lg="auto"
+      class="mb-5 mb-md-0"
     >
-      <div class="d-flex justify-center justify-lg-start mb-2 px-6">
-        <v-avatar
-          v-if="profile.picture"
-          size="160"
-          class="mb-5"
-        >
-          <v-img
-            :src="profile.picture"
-            alt="Profile photo"
+      <v-card height="100%">
+        <v-card-text class="profile-details-avatar__inner">
+          <div class="d-flex justify-center justify-lg-start mb-2 px-6">
+            <v-avatar
+              size="160"
+              class="mb-6"
+            >
+              <v-img
+                :lazy-src="avatarPlaceholder"
+                :src="profile.picture"
+                alt="Profile photo"
+              />
+            </v-avatar>
+          </div>
+
+          <div class="d-flex justify-center">
+            <input
+              ref="photoSelect"
+              type="file"
+              accept="image/*"
+              hidden
+              @input="onPhotoSelected"
+            >
+
+            <v-btn
+              :loading="isLoadingPhoto"
+              color="primary"
+              @click="onSelectPhoto"
+            >
+              {{ profile.picture ? 'Change' : 'Set' }} avatar
+            </v-btn>
+          </div>
+
+          <modal-image-crop
+            :is-open.sync="isModalCropOpen"
+            :image-src.sync="selectedImageFile"
+            @done="onProfilePhotoUpdate"
           />
-        </v-avatar>
-      </div>
-
-      <div class="d-flex justify-center">
-        <input
-          ref="photoSelect"
-          type="file"
-          accept="image/*"
-          hidden
-          @input="onPhotoSelected"
-        >
-
-        <v-btn
-          :loading="isLoadingPhoto"
-          color="primary"
-          small
-          @click="onSelectPhoto"
-        >
-          {{ profile.picture ? 'Change' : 'Set' }} avatar
-        </v-btn>
-      </div>
-
-      <modal-image-crop
-        :is-open.sync="isModalCropOpen"
-        :image-src.sync="selectedImageFile"
-        @done="onProfilePhotoUpdate"
-      />
+        </v-card-text>
+      </v-card>
     </a-column>
 
     <a-column
@@ -50,53 +54,57 @@
       md="6"
       lg="4"
     >
-      <form
-        @submit.prevent="onUpdateProfile"
-      >
-        <a-validation
-          v-slot="{ hasError, errorMessage }"
-          :error="$v.userData.email"
-        >
-          <v-text-field
-            v-model="userData.email"
-            :error="hasError"
-            :error-messages="errorMessage"
-            label="Email"
-          />
-        </a-validation>
+      <v-card>
+        <v-card-text>
+          <form
+            @submit.prevent="onUpdateProfile"
+          >
+            <a-validation
+              v-slot="{ hasError, errorMessage }"
+              :error="$v.userData.email"
+            >
+              <v-text-field
+                v-model="userData.email"
+                :error="hasError"
+                :error-messages="errorMessage"
+                label="Email"
+              />
+            </a-validation>
 
-        <a-validation
-          v-slot="{ hasError, errorMessage }"
-          :error="$v.userData.givenName"
-        >
-          <v-text-field
-            v-model="userData.givenName"
-            :error="hasError"
-            :error-messages="errorMessage"
-            label="First name"
-          />
-        </a-validation>
+            <a-validation
+              v-slot="{ hasError, errorMessage }"
+              :error="$v.userData.givenName"
+            >
+              <v-text-field
+                v-model="userData.givenName"
+                :error="hasError"
+                :error-messages="errorMessage"
+                label="First name"
+              />
+            </a-validation>
 
-        <a-validation
-          v-slot="{ hasError, errorMessage }"
-          :error="$v.userData.familyName"
-        >
-          <v-text-field
-            v-model="userData.familyName"
-            :error="hasError"
-            :error-messages="errorMessage"
-            label="Last name"
-          />
-        </a-validation>
+            <a-validation
+              v-slot="{ hasError, errorMessage }"
+              :error="$v.userData.familyName"
+            >
+              <v-text-field
+                v-model="userData.familyName"
+                :error="hasError"
+                :error-messages="errorMessage"
+                label="Last name"
+              />
+            </a-validation>
 
-        <v-btn
-          :loading="isLoading"
-          type="submit"
-          color="primary"
-        >
-          Save
-        </v-btn>
-      </form>
+            <v-btn
+              :loading="isLoading"
+              type="submit"
+              color="primary"
+            >
+              Save
+            </v-btn>
+          </form>
+        </v-card-text>
+      </v-card>
 
       <modal-verify-email
         :is-open.sync="isModalVerifyEmailOpen"
@@ -111,6 +119,7 @@ import { pick } from 'lodash'
 import { required, email } from 'vuelidate/lib/validators'
 import ModalImageCrop from '~/components/modals/ModalImageCrop'
 import ModalVerifyEmail from '~/components/modals/ModalVerifyEmail'
+import { avatarPlaceholder } from '~/assets/images'
 
 export default {
   name: 'ProfileDetails',
@@ -124,6 +133,7 @@ export default {
     return {
       isLoading: false,
       isLoadingPhoto: false,
+      avatarPlaceholder,
 
       userData: {
         givenName: '',
@@ -257,3 +267,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.profile-details-avatar__inner {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+}
+</style>

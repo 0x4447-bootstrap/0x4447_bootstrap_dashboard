@@ -225,18 +225,11 @@
         size="48"
         class="ml-5"
       >
-        <span
-          v-if="!profile.picture"
-          class="white--text headline"
-        >
-          {{ profile.givenName }} {{ profile.familyName }}
-        </span>
-
-        <img
-          v-else
+        <v-img
+          :lazy-src="avatarPlaceholder"
           :src="profile.picture"
-          alt="Profile picture"
-        >
+          alt="Profile photo"
+        />
       </v-avatar>
 
       <v-btn
@@ -283,7 +276,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import AppNotifications from '~/components/general/AppNotifications'
-import { logo, logoDark, logoSquare, logoSquareDark } from '~/assets/images'
+import { avatarPlaceholder, logo, logoDark, logoSquare, logoSquareDark } from '~/assets/images'
 
 const logosMap = new Map([
   ['light-expanded', logo],
@@ -303,7 +296,8 @@ export default {
     return {
       isSidebarOpen: false,
       isSidebarMinimized: false,
-      isSidebarFooterVisible: true
+      isSidebarFooterVisible: true,
+      avatarPlaceholder
     }
   },
 
