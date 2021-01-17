@@ -170,13 +170,11 @@ export default {
       requestEmailVerification: 'auth/requestEmailVerification',
       profileUpdate: 'user/profileUpdate',
       profilePhotoUpdate: 'user/profilePhotoUpdate',
-      notificationShow: 'notifications/show',
-      loaderSet: 'loader/set'
+      notificationShow: 'notifications/show'
     }),
 
     async onUpdateProfile () {
       this.isLoading = true
-      this.loaderSet(true)
 
       try {
         if (this.$v.userData.$invalid) {
@@ -205,7 +203,6 @@ export default {
         })
       } finally {
         this.isLoading = false
-        this.loaderSet(false)
       }
     },
 
@@ -226,7 +223,6 @@ export default {
 
     async onProfilePhotoUpdate (file) {
       this.isLoadingPhoto = true
-      this.loaderSet(true)
 
       try {
         await this.profilePhotoUpdate({
@@ -244,7 +240,6 @@ export default {
         })
       } finally {
         this.isLoadingPhoto = false
-        this.loaderSet(false)
       }
     }
   },
