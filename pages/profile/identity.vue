@@ -8,11 +8,7 @@
       </h1>
     </title-anchored>
 
-    <v-card>
-      <v-card-text>
-        <profile-details />
-      </v-card-text>
-    </v-card>
+    <profile-details />
   </v-layout>
 </template>
 
