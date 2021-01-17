@@ -244,9 +244,7 @@
         v-if="showAccountMenu"
         #extension
       >
-        <v-tabs
-          align-with-title
-        >
+        <v-tabs class="px-3">
           <v-tabs-slider />
 
           <v-tab
