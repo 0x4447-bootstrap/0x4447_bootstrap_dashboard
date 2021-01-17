@@ -33,11 +33,9 @@
           </a-column>
 
           <a-column>
-            <v-fade-transition
-              mode="out-in"
-            >
-              <nuxt-child />
-            </v-fade-transition>
+            <nuxt-child
+              :key="$route.path"
+            />
           </a-column>
         </v-row>
       </v-card-text>
