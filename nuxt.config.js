@@ -3,6 +3,7 @@ import { buildModules, modules } from './config/modules'
 import { css } from './config/css'
 import { env } from './config/env'
 import { head } from './config/head'
+import { loadingIndicator } from './config/loading'
 import { plugins } from './config/plugins'
 import { privateRuntimeConfig, publicRuntimeConfig } from './config/runtimeConfig'
 import { router } from './config/router'
@@ -40,6 +41,8 @@ export default {
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules,
+
+  loadingIndicator,
 
   // Dynamic environmental variables accessible from Nuxt context
   // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-runtime-config
