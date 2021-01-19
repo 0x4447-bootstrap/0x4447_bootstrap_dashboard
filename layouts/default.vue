@@ -84,6 +84,16 @@
       <template
         #append
       >
+        <div class="pa-2">
+          <v-btn
+            block
+            small
+            @click="onSignOut"
+          >
+            Logout
+          </v-btn>
+        </div>
+
         <v-fade-transition
           mode="out-in"
           hide-on-leave
@@ -231,14 +241,6 @@
           alt="Profile photo"
         />
       </v-avatar>
-
-      <v-btn
-        class="ml-5"
-        small
-        @click="onSignOut"
-      >
-        Sign out
-      </v-btn>
 
       <template
         v-if="showAccountMenu"
