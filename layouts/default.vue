@@ -90,7 +90,7 @@
             small
             @click="onSignOut"
           >
-            Logout
+            Sign out
           </v-btn>
         </div>
 
