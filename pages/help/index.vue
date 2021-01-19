@@ -1,5 +1,7 @@
 <template>
-  <div />
+  <div>
+    Select an article
+  </div>
 </template>
 
 <script>

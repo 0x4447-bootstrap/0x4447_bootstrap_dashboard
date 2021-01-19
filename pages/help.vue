@@ -4,16 +4,18 @@
       {{ $routes.help.title }}
     </h1>
 
-    <v-card>
-      <v-card-text>
-        <v-row>
-          <a-column
-            cols="12"
-            md="4"
-            lg="3"
-            class="mb-5 mb-md-0"
-          >
-            <v-list class="py-0">
+    <v-row>
+      <a-column
+        cols="12"
+        md="4"
+        lg="3"
+        class="mb-5 mb-md-0"
+      >
+        <v-card>
+          <v-card-text>
+            <v-list
+              class="py-0 help__list"
+            >
               <v-list-item
                 v-for="article in articles"
                 :key="article.slug"
@@ -30,16 +32,20 @@
                 </v-list-item-icon>
               </v-list-item>
             </v-list>
-          </a-column>
+          </v-card-text>
+        </v-card>
+      </a-column>
 
-          <a-column>
+      <a-column>
+        <v-card>
+          <v-card-text>
             <nuxt-child
               :key="$route.path"
             />
-          </a-column>
-        </v-row>
-      </v-card-text>
-    </v-card>
+          </v-card-text>
+        </v-card>
+      </a-column>
+    </v-row>
   </v-layout>
 </template>
 
@@ -62,3 +68,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.help {
+  &__list {
+    .v-list-item--link:before {
+      border-radius: 4px;
+    }
+  }
+}
+</style>
