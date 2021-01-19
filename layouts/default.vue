@@ -512,7 +512,7 @@ export default {
       right: 0;
       width: 1px;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.12);
+      background-color: rgba(255, 255, 255, 0.12);
     }
 
     &:last-child {
