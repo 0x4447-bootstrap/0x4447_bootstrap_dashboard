@@ -36,24 +36,30 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { Auth } from 'aws-amplify'
 
 export default {
   name: 'ViewDebug',
 
-  computed: {
-    ...mapGetters({
-      profile: 'user/profile'
-    }),
+  data () {
+    return {
+      currentCredentials: {}
+    }
+  },
 
+  computed: {
     debugDetails () {
       return [
         {
-          label: 'User Cognito ID',
-          value: this.profile.id
+          label: 'Cognito Identity ID',
+          value: this.currentCredentials.identityId
         }
       ]
     }
+  },
+
+  async beforeMount () {
+    this.currentCredentials = await Auth.currentCredentials()
   },
 
   head () {
