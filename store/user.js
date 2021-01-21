@@ -67,7 +67,7 @@ export const actions = {
     getters,
     dispatch
   }, { file }) {
-    const key = getters.profile.id
+    const key = (await Auth.currentCredentials()).identityId
 
     await Storage.put(key, file, {
       cacheControl: 'public, max-age=365000000',
