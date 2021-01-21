@@ -53,47 +53,39 @@
       xs="12"
       md="6"
       lg="4"
+      class="d-flex"
     >
-      <v-card>
-        <v-card-text>
+      <v-card class="profile-details__card">
+        <v-card-text class="profile-details__card__inner">
           <form
+            class="profile-details__form"
             @submit.prevent="onUpdateProfile"
           >
-            <a-validation
-              v-slot="{ hasError, errorMessage }"
-              :error="$v.userData.email"
-            >
-              <v-text-field
-                v-model="userData.email"
-                :error="hasError"
-                :error-messages="errorMessage"
-                label="Email"
-              />
-            </a-validation>
+            <div class="profile-details__form__inner">
+              <a-validation
+                v-slot="{ hasError, errorMessage }"
+                :error="$v.userData.email"
+              >
+                <v-text-field
+                  v-model="userData.email"
+                  :error="hasError"
+                  :error-messages="errorMessage"
+                  label="Email"
+                />
+              </a-validation>
 
-            <a-validation
-              v-slot="{ hasError, errorMessage }"
-              :error="$v.userData.givenName"
-            >
-              <v-text-field
-                v-model="userData.givenName"
-                :error="hasError"
-                :error-messages="errorMessage"
-                label="First name"
-              />
-            </a-validation>
-
-            <a-validation
-              v-slot="{ hasError, errorMessage }"
-              :error="$v.userData.familyName"
-            >
-              <v-text-field
-                v-model="userData.familyName"
-                :error="hasError"
-                :error-messages="errorMessage"
-                label="Last name"
-              />
-            </a-validation>
+              <a-validation
+                v-slot="{ hasError, errorMessage }"
+                :error="$v.userData.givenName"
+              >
+                <v-text-field
+                  v-model="userData.givenName"
+                  :error="hasError"
+                  :error-messages="errorMessage"
+                  label="First name"
+                />
+              </a-validation>
+            </div>
 
             <v-btn
               :loading="isLoading"
@@ -136,8 +128,7 @@ export default {
       avatarPlaceholder,
 
       userData: {
-        givenName: '',
-        familyName: ''
+        givenName: ''
       },
 
       selectedImageFile: '',
@@ -158,8 +149,7 @@ export default {
       handler (profile) {
         this.userData = pick(profile, [
           'email',
-          'givenName',
-          'familyName'
+          'givenName'
         ])
       }
     }
@@ -253,9 +243,6 @@ export default {
         },
         givenName: {
           required
-        },
-        familyName: {
-          required
         }
       }
     }
@@ -269,5 +256,27 @@ export default {
   display: flex;
   flex-flow: column;
   justify-content: space-between;
+}
+
+.profile-details {
+  &__card {
+    width: 100%;
+  }
+
+  &__card__inner {
+    height: 100%;
+  }
+
+  &__form {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  &__form__inner {
+    width: 100%;
+  }
 }
 </style>
