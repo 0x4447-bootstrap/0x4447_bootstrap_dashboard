@@ -84,16 +84,6 @@
       <template
         #append
       >
-        <div class="pa-2">
-          <v-btn
-            block
-            small
-            @click="onSignOut"
-          >
-            Sign out
-          </v-btn>
-        </div>
-
         <v-fade-transition
           mode="out-in"
           hide-on-leave
@@ -226,6 +216,19 @@
 
             <v-list-item-content>
               <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item
+            dense
+            @click="onSignOut"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>Sign out</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
