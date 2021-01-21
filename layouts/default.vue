@@ -218,6 +218,19 @@
               <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+
+          <v-list-item
+            dense
+            @click="onSignOut"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>Sign out</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-menu>
 
@@ -231,14 +244,6 @@
           alt="Profile photo"
         />
       </v-avatar>
-
-      <v-btn
-        class="ml-5"
-        small
-        @click="onSignOut"
-      >
-        Sign out
-      </v-btn>
 
       <template
         v-if="showAccountMenu"
