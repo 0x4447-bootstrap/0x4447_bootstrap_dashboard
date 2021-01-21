@@ -150,14 +150,14 @@ export default {
 
         this.notificationShow({
           type: 'success',
-          message: 'Payment method has been saved!'
+          message: 'Payment method has been created!'
         })
 
         this.fetchPaymentDetails()
       } catch (err) {
         this.notificationShow({
           type: 'error',
-          message: 'Unable to save payment method'
+          message: 'Unable to create a payment method'
         })
 
         throw err

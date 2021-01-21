@@ -143,7 +143,7 @@ export default {
 
         this.notificationShow({
           type: 'success',
-          message: 'Profile updated!'
+          message: 'Address has been updated!'
         })
       } catch (err) {
         this.notificationShow({
