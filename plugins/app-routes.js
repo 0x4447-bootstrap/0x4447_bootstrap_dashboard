@@ -58,6 +58,12 @@ export default function appRoutesPlugin (context, inject) {
         name: 'support'
       },
       title: 'Support'
+    },
+    debug: {
+      route: {
+        name: 'debug'
+      },
+      title: 'Debug'
     }
   }
 
