@@ -367,11 +367,6 @@ export default {
           route: this.$routes.profileIdentity.route
         },
         {
-          title: this.$routes.profileAddress.title,
-          icon: 'mdi-home',
-          route: this.$routes.profileAddress.route
-        },
-        {
           title: this.$routes.payment.title,
           icon: 'mdi-credit-card-plus-outline',
           route: this.$routes.payment.route

@@ -13,15 +13,7 @@ export const state = () => ({
     id: '',
     email: '',
     givenName: '',
-    picture: '',
-    // It is currently stored as JSON string in Cognito and requires parsing before saving to Cognito
-    address: {
-      city: '',
-      country: '',
-      postalCode: '',
-      state: '',
-      streetAddress: ''
-    }
+    picture: ''
   },
 
   settings: {
@@ -40,11 +32,9 @@ export const getters = {
    */
   isProfileEmpty (state) {
     const {
-      givenName,
-      address
+      givenName
     } = state.profile
-    return !givenName || !address ||
-      Object.values(address).every(addressField => !addressField)
+    return !givenName
   },
 
   settings (state) {
@@ -55,8 +45,7 @@ export const getters = {
 export const actions = {
   profileSet ({ commit }, { profile }) {
     commit(types.PROFILE_SET, {
-      ...profile,
-      address: profile.address ? JSON.parse(profile.address) : {}
+      ...profile
     })
   },
 
@@ -67,8 +56,7 @@ export const actions = {
       pickBy({
         email: profilePayload.email,
         given_name: profilePayload.givenName,
-        picture: profilePayload.picture,
-        address: JSON.stringify(profilePayload.address)
+        picture: profilePayload.picture
       })
     )
 
