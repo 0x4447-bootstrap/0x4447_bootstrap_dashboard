@@ -179,7 +179,7 @@ export default {
 
         this.notificationShow({
           type: 'success',
-          message: 'Profile updated!'
+          message: 'Profile has been updated!'
         })
 
         if (hasEmailChanged) {
