@@ -1,13 +1,21 @@
 import avatarPlaceholder from './avatar-placeholder.jpg'
-import logo from './logo.svg'
-import logoDark from './logo-dark.svg'
-import logoSquare from './logo-square.svg'
-import logoSquareDark from './logo-square-dark.svg'
+import logo from './logo.png'
+import logo2x from './logo@2x.png'
+import logoDark from './logo-dark.png'
+import logoDark2x from './logo-dark@2x.png'
+import logoSquare from './logo-square.png'
+import logoSquare2x from './logo-square@2x.png'
+import logoSquareDark from './logo-square-dark.png'
+import logoSquareDark2x from './logo-square-dark@2x.png'
 
 export {
   avatarPlaceholder,
   logo,
+  logo2x,
   logoDark,
+  logoDark2x,
   logoSquare,
-  logoSquareDark
+  logoSquare2x,
+  logoSquareDark,
+  logoSquareDark2x
 }
