@@ -15,8 +15,9 @@
             mode="out-in"
           >
             <img
-              :key="logoImage"
-              :src="logoImage"
+              :key="logoImage.src"
+              :src="logoImage.src"
+              :srcset="logoImage.srcset"
               class="navbar__logo__image"
               alt="Logo"
             >
@@ -287,13 +288,23 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import AppNotifications from '~/components/general/AppNotifications'
-import { avatarPlaceholder, logo, logoDark, logoSquare, logoSquareDark } from '~/assets/images'
+import {
+  avatarPlaceholder,
+  logo,
+  logo2x,
+  logoDark,
+  logoDark2x,
+  logoSquare,
+  logoSquare2x,
+  logoSquareDark,
+  logoSquareDark2x
+} from '~/assets/images'
 
 const logosMap = new Map([
-  ['light-expanded', logo],
-  ['dark-expanded', logoDark],
-  ['light-minimized', logoSquare],
-  ['dark-minimized', logoSquareDark]
+  ['light-expanded', [logo, logo2x]],
+  ['dark-expanded', [logoDark, logoDark2x]],
+  ['light-minimized', [logoSquare, logoSquare2x]],
+  ['dark-minimized', [logoSquareDark, logoSquareDark2x]]
 ])
 
 export default {
@@ -333,7 +344,12 @@ export default {
         `${isMinimized ? 'minimized' : 'expanded'}`
       ].join('-')
 
-      return logosMap.get(logoSetting)
+      const logos = logosMap.get(logoSetting)
+
+      return {
+        src: logos[0],
+        srcset: `${logos[0]} 1x, ${logos[1]} 2x`
+      }
     },
 
     navigationMenu () {
@@ -489,6 +505,7 @@ export default {
 
   &__logo__image {
     width: 100%;
+    object-fit: contain;
   }
 }
 

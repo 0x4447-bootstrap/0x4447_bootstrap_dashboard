@@ -10,7 +10,8 @@ const awsConfig = {
   },
   Storage: {
     bucket: process.env.AWS_USER_FILES_S3_BUCKET,
-    region: process.env.AWS_USER_FILES_S3_REGION
+    region: process.env.AWS_USER_FILES_S3_REGION,
+    level: 'private'
   }
 }
 
