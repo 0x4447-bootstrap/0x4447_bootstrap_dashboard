@@ -15,7 +15,7 @@
             mode="out-in"
           >
             <img
-              :key="logoImage"
+              :key="logoImage.src"
               :src="logoImage.src"
               :srcset="logoImage.srcset"
               class="navbar__logo__image"
