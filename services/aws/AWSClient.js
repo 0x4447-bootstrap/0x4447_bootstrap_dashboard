@@ -55,4 +55,10 @@ export default class AwsClient {
     })
     cognitoSync = new AWS.CognitoSync()
   }
+
+  static destroyInstance () {
+    credentials = null
+    dynamoDbClient = null
+    cognitoSync = null
+  }
 }

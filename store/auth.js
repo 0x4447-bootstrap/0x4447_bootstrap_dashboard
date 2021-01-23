@@ -95,11 +95,12 @@ export const actions = {
 
   async signOut ({ commit }) {
     await Auth.signOut()
+
+    AwsClient.destroyInstance()
+
     commit(types.AUTH_SET, {
       isLoggedIn: false
     })
-
-    // TODO reset user profile
   },
 
   /**
