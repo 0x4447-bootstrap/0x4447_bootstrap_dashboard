@@ -37,6 +37,17 @@ export default function appRoutesPlugin (context, inject) {
       },
       title: 'Invoices'
     },
+    paymentInvoiceId (invoiceId) {
+      return {
+        route: {
+          name: 'profile-invoices-invoiceId',
+          params: {
+            invoiceId
+          }
+        },
+        title: `Invoice #${invoiceId}`
+      }
+    },
     help: {
       route: {
         name: 'help'

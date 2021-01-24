@@ -21,7 +21,7 @@ export const actions = {
 
     // Set pagination offset for query
     // using last loaded & stored document key
-    const startKey = getters.paginationKeys[page]
+    const year = (new Date().getFullYear() + 1) - page
 
     const { Items = [], LastEvaluatedKey = null, Count = 0 } = await dbClient.query({
       TableName: 'default',
@@ -32,13 +32,10 @@ export const actions = {
       },
       ExpressionAttributeValues: {
         ':pk': identityId,
-        ':sk': 'user#invoice#'
+        ':sk': `user#invoice#${year}`
       },
       Limit: perPage,
-      ScanIndexForward: false,
-      ...(startKey && {
-        ExclusiveStartKey: startKey
-      })
+      ScanIndexForward: false
     }).promise()
 
     if (LastEvaluatedKey) {
@@ -53,6 +50,34 @@ export const actions = {
       invoices: Items,
       total: Count
     }
+  },
+
+  async invoiceLoad (store, { invoiceId }) {
+    const dbClient = await AwsClient.dynamoDb()
+    const { identityId } = await AwsClient.credentials()
+
+    const { Items = [] } = await dbClient.query({
+      TableName: 'default',
+      KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
+      ExpressionAttributeNames: {
+        '#pk': 'pk',
+        '#sk': 'sk'
+      },
+      FilterExpression: 'stripe_invoice_id = :stripe_invoice_id',
+      ExpressionAttributeValues: {
+        ':pk': identityId,
+        ':sk': 'user#invoice',
+        ':stripe_invoice_id': invoiceId
+      },
+      Limit: 1,
+      ScanIndexForward: false
+    }).promise()
+
+    if (Items.length === 0) {
+      throw new Error('Invoice not found')
+    }
+
+    return Items[0]
   }
 }
 
