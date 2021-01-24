@@ -97,6 +97,7 @@ export const actions = {
     await Auth.signOut()
 
     AwsClient.destroyInstance()
+    localStorage.clear()
 
     commit(types.AUTH_SET, {
       isLoggedIn: false
