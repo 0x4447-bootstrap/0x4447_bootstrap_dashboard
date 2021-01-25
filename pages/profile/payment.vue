@@ -39,18 +39,14 @@
           anchor="add-payment-method"
         >
           <h1 class="display-1 mb-3 px-4">
-            Add payment method
+            Subscription
           </h1>
         </title-anchored>
 
-        <v-card>
-          <v-card-text>
-            <payment-method-add
-              :loading="loadingCreate"
-              @payment-method:create="onPaymentMethodCreate"
-            />
-          </v-card-text>
-        </v-card>
+        <payment-method-add
+          :loading="loadingCreate"
+          @payment-method:create="onPaymentMethodCreate"
+        />
       </div>
     </v-fade-transition>
   </v-layout>
