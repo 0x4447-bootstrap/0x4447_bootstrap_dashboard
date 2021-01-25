@@ -57,7 +57,6 @@ export default {
   computed: {
     paymentDetailsFormatted () {
       const details = this.paymentDetails || {}
-      const { address } = details || {}
 
       return [
         {
@@ -79,26 +78,6 @@ export default {
         {
           label: 'Last Name',
           value: details.last_name || '-'
-        },
-        {
-          label: 'Street Address',
-          value: address.street_address || '-'
-        },
-        {
-          label: 'City',
-          value: address.city || '-'
-        },
-        {
-          label: 'State',
-          value: address.state || '-'
-        },
-        {
-          label: 'Postal Code',
-          value: address.postal_code || '-'
-        },
-        {
-          label: 'Country',
-          value: address.country || '-'
         }
       ]
     }

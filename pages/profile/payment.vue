@@ -39,7 +39,7 @@
           anchor="add-payment-method"
         >
           <h1 class="display-1 mb-3 px-4">
-            Add payment method
+            Subscription
           </h1>
         </title-anchored>
 

@@ -2,6 +2,43 @@
   <v-row>
     <a-column
       cols="12"
+      md="4"
+      class="d-flex flex-column mb-5 mb-md-0"
+    >
+      <button
+        v-ripple
+        :class="classPlanButton(plans[0])"
+        class="plan-button__container elevation-5"
+        @click="onPlanSelect(plans[0])"
+      >
+        <div class="plan-button__name mb-5">
+          Monthly subscription
+        </div>
+
+        <div class="plan-button__price">
+          $1/month
+        </div>
+      </button>
+
+      <button
+        v-ripple
+        :class="classPlanButton(plans[1])"
+        class="plan-button__container elevation-5"
+        @click="onPlanSelect(plans[1])"
+      >
+        <div class="plan-button__name mb-5">
+          Yearly subscription
+        </div>
+
+        <div class="plan-button__price">
+          $10/month
+        </div>
+      </button>
+    </a-column>
+
+    <a-column
+      cols="12"
+      md="8"
     >
       <form
         @submit.prevent="onSave"
@@ -19,9 +56,10 @@
               />
 
               <p
-                class="subtitle-2 mb-0"
+                class="mb-0"
               >
-                This input field is provided by © Stripe. We won't be able to see your details, we get back a token representing your card, and not the card details that you type here.
+                This input field is provided by © Stripe. We won't be able to see your details, we get back a token
+                representing your card, and not the card details that you type here.
               </p>
             </div>
           </v-col>
@@ -31,24 +69,6 @@
             md="6"
             lg="4"
           >
-            <v-tabs
-              v-if="!isProfileEmpty"
-              class="mb-5"
-              left
-            >
-              <v-tab
-                @click="setFormFromProfile"
-              >
-                From profile
-              </v-tab>
-
-              <v-tab
-                @click="resetForm"
-              >
-                Different than profile
-              </v-tab>
-            </v-tabs>
-
             <div class="mb-5">
               <a-validation
                 v-slot="{ hasError, errorMessage }"
@@ -73,55 +93,10 @@
                   label="Last name"
                 />
               </a-validation>
-
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
-                :error="$v.paymentDetails.streetAddress"
-              >
-                <v-text-field
-                  v-model="paymentDetails.streetAddress"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  label="Street address"
-                />
-              </a-validation>
-
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
-                :error="$v.paymentDetails.city"
-              >
-                <v-text-field
-                  v-model="paymentDetails.city"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  label="City"
-                />
-              </a-validation>
-
-              <v-text-field
-                v-model="paymentDetails.state"
-                label="State"
-              />
-
-              <v-text-field
-                v-model="paymentDetails.postalCode"
-                label="Postal Code"
-              />
-
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
-                :error="$v.paymentDetails.country"
-              >
-                <v-text-field
-                  v-model="paymentDetails.country"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  label="Country"
-                />
-              </a-validation>
             </div>
 
             <v-btn
+              :disabled="!planSelected"
               :loading="loading"
               color="primary"
               type="submit"
@@ -142,12 +117,7 @@ import { required } from 'vuelidate/lib/validators'
 
 const initialForm = {
   firstName: '',
-  lastName: '',
-  streetAddress: '',
-  city: '',
-  state: '',
-  postalCode: '',
-  country: ''
+  lastName: ''
 }
 
 export default {
@@ -167,7 +137,9 @@ export default {
 
       paymentDetails: {
         ...initialForm
-      }
+      },
+
+      planSelected: null
     }
   },
 
@@ -175,15 +147,20 @@ export default {
     ...mapGetters({
       isProfileEmpty: 'user/isProfileEmpty',
       profile: 'user/profile'
-    })
+    }),
+
+    plans () {
+      const config = this.$config
+
+      return [
+        config.STRIPE_PRICE_ID_MONTH,
+        config.STRIPE_PRICE_ID_YEAR
+      ]
+    }
   },
 
   mounted () {
     this.initStripe()
-
-    if (!this.isProfileEmpty) {
-      this.setFormFromProfile()
-    }
   },
 
   methods: {
@@ -218,11 +195,22 @@ export default {
       this.stripeCardField.mount(cardSelector)
     },
 
+    classPlanButton (planId) {
+      return [
+        { 'plan-button--active': this.planSelected === planId }
+      ]
+    },
+
+    onPlanSelect (planId) {
+      this.planSelected = planId
+    },
+
     async onSave () {
       if (this.$v.paymentDetails.$invalid) {
         return this.$v.paymentDetails.$touch()
       }
 
+      // eslint-disable-next-line no-unreachable
       const { token } = await this.stripeClient.createToken(this.stripeCardField)
 
       if (!token) {
@@ -238,7 +226,8 @@ export default {
 
       this.$emit('payment-method:create', {
         ...this.paymentDetails,
-        postalCode: this.paymentDetails.postalCode || card.address_zip,
+        plan: this.planSelected,
+        postalCode: card.address_zip,
         brand: card.brand,
         cardId: card.id,
         cardToken: token.id,
@@ -246,19 +235,6 @@ export default {
         expMonth: card.exp_month,
         expYear: card.exp_year
       })
-    },
-
-    setFormFromProfile () {
-      const { familyName = '', givenName = '', address = {} } = this.profile
-      this.paymentDetails = {
-        firstName: familyName,
-        lastName: givenName,
-        ...address
-      }
-    },
-
-    resetForm () {
-      this.paymentDetails = { ...initialForm }
     }
   },
 
@@ -270,18 +246,30 @@ export default {
         },
         lastName: {
           required
-        },
-        streetAddress: {
-          required
-        },
-        city: {
-          required
-        },
-        country: {
-          required
         }
       }
     }
   }
 }
 </script>
+
+<style lang="scss">
+.plan-button {
+  &__container {
+    flex: 1;
+    outline: none;
+    border-radius: 5px;
+    border: 2px solid transparent;
+  }
+
+  &--active {
+    border-color: #2196F3;
+  }
+
+  @media (max-width: 768px) {
+    &__container {
+      padding: 30px;
+    }
+  }
+}
+</style>

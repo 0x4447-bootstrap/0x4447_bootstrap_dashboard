@@ -32,6 +32,7 @@ export const actions = {
     const documentPayload = {
       pk: identityId,
       sk: `user#payment#${paymentDetails.last4}`,
+      plan: paymentDetails.plan,
       card_token: paymentDetails.cardToken,
       card_id: paymentDetails.cardId,
       first_name: paymentDetails.firstName,
@@ -40,13 +41,6 @@ export const actions = {
       exp_month: paymentDetails.expMonth,
       exp_year: paymentDetails.expYear,
       last4: paymentDetails.last4,
-      address: {
-        street_address: paymentDetails.streetAddress,
-        city: paymentDetails.city,
-        state: paymentDetails.state,
-        postal_code: paymentDetails.postalCode,
-        country: paymentDetails.country
-      },
       timestamp_created: Math.floor(Date.now() / 1000)
     }
 
