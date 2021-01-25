@@ -265,7 +265,6 @@
             v-for="(tab, index) in accountMenu"
             :key="index"
             :to="tab.route"
-            exact
           >
             {{ tab.title }}
           </v-tab>
@@ -397,7 +396,10 @@ export default {
 
     showAccountMenu () {
       const routeName = this.route.name
-      return this.accountMenu.findIndex(menuItem => menuItem.route?.name === routeName) > -1
+      return [
+        ...this.accountMenu.map(menuItem => menuItem.route),
+        this.$routes.paymentInvoiceId().route
+      ].findIndex(menuRoute => menuRoute?.name === routeName) > -1
     }
   },
 
