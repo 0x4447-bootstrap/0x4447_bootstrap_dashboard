@@ -3,109 +3,117 @@
     <a-column
       cols="12"
       md="4"
-      class="d-flex flex-column mb-5 mb-md-0"
+      class="mb-5 mb-md-0"
     >
-      <button
-        v-ripple
-        :class="classPlanButton(plans[0])"
-        class="plan-button__container elevation-5"
-        @click="onPlanSelect(plans[0])"
-      >
-        <div class="plan-button__name mb-5">
-          Monthly subscription
-        </div>
+      <v-card height="100%">
+        <v-card-text class="plans__list">
+          <button
+            v-ripple
+            :class="classPlanButton(plans[0])"
+            class="plan-button__container elevation-3"
+            @click="onPlanSelect(plans[0])"
+          >
+            <div class="plan-button__name mb-5">
+              Monthly subscription
+            </div>
 
-        <div class="plan-button__price">
-          $1/month
-        </div>
-      </button>
+            <div class="plan-button__price">
+              $1/month
+            </div>
+          </button>
 
-      <button
-        v-ripple
-        :class="classPlanButton(plans[1])"
-        class="plan-button__container elevation-5"
-        @click="onPlanSelect(plans[1])"
-      >
-        <div class="plan-button__name mb-5">
-          Yearly subscription
-        </div>
+          <button
+            v-ripple
+            :class="classPlanButton(plans[1])"
+            class="plan-button__container elevation-3"
+            @click="onPlanSelect(plans[1])"
+          >
+            <div class="plan-button__name mb-5">
+              Yearly subscription
+            </div>
 
-        <div class="plan-button__price">
-          $10/month
-        </div>
-      </button>
+            <div class="plan-button__price">
+              $10/month
+            </div>
+          </button>
+        </v-card-text>
+      </v-card>
     </a-column>
 
     <a-column
       cols="12"
       md="8"
     >
-      <form
-        @submit.prevent="onSave"
-      >
-        <v-row class="fill-height flex-column flex-nowrap">
-          <v-col
-            cols="12"
-            md="6"
+      <v-card>
+        <v-card-text>
+          <form
+            @submit.prevent="onSave"
           >
-            <div>
-              <div
-                id="cardForm"
-                class="mb-5"
-                style="max-width: 380px"
-              />
-
-              <p
-                class="mb-0"
+            <v-row class="fill-height flex-column flex-nowrap">
+              <v-col
+                cols="12"
+                md="6"
               >
-                This input field is provided by © Stripe. We won't be able to see your details, we get back a token
-                representing your card, and not the card details that you type here.
-              </p>
-            </div>
-          </v-col>
+                <div>
+                  <div
+                    id="cardForm"
+                    class="mb-5"
+                    style="max-width: 380px"
+                  />
 
-          <a-column
-            cols="12"
-            md="6"
-            lg="4"
-          >
-            <div class="mb-5">
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
-                :error="$v.paymentDetails.firstName"
+                  <p
+                    class="mb-0"
+                  >
+                    This input field is provided by © Stripe. We won't be able to see your details, we get back a token
+                    representing your card, and not the card details that you type here.
+                  </p>
+                </div>
+              </v-col>
+
+              <a-column
+                cols="12"
+                md="6"
+                lg="4"
               >
-                <v-text-field
-                  v-model="paymentDetails.firstName"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  label="First name"
-                />
-              </a-validation>
+                <div class="mb-5">
+                  <a-validation
+                    v-slot="{ hasError, errorMessage }"
+                    :error="$v.paymentDetails.firstName"
+                  >
+                    <v-text-field
+                      v-model="paymentDetails.firstName"
+                      :error="hasError"
+                      :error-messages="errorMessage"
+                      label="First name"
+                    />
+                  </a-validation>
 
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
-                :error="$v.paymentDetails.lastName"
-              >
-                <v-text-field
-                  v-model="paymentDetails.lastName"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  label="Last name"
-                />
-              </a-validation>
-            </div>
+                  <a-validation
+                    v-slot="{ hasError, errorMessage }"
+                    :error="$v.paymentDetails.lastName"
+                  >
+                    <v-text-field
+                      v-model="paymentDetails.lastName"
+                      :error="hasError"
+                      :error-messages="errorMessage"
+                      label="Last name"
+                    />
+                  </a-validation>
+                </div>
 
-            <v-btn
-              :disabled="!planSelected"
-              :loading="loading"
-              color="primary"
-              type="submit"
-            >
-              Save
-            </v-btn>
-          </a-column>
-        </v-row>
-      </form>
+                <v-btn
+                  :disabled="!planSelected"
+                  :loading="loading"
+                  color="primary"
+                  type="submit"
+                >
+                  Save
+                </v-btn>
+              </a-column>
+            </v-row>
+          </form>
+        </v-card-text>
+      </v-card>
     </a-column>
   </v-row>
 </template>
@@ -254,6 +262,14 @@ export default {
 </script>
 
 <style lang="scss">
+.plans {
+  &__list {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+  }
+}
+
 .plan-button {
   &__container {
     flex: 1;

@@ -43,14 +43,10 @@
           </h1>
         </title-anchored>
 
-        <v-card>
-          <v-card-text>
-            <payment-method-add
-              :loading="loadingCreate"
-              @payment-method:create="onPaymentMethodCreate"
-            />
-          </v-card-text>
-        </v-card>
+        <payment-method-add
+          :loading="loadingCreate"
+          @payment-method:create="onPaymentMethodCreate"
+        />
       </div>
     </v-fade-transition>
   </v-layout>
