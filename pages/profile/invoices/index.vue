@@ -47,7 +47,7 @@
                   icon
                   ml="4"
                   small
-                  @click="onCopy(item.invoiceIdFormatted, 'Invoice ID')"
+                  @click.stop="onCopy(item.invoiceIdFormatted, 'Invoice ID')"
                 >
                   <v-icon small>
                     mdi-content-copy
@@ -64,7 +64,7 @@
                   icon
                   ml="4"
                   small
-                  @click="onCopy(item.chargeId, 'Charge ID')"
+                  @click.stop="onCopy(item.chargeId, 'Charge ID')"
                 >
                   <v-icon small>
                     mdi-content-copy

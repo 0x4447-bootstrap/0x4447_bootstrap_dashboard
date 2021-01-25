@@ -59,7 +59,7 @@
                           icon
                           ml="4"
                           small
-                          @click="onCopy(field.value, field.label)"
+                          @click.stop="onCopy(field.value, field.label)"
                         >
                           <v-icon small>
                             mdi-content-copy
