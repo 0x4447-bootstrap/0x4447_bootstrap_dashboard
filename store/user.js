@@ -104,6 +104,15 @@ export const actions = {
     await CognitoSyncClient.updateRecords({ key, value })
 
     await dispatch('settingsFetch')
+  },
+
+  async passwordChange (context, { current: currentPassword, new: newPassword }) {
+    const user = await Auth.currentAuthenticatedUser()
+    return Auth.changePassword(
+      user,
+      currentPassword,
+      newPassword
+    )
   }
 }
 

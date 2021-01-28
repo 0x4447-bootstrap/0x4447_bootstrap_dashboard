@@ -51,8 +51,6 @@
 
     <a-column
       xs="12"
-      md="6"
-      lg="4"
       class="d-flex"
     >
       <v-card class="profile-details__card">
@@ -277,6 +275,12 @@ export default {
 
   &__form__inner {
     width: 100%;
+  }
+
+  @media (min-width: 960px) {
+    &__form__inner {
+      max-width: 320px;
+    }
   }
 }
 </style>

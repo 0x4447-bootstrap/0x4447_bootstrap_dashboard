@@ -8,12 +8,23 @@
       </h1>
     </title-anchored>
 
-    <profile-details />
+    <v-row>
+      <a-column
+        cols="12"
+        sm="12"
+        md="6"
+      >
+        <profile-details />
+
+        <password-change />
+      </a-column>
+    </v-row>
   </v-layout>
 </template>
 
 <script>
 import ProfileDetails from '~/components/sections/profile/ProfileDetails'
+import PasswordChange from '~/components/sections/profile/PasswordChange'
 import TitleAnchored from '~/components/general/TitleAnchored'
 
 export default {
@@ -21,7 +32,8 @@ export default {
 
   components: {
     TitleAnchored,
-    ProfileDetails
+    ProfileDetails,
+    PasswordChange
   },
 
   head () {
