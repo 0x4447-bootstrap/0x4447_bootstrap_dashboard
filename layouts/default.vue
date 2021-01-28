@@ -1,276 +1,15 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-model="isSidebarOpen"
-      :mini-variant="isSidebarMinimized"
-      mini-variant-width="64"
-      app
-    >
-      <div class="navbar__logo">
-        <router-link
-          :to="$routes.dashboard.route"
-          class="navbar__logo__link"
-        >
-          <v-fade-transition
-            mode="out-in"
-          >
-            <img
-              :key="logoImage.src"
-              :src="logoImage.src"
-              :srcset="logoImage.srcset"
-              class="navbar__logo__image"
-              alt="Logo"
-            >
-          </v-fade-transition>
-        </router-link>
-      </div>
+    <app-sidebar
+      :is-open="isSidebarOpen"
+      :is-minimized="isSidebarMinimized"
+      :is-footer-visible="isSidebarFooterVisible"
+      @update:is-open="onSidebarToggle"
+    />
 
-      <v-divider />
-
-      <v-list
-        dense
-        nav
-      >
-        <template
-          v-for="(menuItem, index) in navigationMenu"
-        >
-          <v-divider
-            v-if="menuItem.divider"
-            :key="index"
-            class="my-2"
-          />
-
-          <v-list-item
-            v-else-if="!menuItem.subNav"
-            :key="menuItem.title"
-            :to="menuItem.route"
-            exact
-            link
-          >
-            <v-list-item-icon>
-              <v-icon>{{ menuItem.icon }}</v-icon>
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-list-group
-            v-else
-            :key="menuItem.title"
-            :prepend-icon="menuItem.icon"
-          >
-            <template #activator>
-              <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
-            </template>
-
-            <v-list-item
-              v-for="subMenuItem in menuItem.subNav"
-              :key="subMenuItem.title"
-              :to="subMenuItem.route"
-              exact
-              link
-            >
-              <v-list-item-title v-text="subMenuItem.title" />
-
-              <v-list-item-icon>
-                <v-icon v-text="subMenuItem.icon" />
-              </v-list-item-icon>
-            </v-list-item>
-          </v-list-group>
-        </template>
-      </v-list>
-
-      <template
-        #append
-      >
-        <v-fade-transition
-          mode="out-in"
-          hide-on-leave
-        >
-          <div
-            v-if="isSidebarFooterVisible"
-            class="sidebar-footer__container"
-          >
-            <v-divider />
-
-            <div class="sidebar-footer__inner">
-              <div class="sidebar-footer__links">
-                <a
-                  class="sidebar-footer__link grey--text"
-                  href="/docs/privacy-policy.pdf"
-                  target="_blank"
-                >
-                  Privacy Policy
-                </a>
-
-                <a
-                  class="sidebar-footer__link grey--text"
-                  href="/docs/terms-of-service.pdf"
-                  target="_blank"
-                >
-                  Terms of Service
-                </a>
-              </div>
-            </div>
-
-            <div class="sidebar-footer__copyright grey--text text-center">
-              Est.2016, Copr.0x4447™ LLC.
-            </div>
-          </div>
-        </v-fade-transition>
-
-        <div
-          v-if="isSidebarMinimized"
-          class="sidebar-footer-minimized__container"
-        >
-          <a
-            href="#"
-            class="sidebar-footer-minimized__logo grey--text text--darken-2"
-            @click.prevent="onSidebarToggle"
-          >
-            {{ company.name }}
-          </a>
-        </div>
-      </template>
-    </v-navigation-drawer>
-
-    <v-app-bar
-      app
-    >
-      <v-app-bar-nav-icon
-        @click.stop="onSidebarToggle"
-      />
-
-      <v-spacer class="d-lg-none" />
-
-      <v-spacer />
-
-      <v-menu
-        bottom
-        left
-        offset-y
-      >
-        <template #activator="{ on }">
-          <v-btn
-            class="ml-5"
-            small
-            v-on="on"
-          >
-            Menu
-          </v-btn>
-        </template>
-
-        <v-list
-          dense
-        >
-          <v-list-item
-            v-for="menuItem in accountMenu"
-            :key="menuItem.title"
-            :to="menuItem.route"
-            link
-            exact
-            dense
-          >
-            <v-list-item-icon>
-              <v-icon>{{ menuItem.icon }}</v-icon>
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-list-item
-            dense
-            @click="onSignOut"
-          >
-            <v-list-item-icon>
-              <v-icon>mdi-logout</v-icon>
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              <v-list-item-title>Sign out</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-
-      <v-menu
-        bottom
-        left
-        offset-y
-      >
-        <template #activator="{ on }">
-          <v-btn
-            icon
-            v-on="on"
-          >
-            <v-icon>mdi-bell</v-icon>
-          </v-btn>
-        </template>
-
-        <v-list
-          v-if="hasNotifications"
-        >
-          <template
-            v-for="(notification, index) in notifications"
-          >
-            <v-list-item
-              :key="index"
-              :class="notification.type"
-              two-line
-            >
-              <v-list-item-content>
-                <v-list-item-title v-html="notification.message" />
-                <v-list-item-subtitle v-html="notification.createdOnPretty" />
-              </v-list-item-content>
-            </v-list-item>
-
-            <v-divider
-              :key="`${index}-divider`"
-              inset
-            />
-          </template>
-        </v-list>
-
-        <v-sheet
-          v-else
-          class="pa-5"
-        >
-          No notifications
-        </v-sheet>
-      </v-menu>
-
-      <v-avatar
-        size="48"
-        class="ml-5"
-      >
-        <v-img
-          :lazy-src="avatarPlaceholder"
-          :src="profile.picture"
-          alt="Profile photo"
-        />
-      </v-avatar>
-
-      <template
-        v-if="showAccountMenu"
-        #extension
-      >
-        <v-tabs class="px-3">
-          <v-tabs-slider />
-
-          <v-tab
-            v-for="(tab, index) in accountMenu"
-            :key="index"
-            :to="tab.route"
-          >
-            {{ tab.title }}
-          </v-tab>
-        </v-tabs>
-      </template>
-    </v-app-bar>
+    <app-toolbar
+      @sidebar:toggle="onSidebarToggle"
+    />
 
     <v-main>
       <v-container fluid>
@@ -285,31 +24,17 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import AppSidebar from '~/components/general/AppSidebar'
+import AppToolbar from '~/components/general/AppToolbar'
 import AppNotifications from '~/components/general/AppNotifications'
-import {
-  avatarPlaceholder,
-  logo,
-  logo2x,
-  logoDark,
-  logoDark2x,
-  logoSquare,
-  logoSquare2x,
-  logoSquareDark,
-  logoSquareDark2x
-} from '~/assets/images'
-
-const logosMap = new Map([
-  ['light-expanded', [logo, logo2x]],
-  ['dark-expanded', [logoDark, logoDark2x]],
-  ['light-minimized', [logoSquare, logoSquare2x]],
-  ['dark-minimized', [logoSquareDark, logoSquareDark2x]]
-])
 
 export default {
   name: 'LayoutDefault',
 
   components: {
+    AppSidebar,
+    AppToolbar,
     AppNotifications
   },
 
@@ -317,90 +42,15 @@ export default {
     return {
       isSidebarOpen: false,
       isSidebarMinimized: false,
-      isSidebarFooterVisible: true,
-      avatarPlaceholder
+      isSidebarFooterVisible: true
     }
   },
 
   computed: {
-    ...mapState({
-      route: 'route'
-    }),
     ...mapGetters({
-      profile: 'user/profile',
       settings: 'user/settings',
-      company: 'app/company',
-      notifications: 'notifications/history',
       hasNotifications: 'notifications/hasHistory'
-    }),
-
-    logoImage () {
-      const isDarkMode = this.$vuetify.theme.dark
-      const isMinimized = this.isSidebarMinimized
-
-      const logoSetting = [
-        `${isDarkMode ? 'dark' : 'light'}`,
-        `${isMinimized ? 'minimized' : 'expanded'}`
-      ].join('-')
-
-      const logos = logosMap.get(logoSetting)
-
-      return {
-        src: logos[0],
-        srcset: `${logos[0]} 1x, ${logos[1]} 2x`
-      }
-    },
-
-    navigationMenu () {
-      return [
-        {
-          title: 'Home',
-          icon: 'mdi-view-dashboard',
-          route: this.$routes.dashboard.route
-        },
-        {
-          divider: true
-        },
-        {
-          title: this.$routes.help.title,
-          icon: 'mdi-help',
-          route: this.$routes.help.route
-        },
-        {
-          title: this.$routes.support.title,
-          icon: 'mdi-lifebuoy',
-          route: this.$routes.support.route
-        }
-      ]
-    },
-
-    accountMenu () {
-      return [
-        {
-          title: this.$routes.profileIdentity.title,
-          icon: 'mdi-account',
-          route: this.$routes.profileIdentity.route
-        },
-        {
-          title: this.$routes.payment.title,
-          icon: 'mdi-credit-card-plus-outline',
-          route: this.$routes.payment.route
-        },
-        {
-          title: this.$routes.paymentInvoices.title,
-          icon: 'mdi-receipt',
-          route: this.$routes.paymentInvoices.route
-        }
-      ]
-    },
-
-    showAccountMenu () {
-      const routeName = this.route.name
-      return [
-        ...this.accountMenu.map(menuItem => menuItem.route),
-        this.$routes.paymentInvoiceId().route
-      ].findIndex(menuRoute => menuRoute?.name === routeName) > -1
-    }
+    })
   },
 
   watch: {
@@ -433,8 +83,6 @@ export default {
 
   methods: {
     ...mapActions({
-      signOut: 'auth/signOut',
-      checkUserRecordExists: 'auth/checkUserRecordExists',
       settingsFetch: 'user/settingsFetch',
       settingsSave: 'user/settingsSave'
     }),
@@ -453,18 +101,6 @@ export default {
         this.toggleSidebarMinimized(!this.isSidebarMinimized)
       } else {
         this.isSidebarOpen = !this.isSidebarOpen
-      }
-    },
-
-    async onSignOut () {
-      try {
-        await this.signOut()
-        await this.$router.replace(this.$routes.auth.route)
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(err)
-        // TODO handle error
-        throw err
       }
     },
 
