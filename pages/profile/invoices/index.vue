@@ -44,6 +44,7 @@
                 {{ item.invoiceIdFormatted }}
 
                 <v-btn
+                  v-if="item.invoiceId"
                   icon
                   ml="4"
                   small
@@ -58,13 +59,14 @@
               <template
                 #item.chargeId="{ item } "
               >
-                {{ item.chargeId }}
+                {{ item.chargeIdFormatted }}
 
                 <v-btn
+                  v-if="item.chargeId"
                   icon
                   ml="4"
                   small
-                  @click.stop="onCopy(item.chargeId, 'Charge ID')"
+                  @click.stop="onCopy(item.chargeIdFormatted, 'Charge ID')"
                 >
                   <v-icon small>
                     mdi-content-copy
@@ -149,7 +151,8 @@ export default {
         paid: invoice.paid,
         invoiceId: invoice.stripe_invoice_id,
         invoiceIdFormatted: invoice.stripe_invoice_id?.substring(3) || 'N/A',
-        chargeId: invoice.charge_id?.substring(3) || 'N/A',
+        chargeId: invoice.charge_id,
+        chargeIdFormatted: invoice.charge_id?.substring(3) || 'N/A',
         nextPaymentAttempt: invoice.next_payment_attempt
           ? format(parseISO(invoice.next_payment_attempt), 'MM/dd/yyyy, hh:mm:ss a')
           : ''
@@ -226,7 +229,9 @@ export default {
     },
 
     onOpenInvoice (invoice) {
-      this.$router.push(this.$routes.paymentInvoiceId(invoice.invoiceId).route)
+      if (invoice.paid) {
+        this.$router.push(this.$routes.paymentInvoiceId(invoice.invoiceId).route)
+      }
     }
   },
 

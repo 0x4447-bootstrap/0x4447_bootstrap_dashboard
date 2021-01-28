@@ -17,32 +17,41 @@ export const getters = {
 
 export const actions = {
   async checkUserAuthentication ({ dispatch }) {
-    const user = await Auth.currentUserInfo()
-    const credentials = await Auth.currentCredentials()
+    try {
+      const user = await Auth.currentUserInfo()
+      const credentials = await Auth.currentCredentials()
 
-    if (!user) {
-      return dispatch('setAuthState', {
+      if (!user) {
+        return dispatch('setAuthState', {
+          isLoggedIn: false
+        })
+      }
+
+      await Promise.all([
+        dispatch('setAuthState', {
+          isLoggedIn: true
+        }),
+        dispatch('user/profileSet', {
+          profile: {
+            id: user.attributes.sub,
+            email: user.attributes.email,
+            givenName: user.attributes.given_name,
+            familyName: user.attributes.family_name
+          }
+        }, { root: true }),
+        dispatch('user/fetchProfilePhoto', {
+          key: credentials.identityId
+        }, { root: true }),
+        dispatch('user/settingsFetch', {}, { root: true })
+      ])
+    } catch (err) {
+      dispatch('setAuthState', {
         isLoggedIn: false
       })
-    }
 
-    await Promise.all([
-      dispatch('setAuthState', {
-        isLoggedIn: true
-      }),
-      dispatch('user/profileSet', {
-        profile: {
-          id: user.attributes.sub,
-          email: user.attributes.email,
-          givenName: user.attributes.given_name,
-          familyName: user.attributes.family_name
-        }
-      }, { root: true }),
-      dispatch('user/fetchProfilePhoto', {
-        key: credentials.identityId
-      }, { root: true }),
-      dispatch('user/settingsFetch', {}, { root: true })
-    ])
+      // eslint-disable-next-line no-console
+      console.error(err)
+    }
   },
 
   async checkUserRecordExists (store, { sub }) {
