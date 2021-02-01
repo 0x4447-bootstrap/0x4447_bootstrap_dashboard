@@ -144,7 +144,7 @@ export default {
         {
           label: 'Charge ID',
           value: invoice.charge_id || 'N/A',
-          copy: !!invoice.stripe_invoice_id
+          copy: !!invoice.charge_id
         },
         {
           label: 'Created',

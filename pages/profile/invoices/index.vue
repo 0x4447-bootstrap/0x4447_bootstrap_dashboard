@@ -229,9 +229,7 @@ export default {
     },
 
     onOpenInvoice (invoice) {
-      if (invoice.paid) {
-        this.$router.push(this.$routes.paymentInvoiceId(invoice.invoiceId).route)
-      }
+      this.$router.push(this.$routes.paymentInvoiceId(invoice.invoiceId).route)
     }
   },
 
