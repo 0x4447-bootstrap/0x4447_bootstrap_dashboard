@@ -69,7 +69,6 @@ export const actions = {
         ':sk': 'user#invoice',
         ':stripe_invoice_id': invoiceId
       },
-      Limit: 1,
       ScanIndexForward: false
     }).promise()
 
