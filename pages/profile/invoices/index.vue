@@ -178,7 +178,7 @@ export default {
     getPageText () {
       const year = new Date().getFullYear()
 
-      return `${year + 1 - this.page}`
+      return `Data for year ${year + 1 - this.page}`
     }
   },
 
