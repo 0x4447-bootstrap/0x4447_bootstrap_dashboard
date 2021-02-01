@@ -27,12 +27,14 @@
                 <v-chip
                   v-if="item.paid"
                   color="success"
+                  small
                 >
                   Paid
                 </v-chip>
                 <v-chip
                   v-else
                   color="error"
+                  small
                 >
                   Not paid
                 </v-chip>
