@@ -33,12 +33,14 @@
                         <v-chip
                           v-if="field.value"
                           color="success"
+                          small
                         >
                           Paid
                         </v-chip>
                         <v-chip
                           v-else
                           color="error"
+                          small
                         >
                           Not paid
                         </v-chip>
