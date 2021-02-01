@@ -138,13 +138,13 @@ export default {
       return [
         {
           label: 'Invoice ID',
-          value: invoice.stripe_invoice_id?.substring(3) || 'N/A',
-          copy: true
+          value: invoice.stripe_invoice_id || 'N/A',
+          copy: !!invoice.stripe_invoice_id
         },
         {
           label: 'Charge ID',
-          value: invoice.charge_id?.substring(3) || 'N/A',
-          copy: true
+          value: invoice.charge_id || 'N/A',
+          copy: !!invoice.stripe_invoice_id
         },
         {
           label: 'Created',
