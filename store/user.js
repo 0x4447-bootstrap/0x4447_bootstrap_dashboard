@@ -1,6 +1,7 @@
-import { Auth, Storage } from 'aws-amplify'
+import { Auth } from 'aws-amplify'
 import { pickBy } from 'lodash'
 import CognitoSyncClient from '~/services/aws/CognitoSync'
+import s3Client from '~/services/aws/S3'
 
 const types = {
   PROFILE_SET: 'PROFILE_SET',
@@ -69,21 +70,30 @@ export const actions = {
   }, { file }) {
     const key = (await Auth.currentCredentials()).identityId
 
-    await Storage.put(key, file, {
-      cacheControl: 'public, max-age=365000000',
-      contentType: file.type
+    await s3Client.put({
+      key,
+      file
     })
+
     await dispatch('fetchProfilePhoto', { key })
   },
 
   async fetchProfilePhoto ({ dispatch }, { key }) {
-    const profilePictureUrl = await Storage.get(key)
+    try {
+      const profilePictureUrl = await s3Client.getUrl({ key })
 
-    await dispatch('profileStateUpdate', {
-      picture: profilePictureUrl
-    })
+      await dispatch('profileStateUpdate', {
+        picture: profilePictureUrl
+      })
 
-    return profilePictureUrl
+      return profilePictureUrl
+    } catch (err) {
+      if (err?.statusCode === 403) {
+        return // Fail silently, image doesn't exist
+      }
+
+      throw err
+    }
   },
 
   profileStateUpdate ({ commit }, updatedFields) {

@@ -5,7 +5,8 @@ export const awsConfig = {
   apiVersion: '2012-08-10',
   cognitoIdentityPoolId: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
   cognitoUserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
-  region: process.env.AWS_COGNITO_REGION
+  region: process.env.AWS_COGNITO_REGION,
+  s3bucket: process.env.AWS_USER_FILES_S3_BUCKET
 }
 
 AWS.config.region = awsConfig.region
@@ -13,6 +14,7 @@ AWS.config.region = awsConfig.region
 let credentials = null
 let dynamoDbClient = null
 let cognitoSync = null
+let s3 = null
 
 export default class AwsClient {
   static async dynamoDb () {
@@ -29,6 +31,14 @@ export default class AwsClient {
     }
 
     return cognitoSync
+  }
+
+  static async s3 () {
+    if (!s3) {
+      await this.buildInstance()
+    }
+
+    return s3
   }
 
   static async credentials () {
@@ -54,11 +64,17 @@ export default class AwsClient {
       apiVersion: awsConfig.apiVersion
     })
     cognitoSync = new AWS.CognitoSync()
+    s3 = new AWS.S3({
+      apiVersion: awsConfig.apiVersion,
+      region: awsConfig.region,
+      bucket: awsConfig.s3bucket
+    })
   }
 
   static destroyInstance () {
     credentials = null
     dynamoDbClient = null
     cognitoSync = null
+    s3 = null
   }
 }
