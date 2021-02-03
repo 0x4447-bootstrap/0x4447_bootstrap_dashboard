@@ -45,10 +45,10 @@
               <template
                 #item.invoiceId="{ item } "
               >
-                {{ item.invoiceId }}
+                {{ item.invoiceId || '-' }}
 
                 <v-btn
-                  v-if="item.invoiceIdCopy"
+                  v-if="item.invoiceId"
                   icon
                   ml="4"
                   small
@@ -63,10 +63,10 @@
               <template
                 #item.chargeId="{ item } "
               >
-                {{ item.chargeId }}
+                {{ item.chargeId || '-' }}
 
                 <v-btn
-                  v-if="item.chargeIdCopy"
+                  v-if="item.chargeId"
                   icon
                   ml="4"
                   small
@@ -155,9 +155,7 @@ export default {
         amount: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : '-',
         paid: invoice.paid,
         invoiceId: invoice.stripe_invoice_id,
-        invoiceIdFormatted: invoice.stripe_invoice_id?.substring(3) || 'N/A',
         chargeId: invoice.charge_id,
-        chargeIdFormatted: invoice.charge_id?.substring(3) || 'N/A',
         next_payment_attempt: invoice.next_payment_attempt
           ? format(parseISO(invoice.next_payment_attempt), 'MM/dd/yyyy, hh:mm:ss a')
           : ''
