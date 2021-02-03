@@ -70,8 +70,16 @@
           icon
           class="ml-5"
           v-on="on"
+          @click="onNotificationsMarkRead"
         >
-          <v-icon>mdi-bell</v-icon>
+          <v-badge
+            :value="hasUnreadNotifications"
+            dot
+            overlap
+            color="red"
+          >
+            <v-icon>mdi-bell</v-icon>
+          </v-badge>
         </v-btn>
       </template>
 
@@ -147,7 +155,8 @@ export default {
 
   data () {
     return {
-      avatarPlaceholder
+      avatarPlaceholder,
+      hasUnreadNotifications: false
     }
   },
 
@@ -191,6 +200,14 @@ export default {
     }
   },
 
+  watch: {
+    notifications (nextValue, prevValue) {
+      if (nextValue.length > prevValue.length) {
+        this.hasUnreadNotifications = true
+      }
+    }
+  },
+
   methods: {
     ...mapActions({
       signOut: 'auth/signOut'
@@ -208,8 +225,12 @@ export default {
       }
     },
 
-    onSidebarToggle (isOpen) {
+    onSidebarToggle () {
       this.$emit('sidebar:toggle')
+    },
+
+    onNotificationsMarkRead () {
+      this.hasUnreadNotifications = false
     }
   }
 }
