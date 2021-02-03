@@ -16,6 +16,8 @@
           >
             <v-data-table
               :page.sync="page"
+              :sort-by.sync="sortBy"
+              :sort-desc.sync="sortDesc"
               v-bind="bindingsTable"
               class="elevation-1"
               @update:page="onPageChange"
@@ -43,10 +45,10 @@
               <template
                 #item.invoiceId="{ item } "
               >
-                {{ item.invoiceId }}
+                {{ item.invoiceId || '-' }}
 
                 <v-btn
-                  v-if="item.invoiceIdCopy"
+                  v-if="item.invoiceId"
                   icon
                   ml="4"
                   small
@@ -61,10 +63,10 @@
               <template
                 #item.chargeId="{ item } "
               >
-                {{ item.chargeId }}
+                {{ item.chargeId || '-' }}
 
                 <v-btn
-                  v-if="item.chargeIdCopy"
+                  v-if="item.chargeId"
                   icon
                   ml="4"
                   small
@@ -91,7 +93,8 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { orderBy } from 'lodash'
+import arraySort from 'array-sort'
+import { isArray } from 'lodash'
 import parseISO from 'date-fns/parseISO'
 import format from 'date-fns/format'
 import TitleAnchored from '~/components/general/TitleAnchored'
@@ -112,18 +115,15 @@ export default {
       headers: [
         {
           text: 'Created',
-          value: 'created',
-          sortable: true
+          value: 'created'
         },
         {
           text: 'Amount',
-          value: 'amount',
-          sortable: false
+          value: 'amount'
         },
         {
           text: 'Paid',
-          value: 'paid',
-          sortable: false
+          value: 'paid'
         },
         {
           text: 'Invoice ID',
@@ -137,28 +137,31 @@ export default {
         },
         {
           text: 'Next Payment Attempt',
-          value: 'nextPaymentAttempt',
-          sortable: false
+          value: 'next_payment_attempt'
         }
       ],
+      sortBy: 'created',
+      sortDesc: true,
       invoices: []
     }
   },
 
   computed: {
     invoicesFormatted () {
-      return orderBy(this.invoices, ['created'], 'desc').map(invoice => ({
+      const sortDesc = isArray(this.sortDesc) ? this.sortDesc[0] : this.sortDesc
+      return arraySort(this.invoices.map(invoice => ({
         created: invoice.created ? format(parseISO(invoice.created), 'MM/dd/yyyy, hh:mm:ss a') : 'N/A',
-        amount: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : 0,
+        amount_paid: invoice.amount_paid,
+        amount: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : '-',
         paid: invoice.paid,
-        invoiceId: invoice.stripe_invoice_id || 'N/A',
-        invoiceIdCopy: !!invoice.stripe_invoice_id,
-        chargeId: invoice.charge_id || 'N/A',
-        chargeIdCopy: !!invoice.charge_id,
-        nextPaymentAttempt: invoice.next_payment_attempt
+        invoiceId: invoice.stripe_invoice_id,
+        chargeId: invoice.charge_id,
+        next_payment_attempt: invoice.next_payment_attempt
           ? format(parseISO(invoice.next_payment_attempt), 'MM/dd/yyyy, hh:mm:ss a')
           : ''
-      }))
+      })), this.sortBy, {
+        reverse: sortDesc
+      })
     },
 
     bindingsTable () {
