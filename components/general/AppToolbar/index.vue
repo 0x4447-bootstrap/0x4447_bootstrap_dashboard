@@ -77,6 +77,7 @@
 
       <v-list
         v-if="hasNotifications"
+        class="px-2"
       >
         <template
           v-for="(notification, index) in notifications"
