@@ -62,18 +62,6 @@
             <div class="profile-details__form__inner">
               <a-validation
                 v-slot="{ hasError, errorMessage }"
-                :error="$v.userData.email"
-              >
-                <v-text-field
-                  v-model="userData.email"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  label="Email"
-                />
-              </a-validation>
-
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
                 :error="$v.userData.givenName"
               >
                 <v-text-field
@@ -81,6 +69,18 @@
                   :error="hasError"
                   :error-messages="errorMessage"
                   label="First name"
+                />
+              </a-validation>
+
+              <a-validation
+                v-slot="{ hasError, errorMessage }"
+                :error="$v.userData.email"
+              >
+                <v-text-field
+                  v-model="userData.email"
+                  :error="hasError"
+                  :error-messages="errorMessage"
+                  label="Email"
                 />
               </a-validation>
             </div>

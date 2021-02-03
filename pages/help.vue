@@ -20,6 +20,7 @@
                 v-for="article in articles"
                 :key="article.slug"
                 :to="$routes.helpArticle(article.slug).route"
+                class="help__list-item"
               >
                 <v-list-item-content>
                   <v-list-item-title v-text="article.title" />
@@ -74,6 +75,14 @@ export default {
   &__list {
     .v-list-item--link:before {
       border-radius: 4px;
+    }
+  }
+
+  &__list-item {
+    margin-bottom: 16px;
+
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }

@@ -45,14 +45,14 @@
               <template
                 #item.invoiceId="{ item } "
               >
-                {{ item.invoiceIdFormatted }}
+                {{ item.invoiceId }}
 
                 <v-btn
-                  v-if="item.invoiceId"
+                  v-if="item.invoiceIdCopy"
                   icon
                   ml="4"
                   small
-                  @click.stop="onCopy(item.invoiceIdFormatted, 'Invoice ID')"
+                  @click.stop="onCopy(item.invoiceId, 'Invoice ID')"
                 >
                   <v-icon small>
                     mdi-content-copy
@@ -63,14 +63,14 @@
               <template
                 #item.chargeId="{ item } "
               >
-                {{ item.chargeIdFormatted }}
+                {{ item.chargeId }}
 
                 <v-btn
-                  v-if="item.chargeId"
+                  v-if="item.chargeIdCopy"
                   icon
                   ml="4"
                   small
-                  @click.stop="onCopy(item.chargeIdFormatted, 'Charge ID')"
+                  @click.stop="onCopy(item.chargeId, 'Charge ID')"
                 >
                   <v-icon small>
                     mdi-content-copy
@@ -185,7 +185,7 @@ export default {
     getPageText () {
       const year = new Date().getFullYear()
 
-      return `${year + 1 - this.page}`
+      return `Data for year ${year + 1 - this.page}`
     }
   },
 
@@ -236,9 +236,7 @@ export default {
     },
 
     onOpenInvoice (invoice) {
-      if (invoice.paid) {
-        this.$router.push(this.$routes.paymentInvoiceId(invoice.invoiceId).route)
-      }
+      this.$router.push(this.$routes.paymentInvoiceId(invoice.invoiceId).route)
     }
   },
 

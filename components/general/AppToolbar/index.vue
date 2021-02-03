@@ -68,6 +68,7 @@
       <template #activator="{ on }">
         <v-btn
           icon
+          class="ml-5"
           v-on="on"
         >
           <v-icon>mdi-bell</v-icon>
