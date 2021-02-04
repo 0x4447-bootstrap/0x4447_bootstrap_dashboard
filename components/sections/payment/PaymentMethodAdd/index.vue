@@ -44,36 +44,43 @@
       cols="12"
       md="8"
     >
-      <v-card>
-        <v-card-text>
-          <form
-            @submit.prevent="onSave"
-          >
-            <v-row class="fill-height flex-column flex-nowrap">
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <div>
-                  <div
-                    id="cardForm"
-                    class="mb-5"
-                    style="max-width: 380px"
-                  />
+      <v-row class="flex-column flex-nowrap">
+        <v-col
+          cols="12"
+          md="6"
+          xl="3"
+        >
+          <v-card>
+            <v-card-text>
+              <div>
+                <div
+                  id="cardForm"
+                  class="mb-5"
+                  style="max-width: 380px"
+                />
 
-                  <p
-                    class="mb-0"
-                  >
-                    This input field is provided by © Stripe. We won't be able to see your details, we get back a token
-                    representing your card, and not the card details that you type here.
-                  </p>
-                </div>
-              </v-col>
+                <p
+                  class="mb-0"
+                >
+                  This input field is provided by © Stripe. We won't be able to see your details, we get back a
+                  token
+                  representing your card, and not the card details that you type here.
+                </p>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-              <a-column
-                cols="12"
-                md="6"
-                lg="4"
+        <v-col
+          cols="12"
+          md="6"
+          xl="3"
+        >
+          <v-card>
+            <v-card-text>
+              <form
+                class="plans__form"
+                @submit.prevent="onSave"
               >
                 <div class="mb-5">
                   <a-validation
@@ -109,11 +116,11 @@
                 >
                   Save
                 </v-btn>
-              </a-column>
-            </v-row>
-          </form>
-        </v-card-text>
-      </v-card>
+              </form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
     </a-column>
   </v-row>
 </template>
@@ -267,6 +274,16 @@ export default {
     height: 100%;
     display: flex;
     flex-flow: column;
+  }
+
+  &__form {
+    width: 50%;
+  }
+
+  @media (max-width: 1024px) {
+    &__form {
+      width: 100%;
+    }
   }
 }
 
