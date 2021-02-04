@@ -7,11 +7,6 @@ const awsConfig = {
     region: process.env.AWS_COGNITO_REGION,
     userPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
     userPoolWebClientId: process.env.AWS_COGNITO_APP_CLIENT_ID
-  },
-  Storage: {
-    bucket: process.env.AWS_USER_FILES_S3_BUCKET,
-    region: process.env.AWS_USER_FILES_S3_REGION,
-    level: 'private'
   }
 }
 
