@@ -41,6 +41,10 @@ export const actions = {
       exp_month: paymentDetails.expMonth,
       exp_year: paymentDetails.expYear,
       last4: paymentDetails.last4,
+      address: {
+        postal_code: paymentDetails.postalCode,
+        country: paymentDetails.country
+      },
       timestamp_created: Math.floor(Date.now() / 1000)
     }
 

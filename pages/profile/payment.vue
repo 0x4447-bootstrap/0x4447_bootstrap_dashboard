@@ -85,12 +85,14 @@ export default {
     }
   },
 
-  mounted () {
+  beforeMount () {
     this.fetchPaymentDetails()
   },
 
   methods: {
     ...mapActions({
+      fetchIpInfo: 'app/fetchIpInfo',
+      fetchCountriesList: 'app/fetchCountriesList',
       paymentDetailsLoad: 'payment/paymentDetailsLoad',
       paymentDetailsCreate: 'payment/paymentDetailsCreate',
       paymentDetailsRemove: 'payment/paymentDetailsRemove',
@@ -108,6 +110,15 @@ export default {
           message: 'Unable to fetch payment details'
         })
       } finally {
+        try {
+          await Promise.all([
+            this.fetchCountriesList(),
+            this.fetchIpInfo()
+          ])
+        } catch (err) {
+          // Fail silently
+        }
+
         this.isFetching = false
       }
     },
