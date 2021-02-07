@@ -155,7 +155,7 @@ export default {
 
   methods: {
     ...mapActions({
-      requestEmailVerification: 'auth/requestEmailVerification',
+      emailVerificationRequest: 'auth/emailVerificationRequest',
       profileUpdate: 'user/profileUpdate',
       profilePhotoUpdate: 'user/profilePhotoUpdate',
       notificationShow: 'notifications/show'
@@ -181,7 +181,7 @@ export default {
         })
 
         if (hasEmailChanged) {
-          await this.requestEmailVerification()
+          await this.emailVerificationRequest()
           this.isModalVerifyEmailOpen = true
         }
       } catch (err) {

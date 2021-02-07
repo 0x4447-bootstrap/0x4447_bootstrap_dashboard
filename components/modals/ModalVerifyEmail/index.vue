@@ -89,7 +89,8 @@ export default {
   methods: {
     ...mapActions({
       notificationShow: 'notifications/show',
-      emailVerificationConfirm: 'auth/emailVerificationConfirm'
+      emailVerificationConfirm: 'auth/emailVerificationConfirm',
+      createUserRecord: 'auth/createUserRecord'
     }),
 
     setIsOpen (value = false) {
@@ -110,6 +111,11 @@ export default {
       try {
         await this.emailVerificationConfirm({
           code: this.verificationCode
+        })
+
+        await this.createUserRecord({
+          sub: this.profile.id,
+          email: this.profile.email
         })
 
         this.notificationShow({
