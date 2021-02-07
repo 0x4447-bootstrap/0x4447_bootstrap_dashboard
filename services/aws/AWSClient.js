@@ -15,6 +15,7 @@ let credentials = null
 let dynamoDbClient = null
 let cognitoSync = null
 let s3 = null
+let lambda = null
 
 export default class AwsClient {
   static async dynamoDb () {
@@ -39,6 +40,14 @@ export default class AwsClient {
     }
 
     return s3
+  }
+
+  static async lambda () {
+    if (!lambda) {
+      await this.buildInstance()
+    }
+
+    return lambda
   }
 
   static async credentials () {
@@ -69,6 +78,7 @@ export default class AwsClient {
       region: awsConfig.region,
       bucket: awsConfig.s3bucket
     })
+    lambda = new AWS.Lambda()
   }
 
   static destroyInstance () {

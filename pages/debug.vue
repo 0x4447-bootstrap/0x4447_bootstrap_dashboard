@@ -37,6 +37,7 @@
 
 <script>
 import { Auth } from 'aws-amplify'
+import LambdaClient from '~/services/aws/Lambda'
 
 export default {
   name: 'ViewDebug',
@@ -60,6 +61,11 @@ export default {
 
   async beforeMount () {
     this.currentCredentials = await Auth.currentCredentials()
+
+    await LambdaClient.invoke({
+      functionName: 'dashboard_debug_version',
+      version: this.$config.VERSION_DASHBOARD_DEBUG_VERSION || '$LATEST'
+    })
   },
 
   head () {
