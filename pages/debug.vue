@@ -62,10 +62,17 @@ export default {
   async beforeMount () {
     this.currentCredentials = await Auth.currentCredentials()
 
-    await LambdaClient.invoke({
-      functionName: 'dashboard_debug_version',
-      version: this.$config.VERSION_DASHBOARD_DEBUG_VERSION || '$LATEST'
-    })
+    this.notifyDebugVersion()
+  },
+
+  methods: {
+    async notifyDebugVersion () {
+      const version = this.$nuxt.context.isDev ? '$LATEST' : this.$config.VERSION_DASHBOARD_DEBUG_VERSION
+      await LambdaClient.invoke({
+        functionName: 'dashboard_debug_version',
+        version
+      })
+    }
   },
 
   head () {
