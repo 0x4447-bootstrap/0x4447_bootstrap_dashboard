@@ -178,7 +178,7 @@ export default {
   computed: {
     ...mapGetters({
       countries: 'app/countries',
-      ipInfo: 'app/ipInfo',
+      countryByTimezone: 'app/countryByTimezone',
       isProfileEmpty: 'user/isProfileEmpty',
       profile: 'user/profile'
     }),
@@ -234,16 +234,7 @@ export default {
     },
 
     preFillUserInfo () {
-      const ipInfo = this.ipInfo
-
-      const {
-        zip,
-        country
-      } = ipInfo
-
-      if (zip && zip.length === 5) {
-        this.paymentDetails.postalCode = zip
-      }
+      const country = this.countryByTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
       if (country) {
         this.paymentDetails.country = country

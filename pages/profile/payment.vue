@@ -91,7 +91,6 @@ export default {
 
   methods: {
     ...mapActions({
-      fetchIpInfo: 'app/fetchIpInfo',
       fetchCountriesList: 'app/fetchCountriesList',
       paymentDetailsLoad: 'payment/paymentDetailsLoad',
       paymentDetailsCreate: 'payment/paymentDetailsCreate',
@@ -111,10 +110,7 @@ export default {
         })
       } finally {
         try {
-          await Promise.all([
-            this.fetchCountriesList(),
-            this.fetchIpInfo()
-          ])
+          await this.fetchCountriesList()
         } catch (err) {
           // Fail silently
         }
