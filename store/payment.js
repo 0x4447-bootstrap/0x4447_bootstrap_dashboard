@@ -10,7 +10,7 @@ export const actions = {
     const { identityId } = await AwsClient.credentials()
 
     const response = await dbClient.query({
-      TableName: 'default',
+      TableName: 'money',
       KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
       ExpressionAttributeNames: {
         '#pk': 'pk',
@@ -49,7 +49,7 @@ export const actions = {
     }
 
     await dbClient.put({
-      TableName: 'default',
+      TableName: 'money',
       Item: documentPayload
     }).promise()
   },
@@ -59,7 +59,7 @@ export const actions = {
     const { identityId } = await AwsClient.credentials()
 
     await dbClient.delete({
-      TableName: 'default',
+      TableName: 'money',
       Key: {
         pk: identityId,
         sk: 'user#payment#' + last4
