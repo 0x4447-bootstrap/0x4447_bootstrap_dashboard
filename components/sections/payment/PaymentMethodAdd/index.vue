@@ -106,6 +106,21 @@
                       label="Last name"
                     />
                   </a-validation>
+
+                  <a-validation
+                    v-slot="{ hasError, errorMessage }"
+                    :error="$v.paymentDetails.country"
+                  >
+                    <v-autocomplete
+                      v-model="paymentDetails.country"
+                      :items="countries"
+                      :error="hasError"
+                      :error-messages="errorMessage"
+                      label="Country"
+                      item-text="name"
+                      item-value="name"
+                    />
+                  </a-validation>
                 </div>
 
                 <v-btn
@@ -132,7 +147,9 @@ import { required } from 'vuelidate/lib/validators'
 
 const initialForm = {
   firstName: '',
-  lastName: ''
+  lastName: '',
+  country: '',
+  postalCode: ''
 }
 
 export default {
@@ -160,6 +177,8 @@ export default {
 
   computed: {
     ...mapGetters({
+      countries: 'app/countries',
+      countryByTimezone: 'app/countryByTimezone',
       isProfileEmpty: 'user/isProfileEmpty',
       profile: 'user/profile'
     }),
@@ -175,6 +194,7 @@ export default {
   },
 
   mounted () {
+    this.preFillUserInfo()
     this.initStripe()
   },
 
@@ -199,6 +219,9 @@ export default {
             color: '#fa755a',
             iconColor: '#fa755a'
           }
+        },
+        value: {
+          postalCode: this.paymentDetails.postalCode
         }
       })
 
@@ -208,6 +231,14 @@ export default {
       }
 
       this.stripeCardField.mount(cardSelector)
+    },
+
+    preFillUserInfo () {
+      const country = this.countryByTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+
+      if (country) {
+        this.paymentDetails.country = country
+      }
     },
 
     classPlanButton (planId) {
@@ -260,6 +291,9 @@ export default {
           required
         },
         lastName: {
+          required
+        },
+        country: {
           required
         }
       }
