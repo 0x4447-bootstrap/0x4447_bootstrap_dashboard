@@ -155,10 +155,11 @@ export default {
 
   methods: {
     ...mapActions({
-      requestEmailVerification: 'auth/requestEmailVerification',
+      emailVerificationRequest: 'auth/emailVerificationRequest',
       profileUpdate: 'user/profileUpdate',
       profilePhotoUpdate: 'user/profilePhotoUpdate',
-      notificationShow: 'notifications/show'
+      notificationShow: 'notifications/show',
+      createUserRecord: 'auth/createUserRecord'
     }),
 
     async onUpdateProfile () {
@@ -181,8 +182,13 @@ export default {
         })
 
         if (hasEmailChanged) {
-          await this.requestEmailVerification()
+          await this.emailVerificationRequest()
           this.isModalVerifyEmailOpen = true
+
+          await this.createUserRecord({
+            sub: this.profile.id,
+            email: this.userData.email
+          })
         }
       } catch (err) {
         this.notificationShow({

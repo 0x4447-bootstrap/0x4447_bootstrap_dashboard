@@ -54,7 +54,7 @@ export const actions = {
     }
   },
 
-  async checkUserRecordExists (store, { sub }) {
+  async getUserRecordExists (store, { sub }) {
     const dbClient = await AwsClient.dynamoDb()
     const { identityId } = await AwsClient.credentials()
 
@@ -74,7 +74,7 @@ export const actions = {
       }
     }).promise()
 
-    return Items?.length > 0
+    return Items[0]
   },
 
   async createUserRecord (store, {
