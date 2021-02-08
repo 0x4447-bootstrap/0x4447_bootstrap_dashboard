@@ -24,7 +24,7 @@ export const actions = {
     const year = (new Date().getFullYear() + 1) - page
 
     const { Items = [], LastEvaluatedKey = null, Count = 0 } = await dbClient.query({
-      TableName: 'default',
+      TableName: 'money',
       KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
       ExpressionAttributeNames: {
         '#pk': 'pk',
@@ -57,7 +57,7 @@ export const actions = {
     const { identityId } = await AwsClient.credentials()
 
     const { Items = [] } = await dbClient.query({
-      TableName: 'default',
+      TableName: 'money',
       KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
       ExpressionAttributeNames: {
         '#pk': 'pk',

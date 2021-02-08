@@ -59,7 +59,7 @@ export const actions = {
     const { identityId } = await AwsClient.credentials()
 
     const { Items } = await dbClient.query({
-      TableName: 'default',
+      TableName: 'profile',
       KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
       ExpressionAttributeNames: {
         '#pk': 'pk',
@@ -92,7 +92,7 @@ export const actions = {
     }
 
     await dbClient.put({
-      TableName: 'default',
+      TableName: 'profile',
       Item: documentPayload
     }).promise()
   },
