@@ -187,6 +187,11 @@ export default {
           title: this.$routes.paymentInvoices.title,
           icon: 'mdi-receipt',
           route: this.$routes.paymentInvoices.route
+        },
+        {
+          title: this.$routes.profileSecurity.title,
+          icon: 'mdi-security',
+          route: this.$routes.profileSecurity.route
         }
       ]
     },

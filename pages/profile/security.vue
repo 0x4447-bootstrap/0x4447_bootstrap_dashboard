@@ -1,10 +1,10 @@
 <template>
   <v-layout column>
     <title-anchored
-      anchor="identity"
+      anchor="security"
     >
       <h1 class="display-1 mb-3 px-4">
-        Identity
+        Security
       </h1>
     </title-anchored>
 
@@ -14,27 +14,27 @@
         sm="12"
         md="6"
       >
-        <profile-details />
+        <password-change />
       </a-column>
     </v-row>
   </v-layout>
 </template>
 
 <script>
-import ProfileDetails from '~/components/sections/profile/ProfileDetails'
+import PasswordChange from '~/components/sections/security/PasswordChange'
 import TitleAnchored from '~/components/general/TitleAnchored'
 
 export default {
-  name: 'ViewProfile',
+  name: 'ViewProfileSecurity',
 
   components: {
     TitleAnchored,
-    ProfileDetails
+    PasswordChange
   },
 
   head () {
     return {
-      title: this.$routes.profileIdentity.title
+      title: this.$routes.profileSecurity.title
     }
   }
 }

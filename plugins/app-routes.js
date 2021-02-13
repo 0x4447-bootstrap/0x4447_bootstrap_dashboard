@@ -48,6 +48,12 @@ export default function appRoutesPlugin (context, inject) {
         title: `Invoice #${invoiceId}`
       }
     },
+    profileSecurity: {
+      route: {
+        name: 'profile-security'
+      },
+      title: 'Security'
+    },
     help: {
       route: {
         name: 'help'
