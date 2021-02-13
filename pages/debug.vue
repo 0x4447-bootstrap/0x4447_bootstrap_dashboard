@@ -7,6 +7,10 @@
 
     <v-row>
       <a-column>
+        <h3 class="text-h6 my-3 px-4">
+          Cognito Details
+        </h3>
+
         <v-card>
           <v-card-text>
             <v-row>
@@ -41,7 +45,7 @@
     <v-row>
       <a-column>
         <h3 class="text-h6 my-3 px-4">
-          Versioning Test
+          Lambda Versioning Test
         </h3>
 
         <v-card>
