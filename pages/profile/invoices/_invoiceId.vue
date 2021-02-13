@@ -1,12 +1,9 @@
 <template>
   <v-layout column>
-    <title-anchored
+    <page-title
+      :title="`Invoice #${invoiceId}`"
       :anchor="`invoice-${invoiceId}`"
-    >
-      <h1 class="display-1 mb-3 px-4">
-        Invoice #{{ invoiceId }}
-      </h1>
-    </title-anchored>
+    />
 
     <v-row>
       <a-column

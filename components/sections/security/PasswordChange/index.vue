@@ -1,72 +1,65 @@
 <template>
-  <v-row class="mt-5">
-    <a-column
-      cols="12"
-      class="mb-5 mb-md-0"
-    >
-      <v-card width="100%">
-        <v-card-text>
-          <h4 class="text-h5">
-            Change password
-          </h4>
+  <v-card width="100%">
+    <v-card-text>
+      <h4 class="text-h5">
+        Change password
+      </h4>
 
-          <form
-            class="profile-password__form"
-            @submit.prevent="onSubmit"
+      <form
+        class="profile-password__form"
+        @submit.prevent="onSubmit"
+      >
+        <div>
+          <a-validation
+            v-slot="{ hasError, errorMessage }"
+            :error="$v.passwords.current"
           >
-            <div>
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
-                :error="$v.passwords.current"
-              >
-                <v-text-field
-                  v-model="passwords.current"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  type="password"
-                  label="Current password"
-                />
-              </a-validation>
+            <v-text-field
+              v-model="passwords.current"
+              :error="hasError"
+              :error-messages="errorMessage"
+              type="password"
+              label="Current password"
+            />
+          </a-validation>
 
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
-                :error="$v.passwords.new"
-              >
-                <v-text-field
-                  v-model="passwords.new"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  type="password"
-                  label="New password"
-                />
-              </a-validation>
+          <a-validation
+            v-slot="{ hasError, errorMessage }"
+            :error="$v.passwords.new"
+          >
+            <v-text-field
+              v-model="passwords.new"
+              :error="hasError"
+              :error-messages="errorMessage"
+              type="password"
+              label="New password"
+            />
+          </a-validation>
 
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
-                :error="$v.passwords.newConfirm"
-              >
-                <v-text-field
-                  v-model="passwords.newConfirm"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  type="password"
-                  label="Repeat new password"
-                />
-              </a-validation>
-            </div>
+          <a-validation
+            v-slot="{ hasError, errorMessage }"
+            :error="$v.passwords.newConfirm"
+          >
+            <v-text-field
+              v-model="passwords.newConfirm"
+              :error="hasError"
+              :error-messages="errorMessage"
+              type="password"
+              label="Repeat new password"
+            />
+          </a-validation>
+        </div>
 
-            <v-btn
-              :loading="isLoading"
-              type="submit"
-              color="primary"
-            >
-              Save
-            </v-btn>
-          </form>
-        </v-card-text>
-      </v-card>
-    </a-column>
-  </v-row>
+        <v-btn
+          :loading="isLoading"
+          type="submit"
+          color="primary"
+        >
+          Save
+        </v-btn>
+      </form>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>

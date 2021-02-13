@@ -1,8 +1,9 @@
 <template>
   <v-layout column>
-    <h1 class="display-1 mb-3 px-4">
-      {{ $routes.help.title }}
-    </h1>
+    <page-title
+      :title="$routes.help.title"
+      anchor="help"
+    />
 
     <v-row>
       <a-column

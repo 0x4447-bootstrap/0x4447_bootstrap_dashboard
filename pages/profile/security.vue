@@ -1,12 +1,9 @@
 <template>
   <v-layout column>
-    <title-anchored
+    <page-title
+      :title="$routes.profileSecurity.title"
       anchor="security"
-    >
-      <h1 class="display-1 mb-3 px-4">
-        Security
-      </h1>
-    </title-anchored>
+    />
 
     <v-row>
       <a-column
@@ -22,13 +19,11 @@
 
 <script>
 import PasswordChange from '~/components/sections/security/PasswordChange'
-import TitleAnchored from '~/components/general/TitleAnchored'
 
 export default {
   name: 'ViewProfileSecurity',
 
   components: {
-    TitleAnchored,
     PasswordChange
   },
 
