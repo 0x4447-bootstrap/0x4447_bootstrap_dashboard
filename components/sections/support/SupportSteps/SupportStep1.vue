@@ -10,17 +10,25 @@
         v-model="supportForm.issue"
         :error="hasError"
         :error-messages="errorMessage"
+        :counter="true"
         autofocus
         name="support-issue"
         label="Describe your problem"
-      />
+      >
+        <template #counter>
+          <div>
+            Words: {{ wordsCharCounter.words }}
+            Characters: {{ wordsCharCounter.characters }}
+          </div>
+        </template>
+      </v-textarea>
     </a-validation>
 
     <v-btn
       color="primary"
       type="submit"
     >
-      Save
+      Next
     </v-btn>
   </v-form>
 </template>
@@ -36,6 +44,16 @@ export default {
     return {
       supportForm: {
         issue: ''
+      }
+    }
+  },
+
+  computed: {
+    wordsCharCounter () {
+      const words = this.supportForm.issue
+      return {
+        words: words ? words.split(' ').length : 0,
+        characters: words.length
       }
     }
   },
