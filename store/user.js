@@ -1,5 +1,6 @@
 import { Auth } from 'aws-amplify'
 import { pickBy } from 'lodash'
+import AwsClient from '~/services/aws/AWSClient'
 import CognitoSyncClient from '~/services/aws/CognitoSync'
 import s3Client from '~/services/aws/S3'
 
@@ -68,7 +69,7 @@ export const actions = {
     getters,
     dispatch
   }, { file }) {
-    const key = (await Auth.currentCredentials()).identityId
+    const key = (await AwsClient.credentials()).identityId
 
     await s3Client.put({
       key,
@@ -78,7 +79,9 @@ export const actions = {
     await dispatch('fetchProfilePhoto', { key })
   },
 
-  async fetchProfilePhoto ({ dispatch }, { key }) {
+  async fetchProfilePhoto ({ dispatch }) {
+    const key = (await AwsClient.credentials()).identityId
+
     try {
       const profilePictureUrl = await s3Client.getUrl({ key })
 
