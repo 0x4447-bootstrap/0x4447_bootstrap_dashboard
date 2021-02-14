@@ -16,7 +16,7 @@
               :sort-by.sync="sortBy"
               :sort-desc.sync="sortDesc"
               v-bind="bindingsTable"
-              class="elevation-1"
+              class="elevation-1 invoices__table"
               @update:page="onPageChange"
               @click:row="onOpenInvoice"
             >
@@ -237,3 +237,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.invoices__table tr:hover {
+  cursor: pointer;
+}
+</style>
