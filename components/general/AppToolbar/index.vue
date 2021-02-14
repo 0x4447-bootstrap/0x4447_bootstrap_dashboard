@@ -93,6 +93,7 @@
           <v-list-item
             :key="index"
             :class="notification.type"
+            class="notifications-list__item"
             two-line
           >
             <v-list-item-content>
@@ -240,3 +241,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.notifications-list {
+  &__item {
+    border-radius: 4px;
+  }
+}
+</style>
