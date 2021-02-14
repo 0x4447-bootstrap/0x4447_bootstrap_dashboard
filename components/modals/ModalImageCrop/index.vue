@@ -161,7 +161,10 @@ export default {
     },
 
     onSave () {
-      this.$refs.imageCropper.getCroppedCanvas().toBlob((blob) => {
+      this.$refs.imageCropper.getCroppedCanvas({
+        height: 320,
+        width: 320
+      }).toBlob((blob) => {
         this.$emit('done', blob)
         this.setIsOpen(false)
         this.resetImage()
