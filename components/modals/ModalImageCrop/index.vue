@@ -135,3 +135,12 @@ export default {
   }
 }
 </script>
+
+<style>
+/*
+* Fix for an empty box in the corner of vue-cropperjs container
+*/
+.cropper-bg {
+  background-image: none;
+}
+</style>
