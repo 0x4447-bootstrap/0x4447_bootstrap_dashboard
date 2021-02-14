@@ -75,6 +75,30 @@
         </v-card>
       </a-column>
     </v-row>
+
+    <v-row>
+      <a-column>
+        <h3 class="text-h6 my-3 px-4">
+          Storage
+        </h3>
+
+        <v-card>
+          <v-card-text>
+            <v-row>
+              <a-column>
+                <div class="py-3">
+                  <v-btn
+                    @click="onClearStorage"
+                  >
+                    Clean Browser Storage
+                  </v-btn>
+                </div>
+              </a-column>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </a-column>
+    </v-row>
   </v-layout>
 </template>
 
@@ -131,6 +155,10 @@ export default {
           message: 'Unable to retrieve debug version'
         })
       }
+    },
+
+    onClearStorage () {
+      localStorage.clear()
     }
   },
 
