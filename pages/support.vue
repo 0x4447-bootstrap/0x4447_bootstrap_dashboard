@@ -11,10 +11,7 @@
     <v-card>
       <v-card-text>
         <v-row>
-          <v-col
-            cols="12"
-            md="6"
-          >
+          <v-col cols="12">
             <support-steps />
           </v-col>
         </v-row>

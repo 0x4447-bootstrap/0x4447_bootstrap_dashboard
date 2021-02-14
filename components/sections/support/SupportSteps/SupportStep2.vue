@@ -1,6 +1,6 @@
 <template>
   <v-form
-    @submit.prevent="onSave"
+    @submit.prevent="onNext"
   >
     <a-validation
       v-slot="{ hasError, errorMessage }"
@@ -10,18 +10,34 @@
         v-model="supportForm.expectation"
         :error="hasError"
         :error-messages="errorMessage"
+        counter
         autofocus
         name="support-issue"
         label="Describe your expectation"
-      />
+      >
+        <template #counter>
+          <div>
+            Words: {{ wordsCharCounter.words }}
+            Characters: {{ wordsCharCounter.characters }}
+          </div>
+        </template>
+      </v-textarea>
     </a-validation>
 
     <v-btn
       :loading="loading"
       color="primary"
       type="submit"
+      class="mr-3"
     >
-      Send
+      Next
+    </v-btn>
+
+    <v-btn
+      text
+      @click="onBack"
+    >
+      Back
     </v-btn>
   </v-form>
 </template>
@@ -44,35 +60,31 @@ export default {
     }
   },
 
+  computed: {
+    wordsCharCounter () {
+      const words = this.supportForm.expectation
+      return {
+        words: words ? words.split(' ').length : 0,
+        characters: words.length
+      }
+    }
+  },
+
   methods: {
     ...mapActions({
       notificationShow: 'notifications/show'
     }),
 
-    async onSave () {
+    onNext () {
       if (this.$v.supportForm.$invalid) {
         return this.$v.supportForm.$touch()
       }
 
-      this.loading = true
+      this.$emit('step:next', this.supportForm)
+    },
 
-      try {
-        await new Promise(resolve => setTimeout(resolve, 2000))
-
-        this.notificationShow({
-          type: 'success',
-          message: 'Your message has been sent!'
-        })
-
-        this.$emit('step:next')
-      } catch (err) {
-        this.notificationShow({
-          type: 'error',
-          message: 'Unable to send a contact form'
-        })
-      } finally {
-        this.loading = false
-      }
+    onBack () {
+      this.$emit('step:previous')
     }
   },
 
