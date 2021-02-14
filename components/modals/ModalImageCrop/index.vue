@@ -5,7 +5,7 @@
     @input="setIsOpen"
   >
     <v-card>
-      <v-card-title class="headline grey lighten-2">
+      <v-card-title class="headline">
         Edit image
       </v-card-title>
 
