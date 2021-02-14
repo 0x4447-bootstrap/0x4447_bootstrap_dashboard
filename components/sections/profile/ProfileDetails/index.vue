@@ -5,7 +5,6 @@
       sm="12"
       md="6"
       lg="auto"
-      class="mb-5 mb-md-0"
     >
       <v-card height="100%">
         <v-card-text class="profile-details-avatar__inner">
