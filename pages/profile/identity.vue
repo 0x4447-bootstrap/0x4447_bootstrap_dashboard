@@ -1,12 +1,9 @@
 <template>
   <v-layout column>
-    <title-anchored
+    <page-title
+      :title="$routes.profileIdentity.title"
       anchor="identity"
-    >
-      <h1 class="display-1 mb-3 px-4">
-        Identity
-      </h1>
-    </title-anchored>
+    />
 
     <v-row>
       <a-column
@@ -22,13 +19,11 @@
 
 <script>
 import ProfileDetails from '~/components/sections/profile/ProfileDetails'
-import TitleAnchored from '~/components/general/TitleAnchored'
 
 export default {
   name: 'ViewProfile',
 
   components: {
-    TitleAnchored,
     ProfileDetails
   },
 

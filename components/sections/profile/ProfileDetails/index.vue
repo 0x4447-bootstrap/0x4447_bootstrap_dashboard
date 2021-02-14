@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <a-column
+    <v-col
       cols="12"
       sm="12"
       md="6"
@@ -47,9 +47,9 @@
           />
         </v-card-text>
       </v-card>
-    </a-column>
+    </v-col>
 
-    <a-column
+    <v-col
       xs="12"
       class="d-flex"
     >
@@ -99,7 +99,7 @@
       <modal-verify-email
         :is-open.sync="isModalVerifyEmailOpen"
       />
-    </a-column>
+    </v-col>
   </v-row>
 </template>
 

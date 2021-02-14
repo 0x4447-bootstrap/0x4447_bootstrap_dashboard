@@ -1,42 +1,51 @@
 <template>
   <v-layout column>
-    <h1 class="display-1 mb-3 px-4">
-      {{ $routes.debug.title }}
-    </h1>
-
-    <v-card>
-      <v-card-text>
-        <v-row>
-          <a-column
-            sm="12"
-            md="auto"
-          >
-            <v-simple-table
-              dense
-            >
-              <template #default>
-                <tbody>
-                  <tr
-                    v-for="(field, index) in debugDetails"
-                    :key="index"
-                  >
-                    <td>{{ field.label }}</td>
-                    <td>
-                      {{ field.value }}
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </a-column>
-        </v-row>
-      </v-card-text>
-    </v-card>
+    <page-title
+      :title="$routes.debug.title"
+      anchor="debug"
+    />
 
     <v-row>
-      <v-col>
+      <a-column>
         <h3 class="text-h6 my-3 px-4">
-          Versioning Test
+          Cognito Details
+        </h3>
+
+        <v-card>
+          <v-card-text>
+            <v-row>
+              <a-column
+                sm="12"
+                md="auto"
+              >
+                <v-simple-table
+                  dense
+                >
+                  <template #default>
+                    <tbody>
+                      <tr
+                        v-for="(field, index) in debugDetails"
+                        :key="index"
+                      >
+                        <td>{{ field.label }}</td>
+                        <td>
+                          {{ field.value }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </a-column>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </a-column>
+    </v-row>
+
+    <v-row>
+      <a-column>
+        <h3 class="text-h6 my-3 px-4">
+          Lambda Versioning Test
         </h3>
 
         <v-card>
@@ -64,7 +73,7 @@
             </v-row>
           </v-card-text>
         </v-card>
-      </v-col>
+      </a-column>
     </v-row>
   </v-layout>
 </template>

@@ -1,19 +1,16 @@
 <template>
   <v-layout column>
-    <title-anchored
+    <page-title
+      :title="$routes.paymentInvoices.title"
       anchor="invoices"
-    >
-      <h1 class="display-1 mb-3 px-4">
-        Invoices
-      </h1>
-    </title-anchored>
+    />
 
-    <v-card>
-      <v-card-text>
-        <v-row>
-          <a-column
-            cols="12"
-          >
+    <v-row>
+      <a-column
+        cols="12"
+      >
+        <v-card>
+          <v-card-text>
             <v-data-table
               :page.sync="page"
               :sort-by.sync="sortBy"
@@ -84,10 +81,10 @@
                 {{ getPageText }}
               </template>
             </v-data-table>
-          </a-column>
-        </v-row>
-      </v-card-text>
-    </v-card>
+          </v-card-text>
+        </v-card>
+      </a-column>
+    </v-row>
   </v-layout>
 </template>
 
@@ -97,14 +94,9 @@ import arraySort from 'array-sort'
 import { isArray } from 'lodash'
 import parseISO from 'date-fns/parseISO'
 import format from 'date-fns/format'
-import TitleAnchored from '~/components/general/TitleAnchored'
 
 export default {
   name: 'ViewPaymentIndex',
-
-  components: {
-    TitleAnchored
-  },
 
   data () {
     return {

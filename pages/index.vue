@@ -1,37 +1,31 @@
 <template>
   <v-layout column>
-    <title-anchored
-      anchor="dashboard"
-    >
-      <h1 class="display-1 mb-3 px-4">
-        Dashboard
-      </h1>
-    </title-anchored>
+    <page-title
+      :title="$routes.dashboard.title"
+    />
 
-    <v-card>
-      <v-card-text>
-        <v-row>
-          <a-column
-            sm="12"
-            md="auto"
-          >
-            Welcome!
-          </a-column>
-        </v-row>
-      </v-card-text>
-    </v-card>
+    <v-row>
+      <a-column>
+        <v-card>
+          <v-card-text>
+            <v-row>
+              <a-column
+                sm="12"
+                md="auto"
+              >
+                Welcome!
+              </a-column>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </a-column>
+    </v-row>
   </v-layout>
 </template>
 
 <script>
-import TitleAnchored from '~/components/general/TitleAnchored'
-
 export default {
   name: 'ViewDashboard',
-
-  components: {
-    TitleAnchored
-  },
 
   head () {
     return {

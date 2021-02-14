@@ -12,13 +12,10 @@
         v-else-if="hasPaymentMethod"
         key="payment-details"
       >
-        <title-anchored
+        <page-title
+          title="Payment method"
           anchor="payment-method"
-        >
-          <h1 class="display-1 mb-3 px-4">
-            Payment method
-          </h1>
-        </title-anchored>
+        />
 
         <v-card>
           <v-card-text>
@@ -35,13 +32,10 @@
         v-else
         key="payment-create"
       >
-        <title-anchored
+        <page-title
+          title="Subscription"
           anchor="add-payment-method"
-        >
-          <h1 class="display-1 mb-3 px-4">
-            Subscription
-          </h1>
-        </title-anchored>
+        />
 
         <payment-method-add
           :loading="loadingCreate"
@@ -56,7 +50,6 @@
 import { mapActions } from 'vuex'
 import PaymentMethodDetails from '~/components/sections/payment/PaymentMethodDetails'
 import PaymentMethodAdd from '~/components/sections/payment/PaymentMethodAdd'
-import TitleAnchored from '~/components/general/TitleAnchored'
 import ProgressContent from '~/components/general/ProgressContent'
 
 export default {
@@ -65,7 +58,6 @@ export default {
   components: {
     PaymentMethodAdd,
     PaymentMethodDetails,
-    TitleAnchored,
     ProgressContent
   },
 

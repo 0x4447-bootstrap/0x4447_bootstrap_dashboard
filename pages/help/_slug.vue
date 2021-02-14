@@ -16,14 +16,8 @@
 </template>
 
 <script>
-import TitleAnchored from '~/components/general/TitleAnchored'
-
 export default {
   name: 'ViewHelpSlug',
-
-  components: {
-    TitleAnchored
-  },
 
   asyncData ({
     params,
