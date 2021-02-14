@@ -9,10 +9,9 @@
     >
       <v-card height="100%">
         <v-card-text class="profile-details-avatar__inner">
-          <div class="d-flex justify-center justify-lg-start mb-2 px-6">
+          <div class="d-flex justify-center justify-lg-start mb-4">
             <v-avatar
               size="160"
-              class="mb-6"
             >
               <v-img
                 :lazy-src="avatarPlaceholder"
