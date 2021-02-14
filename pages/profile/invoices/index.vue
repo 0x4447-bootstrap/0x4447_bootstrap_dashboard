@@ -123,7 +123,7 @@ export default {
           sortable: false
         },
         {
-          text: 'Charge Id',
+          text: 'Charge ID',
           value: 'chargeId',
           sortable: false
         },
