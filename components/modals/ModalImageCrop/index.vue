@@ -35,7 +35,33 @@
               <div
                 id="imageCropPreview"
                 style="width: 160px; height: 160px; overflow: hidden; border-radius: 50%; margin: 0 auto;"
+                class="mb-3"
               />
+
+              <div class="mb-3">
+                <v-btn
+                  block
+                  @click="onRotate(90)"
+                >
+                  Rotate +90deg
+                </v-btn>
+              </div>
+
+              <div class="d-flex">
+                <v-btn
+                  class="flex-grow-1"
+                  @click="onFlipX"
+                >
+                  Flip X
+                </v-btn>
+
+                <v-btn
+                  class="ml-3 flex-grow-1"
+                  @click="onFlipY"
+                >
+                  Flip Y
+                </v-btn>
+              </div>
             </v-col>
           </v-row>
         </div>
@@ -87,6 +113,15 @@ export default {
     }
   },
 
+  data () {
+    return {
+      cropData: {
+        scaleX: 0,
+        scaleY: 0
+      }
+    }
+  },
+
   computed: {
     optionsCropper () {
       return {
@@ -131,6 +166,24 @@ export default {
         this.setIsOpen(false)
         this.resetImage()
       })
+    },
+
+    onRotate (degrees) {
+      this.$refs.imageCropper?.rotate(degrees)
+    },
+
+    onFlipX () {
+      const scale = this.cropData.scaleX
+      const newScale = scale ? -scale : -1
+      this.$refs.imageCropper?.scaleX(newScale)
+      this.cropData.scaleX = newScale
+    },
+
+    onFlipY () {
+      const scale = this.cropData.scaleY
+      const newScale = scale ? -scale : -1
+      this.$refs.imageCropper?.scaleY(newScale)
+      this.cropData.scaleY = newScale
     }
   }
 }
