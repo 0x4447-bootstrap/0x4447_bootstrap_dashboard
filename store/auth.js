@@ -54,7 +54,7 @@ export const actions = {
     }
   },
 
-  async getUserRecordExists () {
+  async userRecordGet () {
     const dbClient = await AwsClient.dynamoDb()
     const { identityId } = await AwsClient.credentials()
 

@@ -43,7 +43,7 @@ export default {
       if (nextAuthStatus === AuthState.SignedIn) {
         await this.checkUserAuthentication()
 
-        const userRecord = await this.getUserRecordExists({ sub: user.attributes.sub })
+        const userRecord = await this.userRecordGet({ sub: user.attributes.sub })
 
         if (!userRecord || userRecord.email !== user.attributes.email) {
           await this.createUserRecord({
@@ -64,7 +64,7 @@ export default {
   methods: {
     ...mapActions({
       checkUserAuthentication: 'auth/checkUserAuthentication',
-      getUserRecordExists: 'auth/getUserRecordExists',
+      userRecordGet: 'auth/userRecordGet',
       createUserRecord: 'auth/createUserRecord'
     })
   },
