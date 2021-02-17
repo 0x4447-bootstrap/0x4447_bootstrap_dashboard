@@ -70,9 +70,16 @@ export const actions = {
   }, { file }) {
     const key = (await Auth.currentCredentials()).identityId
 
+    const aYearFromNow = new Date()
+    aYearFromNow.setFullYear(aYearFromNow.getFullYear() + 1)
+
     await s3Client.put({
       key,
-      file
+      file,
+      params: {
+        CacheControl: 'max-age=31556952',
+        Expires: aYearFromNow
+      }
     })
 
     await dispatch('fetchProfilePhoto', { key })

@@ -1,13 +1,14 @@
 import AwsClient, { awsConfig } from '~/services/aws/AWSClient'
 
 export default class S3Client {
-  static async put ({ key, file }) {
+  static async put ({ key, file, params = {} }) {
     const s3Client = await AwsClient.s3()
 
     await s3Client.putObject({
       Bucket: awsConfig.s3bucket,
       Key: key,
-      Body: file
+      Body: file,
+      ...params
     }).promise()
   }
 
