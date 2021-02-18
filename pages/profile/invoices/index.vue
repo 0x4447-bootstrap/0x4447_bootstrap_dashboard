@@ -13,8 +13,6 @@
           <v-card-text>
             <v-data-table
               :page.sync="page"
-              :sort-by.sync="sortBy"
-              :sort-desc.sync="sortDesc"
               v-bind="bindingsTable"
               class="elevation-1 invoices__table"
               @update:page="onPageChange"
@@ -90,8 +88,6 @@
 
 <script>
 import { mapActions } from 'vuex'
-import arraySort from 'array-sort'
-import { isArray } from 'lodash'
 import parseISO from 'date-fns/parseISO'
 import format from 'date-fns/format'
 
@@ -107,15 +103,18 @@ export default {
       headers: [
         {
           text: 'Created',
-          value: 'created'
+          value: 'created',
+          sortable: false
         },
         {
           text: 'Amount',
-          value: 'amount'
+          value: 'amount',
+          sortable: false
         },
         {
           text: 'Paid',
-          value: 'paid'
+          value: 'paid',
+          sortable: false
         },
         {
           text: 'Invoice ID',
@@ -129,19 +128,17 @@ export default {
         },
         {
           text: 'Next Payment Attempt',
-          value: 'next_payment_attempt'
+          value: 'next_payment_attempt',
+          sortable: false
         }
       ],
-      sortBy: 'created',
-      sortDesc: true,
       invoices: []
     }
   },
 
   computed: {
     invoicesFormatted () {
-      const sortDesc = isArray(this.sortDesc) ? this.sortDesc[0] : this.sortDesc
-      return arraySort(this.invoices.map(invoice => ({
+      return this.invoices.map(invoice => ({
         created: invoice.created ? format(parseISO(invoice.created), 'MM/dd/yyyy, hh:mm:ss a') : 'N/A',
         amount_paid: invoice.amount_paid,
         amount: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : '-',
@@ -151,9 +148,7 @@ export default {
         next_payment_attempt: invoice.next_payment_attempt
           ? format(parseISO(invoice.next_payment_attempt), 'MM/dd/yyyy, hh:mm:ss a')
           : ''
-      })), this.sortBy, {
-        reverse: sortDesc
-      })
+      }))
     },
 
     bindingsTable () {
