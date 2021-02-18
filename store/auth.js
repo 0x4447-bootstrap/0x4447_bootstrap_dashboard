@@ -19,7 +19,6 @@ export const actions = {
   async checkUserAuthentication ({ dispatch }) {
     try {
       const user = await Auth.currentUserInfo()
-      const credentials = await Auth.currentCredentials()
 
       if (!user) {
         return dispatch('setAuthState', {
@@ -39,9 +38,7 @@ export const actions = {
             familyName: user.attributes.family_name
           }
         }, { root: true }),
-        dispatch('user/fetchProfilePhoto', {
-          key: credentials.identityId
-        }, { root: true }),
+        dispatch('user/fetchProfilePhoto', {}, { root: true }),
         dispatch('user/settingsFetch', {}, { root: true })
       ])
     } catch (err) {
