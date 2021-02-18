@@ -54,27 +54,19 @@ export const actions = {
     }
   },
 
-  async getUserRecordExists (store, { sub }) {
+  async userRecordGet () {
     const dbClient = await AwsClient.dynamoDb()
     const { identityId } = await AwsClient.credentials()
 
-    const { Items } = await dbClient.query({
+    const { Item } = await dbClient.get({
       TableName: 'profile',
-      KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
-      ExpressionAttributeNames: {
-        '#pk': 'pk',
-        '#sk': 'sk',
-        '#sub': 'sub'
-      },
-      FilterExpression: '#sub = :sub',
-      ExpressionAttributeValues: {
-        ':pk': identityId,
-        ':sk': 'user#basic',
-        ':sub': sub
+      Key: {
+        pk: identityId,
+        sk: 'user#basic'
       }
     }).promise()
 
-    return Items[0]
+    return Item
   },
 
   async createUserRecord (store, {
