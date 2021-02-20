@@ -112,7 +112,8 @@ export default {
 
   methods: {
     ...mapActions({
-      notificationShow: 'notifications/show'
+      notificationShow: 'notifications/show',
+      ticketCreate: 'support/ticketCreate'
     }),
 
     onNextStep (updatedForm = {}) {
@@ -138,10 +139,16 @@ export default {
 
     async submitForm () {
       try {
-        await new Promise(resolve => setTimeout(resolve, 2000))
+        const payload = {
+          message: `${this.supportForm.issue} ${this.supportForm.expectation}`
+        }
+
+        await this.ticketCreate(payload)
 
         this.onNextStep()
       } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err)
         this.notificationShow({
           type: 'error',
           message: 'Unable to send a contact form'
