@@ -1,8 +1,30 @@
 import AwsClient from '~/services/aws/AWSClient'
+import LambdaClient from '~/services/aws/Lambda'
 
-export const state = () => ({})
+export const state = () => ({
+  plans: [
+    {
+      label: 'Monthly subscription',
+      unit: 'month',
+      id: process.env.STRIPE_PRICE_ID_MONTH,
+      price: process.env.STRIPE_PRICE_MONTH_PRICE,
+      priceLabel: `$${process.env.STRIPE_PRICE_MONTH_PRICE}/month`
+    },
+    {
+      label: 'Yearly subscription',
+      unit: 'year',
+      id: process.env.STRIPE_PRICE_ID_YEAR,
+      price: process.env.STRIPE_PRICE_YEAR_PRICE,
+      priceLabel: `$${process.env.STRIPE_PRICE_YEAR_PRICE}/year`
+    }
+  ]
+})
 
-export const getters = {}
+export const getters = {
+  plans (state) {
+    return state.plans
+  }
+}
 
 export const actions = {
   async paymentDetailsLoad () {
@@ -65,6 +87,27 @@ export const actions = {
         sk: 'user#payment#' + last4
       }
     }).promise()
+  },
+
+  async couponCheck (context, { coupon }) {
+    const { Payload } = await LambdaClient.invoke({
+      functionName: 'dashboard_profile_cupon_check',
+      coupon
+    })
+
+    let payloadParsed
+
+    try {
+      payloadParsed = JSON.parse(Payload)
+    } catch (err) {
+      return {
+        valid: false
+      }
+    }
+
+    return {
+      valid: payloadParsed?.is_valid
+    }
   }
 }
 

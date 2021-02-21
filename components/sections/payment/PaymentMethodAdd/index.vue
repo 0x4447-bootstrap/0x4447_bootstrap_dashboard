@@ -8,34 +8,43 @@
       <v-card height="100%">
         <v-card-text class="plans__list">
           <button
+            v-for="plan in plans"
+            :key="plan.id"
             v-ripple
-            :class="classPlanButton(plans[0])"
+            :class="classPlanButton(plan.id)"
             class="plan-button__container elevation-3"
-            @click="onPlanSelect(plans[0])"
+            @click="onPlanSelect(plan.id)"
           >
             <div class="plan-button__name mb-5">
-              Monthly subscription
+              {{ plan.label }}
             </div>
 
             <div class="plan-button__price">
-              $1/month
+              {{ plan.priceLabel }}
             </div>
           </button>
 
-          <button
-            v-ripple
-            :class="classPlanButton(plans[1])"
-            class="plan-button__container elevation-3"
-            @click="onPlanSelect(plans[1])"
-          >
-            <div class="plan-button__name mb-5">
-              Yearly subscription
-            </div>
+          <div class="plans__coupon">
+            <v-text-field
+              v-model="coupon"
+              :hint="couponApplied ? 'Coupon applied' : ''"
+              :persistent-hint="couponApplied"
+              label="Coupon"
+              class="plans__coupon__field"
+              dense
+            />
 
-            <div class="plan-button__price">
-              $10/month
-            </div>
-          </button>
+            <v-btn
+              v-if="!couponApplied"
+              :disabled="!coupon"
+              :loading="loadingCoupon"
+              class="plans__coupon__apply"
+              small
+              @click="onCouponApply"
+            >
+              Apply
+            </v-btn>
+          </div>
         </v-card-text>
       </v-card>
     </a-column>
@@ -53,20 +62,23 @@
           <v-card>
             <v-card-text>
               <div>
-                <div
-                  id="cardForm"
-                  class="mb-5"
-                  style="max-width: 380px"
-                />
-
-                <p
-                  class="mb-0"
-                >
-                  This input field is provided by © Stripe. We won't be able to see your details, we get back a
-                  token
-                  representing your card, and not the card details that you type here.
-                </p>
+                Total: <strong>{{ total }}</strong>
               </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+
+        <v-col
+          cols="12"
+          md="6"
+          xl="3"
+        >
+          <v-card>
+            <v-card-text>
+              <div
+                id="cardForm"
+                style="max-width: 380px"
+              />
             </v-card-text>
           </v-card>
         </v-col>
@@ -83,30 +95,6 @@
                 @submit.prevent="onSave"
               >
                 <div class="mb-5">
-                  <a-validation
-                    v-slot="{ hasError, errorMessage }"
-                    :error="$v.paymentDetails.firstName"
-                  >
-                    <v-text-field
-                      v-model="paymentDetails.firstName"
-                      :error="hasError"
-                      :error-messages="errorMessage"
-                      label="First name"
-                    />
-                  </a-validation>
-
-                  <a-validation
-                    v-slot="{ hasError, errorMessage }"
-                    :error="$v.paymentDetails.lastName"
-                  >
-                    <v-text-field
-                      v-model="paymentDetails.lastName"
-                      :error="hasError"
-                      :error-messages="errorMessage"
-                      label="Last name"
-                    />
-                  </a-validation>
-
                   <a-validation
                     v-slot="{ hasError, errorMessage }"
                     :error="$v.paymentDetails.country"
@@ -129,7 +117,7 @@
                   color="primary"
                   type="submit"
                 >
-                  Save
+                  Subscribe
                 </v-btn>
               </form>
             </v-card-text>
@@ -141,15 +129,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { loadStripe } from '@stripe/stripe-js'
 import { required } from 'vuelidate/lib/validators'
 
 const initialForm = {
-  firstName: '',
-  lastName: '',
-  country: '',
-  postalCode: ''
+  country: ''
 }
 
 export default {
@@ -167,11 +152,16 @@ export default {
       stripeClient: null,
       stripeCardField: null,
 
+      loadingCoupon: false,
+
+      coupon: '',
+      couponApplied: false,
+      couponDiscount: 12,
       paymentDetails: {
         ...initialForm
       },
 
-      planSelected: null
+      planSelected: this.$config.STRIPE_PRICE_ID_YEAR
     }
   },
 
@@ -180,16 +170,35 @@ export default {
       countries: 'app/countries',
       countryByTimezone: 'app/countryByTimezone',
       isProfileEmpty: 'user/isProfileEmpty',
-      profile: 'user/profile'
+      profile: 'user/profile',
+      plans: 'payment/plans'
     }),
 
-    plans () {
-      const config = this.$config
+    total () {
+      const selectedPlan = this.plans.find(plan => plan.id === this.planSelected)
 
-      return [
-        config.STRIPE_PRICE_ID_MONTH,
-        config.STRIPE_PRICE_ID_YEAR
-      ]
+      if (!selectedPlan) {
+        return '$0'
+      }
+
+      const price = selectedPlan.price
+
+      if (this.couponApplied) {
+        const isMonth = selectedPlan.unit === 'month'
+        const couponDiscount = this.couponDiscount
+        const unitCount = isMonth ? 12 : 1
+        return `(${price}x${unitCount}) - ${couponDiscount}% = $${price * unitCount * ((100 - couponDiscount) / 100)}`
+      }
+
+      return `${price}$`
+    }
+  },
+
+  watch: {
+    coupon (nextValue, prevValue) {
+      if (nextValue !== prevValue) {
+        this.couponApplied = false
+      }
     }
   },
 
@@ -199,6 +208,11 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      couponCheck: 'payment/couponCheck',
+      notificationShow: 'notifications/show'
+    }),
+
     async initStripe () {
       this.stripeClient = await loadStripe(this.$config.STRIPE_PUBLIC_KEY)
 
@@ -272,6 +286,9 @@ export default {
 
       this.$emit('payment-method:create', {
         ...this.paymentDetails,
+        ...(this.coupon && {
+          coupon: this.coupon
+        }),
         plan: this.planSelected,
         postalCode: card.address_zip,
         brand: card.brand,
@@ -281,18 +298,38 @@ export default {
         expMonth: card.exp_month,
         expYear: card.exp_year
       })
+    },
+
+    async onCouponApply () {
+      this.loadingCoupon = true
+
+      try {
+        const { valid } = await this.couponCheck({
+          coupon: this.coupon
+        })
+
+        if (!valid) {
+          return this.notificationShow({
+            type: 'error',
+            message: 'Coupon is not valid'
+          })
+        }
+
+        this.couponApplied = true
+      } catch (err) {
+        return this.notificationShow({
+          type: 'error',
+          message: 'Coupon is not valid'
+        })
+      } finally {
+        this.loadingCoupon = false
+      }
     }
   },
 
   validations () {
     return {
       paymentDetails: {
-        firstName: {
-          required
-        },
-        lastName: {
-          required
-        },
         country: {
           required
         }
@@ -305,13 +342,24 @@ export default {
 <style lang="scss">
 .plans {
   &__list {
+    display: grid;
     height: 100%;
-    display: flex;
-    flex-flow: column;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 12px;
   }
 
   &__form {
     width: 50%;
+  }
+
+  &__coupon {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+  }
+
+  &__coupon__apply {
+    margin-left: 12px;
   }
 
   @media (max-width: 1024px) {

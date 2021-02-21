@@ -17,15 +17,12 @@
           anchor="payment-method"
         />
 
-        <v-card>
-          <v-card-text>
-            <payment-method-details
-              :payment-details="paymentDetails"
-              :loading="loadingRemove"
-              @payment-method:remove="onPaymentMethodRemove"
-            />
-          </v-card-text>
-        </v-card>
+        <payment-method-details
+          :payment-details="paymentDetails"
+          :loading="loadingRemove"
+          @remove:payment-method="onPaymentMethodRemove"
+          @remove:subscription="onPaymentMethodRemove"
+        />
       </div>
 
       <div
