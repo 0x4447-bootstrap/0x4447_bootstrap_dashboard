@@ -35,10 +35,11 @@ export const actions = {
     }
 
     await s3Client.put({
+      ACL: 'bucket-owner-full-control',
       key: ticketKey,
       body: JSON.stringify(ticket),
       params: {
-        Bucket: '0x4447-support-web-messages',
+        Bucket: '0x4447-support-web-us-east-1-messages',
         ContentType: 'application/json; charset=utf-8'
       }
     })
