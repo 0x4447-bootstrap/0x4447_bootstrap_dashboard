@@ -1,15 +1,16 @@
 import { v4 as uuid } from 'uuid'
 import s3Client from '~/services/aws/S3'
+import AwsClient from '~/services/aws/AWSClient'
 
 export const actions = {
   async ticketCreate ({ rootGetters }, payload) {
     const {
-      id: userId,
       email: emailReplyTo,
       givenName
     } = rootGetters['user/profile']
+    const userId = (await AwsClient.credentials()).identityId
     const domainName = window?.location.host
-    const ticketKey = `${userId}/${uuid()}`
+    const ticketKey = `${userId}/${uuid()}.json`
 
     const ticket = {
       subject: `Support request from: ${domainName}`,
