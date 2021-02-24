@@ -334,6 +334,8 @@ export default {
 
         this.couponApplied = true
       } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err)
         return this.notificationShow({
           type: 'error',
           message: 'Coupon is not valid'

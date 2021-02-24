@@ -26,7 +26,7 @@
           </div>
 
           <v-btn
-            :loading="loading"
+            :loading="loading.payment"
             small
             @click="onRemovePaymentMethod"
           >
@@ -46,30 +46,36 @@
     >
       <v-card height="100%">
         <v-card-text
-          class="d-flex flex-column justify-space-between"
           style="height: 100%;"
         >
-          <div class="d-flex flex-column justify-center align-center flex-grow-1">
-            <div class="text-h5">
-              Subscription
-            </div>
-
-            <div class="text-h5">
-              {{ subscriptionFormatted.price }}
-            </div>
-          </div>
-
-          <v-btn
-            :loading="loading"
-            small
-            width="210px"
-            @click="onSubscriptionCancel"
+          <div
+            v-if="subscriptionFormatted.price"
+            class="d-flex flex-column justify-space-between"
           >
-            <v-icon>
-              mdi-delete
-            </v-icon>
-            Cancel subscription
-          </v-btn>
+            <div
+              class="d-flex flex-column justify-center align-center flex-grow-1"
+            >
+              <div class="text-h5">
+                Subscription
+              </div>
+
+              <div class="text-h5">
+                {{ subscriptionFormatted.price }}
+              </div>
+            </div>
+
+            <v-btn
+              :loading="loading.subscription"
+              small
+              width="210px"
+              @click="onSubscriptionCancel"
+            >
+              <v-icon>
+                mdi-delete
+              </v-icon>
+              Cancel subscription
+            </v-btn>
+          </div>
         </v-card-text>
       </v-card>
     </a-column>
@@ -82,7 +88,7 @@
       <v-card>
         <v-card-text>
           <v-btn
-            :loading="loading"
+            :loading="loading.payment || loading.subscription"
             block
             @click="onRemove"
           >
@@ -109,9 +115,17 @@ export default {
       default: () => ({})
     },
 
+    subscriptionDetails: {
+      type: Object,
+      default: () => ({})
+    },
+
     loading: {
-      type: Boolean,
-      default: false
+      type: Object,
+      default: () => ({
+        payment: false,
+        subscription: false
+      })
     }
   },
 
@@ -140,11 +154,11 @@ export default {
     },
 
     subscriptionFormatted () {
-      const details = this.paymentDetails || {}
-      const plan = this.plans.find(plan => plan.id === details.plan)
+      const details = this.subscriptionDetails || {}
+      const plan = this.plans.find(plan => plan.id === details.price_id)
 
       return {
-        price: plan.priceLabel
+        price: plan?.priceLabel
       }
     }
   },

@@ -4,18 +4,18 @@ import LambdaClient from '~/services/aws/Lambda'
 export const state = () => ({
   plans: [
     {
-      label: 'Monthly subscription',
-      unit: 'month',
-      id: process.env.STRIPE_PRICE_ID_MONTH,
-      price: process.env.STRIPE_PRICE_MONTH_PRICE,
-      priceLabel: `$${process.env.STRIPE_PRICE_MONTH_PRICE}/month`
-    },
-    {
       label: 'Yearly subscription',
       unit: 'year',
       id: process.env.STRIPE_PRICE_ID_YEAR,
       price: process.env.STRIPE_PRICE_YEAR_PRICE,
       priceLabel: `$${process.env.STRIPE_PRICE_YEAR_PRICE}/year`
+    },
+    {
+      label: 'Monthly subscription',
+      unit: 'month',
+      id: process.env.STRIPE_PRICE_ID_MONTH,
+      price: process.env.STRIPE_PRICE_MONTH_PRICE,
+      priceLabel: `$${process.env.STRIPE_PRICE_MONTH_PRICE}/month`
     }
   ]
 })
@@ -45,6 +45,21 @@ export const actions = {
     }).promise()
 
     return response.Items[0]
+  },
+
+  async subscriptionDetailsLoad () {
+    const dbClient = await AwsClient.dynamoDb()
+    const { identityId } = await AwsClient.credentials()
+
+    const { Item } = await dbClient.get({
+      TableName: 'money',
+      Key: {
+        pk: identityId,
+        sk: 'user#stripe#subscription#price'
+      }
+    }).promise()
+
+    return Item
   },
 
   async paymentDetailsCreate (context, paymentDetails) {
@@ -102,10 +117,25 @@ export const actions = {
     }).promise()
   },
 
+  async subscriptionCancel () {
+    const dbClient = await AwsClient.dynamoDb()
+    const { identityId } = await AwsClient.credentials()
+
+    await dbClient.delete({
+      TableName: 'money',
+      Key: {
+        pk: identityId,
+        sk: 'user#stripe#subscription#details'
+      }
+    }).promise()
+  },
+
   async couponCheck (context, { coupon }) {
     const { Payload } = await LambdaClient.invoke({
       functionName: 'dashboard_profile_cupon_check',
-      coupon
+      payload: {
+        cupon_id: coupon
+      }
     })
 
     let payloadParsed

@@ -19,9 +19,10 @@
 
         <payment-method-details
           :payment-details="paymentDetails"
+          :subscription-details="subscriptionDetails"
           :loading="loadingRemove"
           @remove:payment-method="onPaymentMethodRemove"
-          @remove:subscription="onPaymentMethodRemove"
+          @remove:subscription="onSubscriptionCancel"
         />
       </div>
 
@@ -61,16 +62,20 @@ export default {
   data () {
     return {
       isFetching: true,
-      loadingRemove: false,
+      loadingRemove: {
+        payment: false,
+        subscription: false
+      },
       loadingCreate: false,
 
-      paymentDetails: {}
+      paymentDetails: {},
+      subscriptionDetails: {}
     }
   },
 
   computed: {
     hasPaymentMethod () {
-      return !!this.paymentDetails?.card_token
+      return !!this.paymentDetails?.card_token || this.subscriptionDetails?.price_id
     }
   },
 
@@ -82,8 +87,10 @@ export default {
     ...mapActions({
       fetchCountriesList: 'app/fetchCountriesList',
       paymentDetailsLoad: 'payment/paymentDetailsLoad',
+      subscriptionDetailsLoad: 'payment/subscriptionDetailsLoad',
       paymentDetailsCreate: 'payment/paymentDetailsCreate',
       paymentDetailsRemove: 'payment/paymentDetailsRemove',
+      subscriptionCancel: 'payment/subscriptionCancel',
       notificationShow: 'notifications/show'
     }),
 
@@ -91,7 +98,12 @@ export default {
       this.isFetching = true
 
       try {
-        this.paymentDetails = await this.paymentDetailsLoad()
+        const [paymentDetails, subscriptionDetails] = await Promise.all([
+          this.paymentDetailsLoad(),
+          this.subscriptionDetailsLoad()
+        ])
+        this.paymentDetails = paymentDetails
+        this.subscriptionDetails = subscriptionDetails
       } catch (err) {
         this.notificationShow({
           type: 'error',
@@ -109,7 +121,7 @@ export default {
     },
 
     async onPaymentMethodRemove () {
-      this.loadingRemove = true
+      this.loadingRemove.payment = true
 
       try {
         await this.paymentDetailsRemove({
@@ -130,7 +142,31 @@ export default {
 
         throw err
       } finally {
-        this.loadingRemove = false
+        this.loadingRemove.payment = false
+      }
+    },
+
+    async onSubscriptionCancel () {
+      this.loadingRemove.subscription = true
+
+      try {
+        await this.subscriptionCancel()
+
+        this.subscriptionDetails = {}
+
+        this.notificationShow({
+          type: 'success',
+          message: 'Payment method has been removed!'
+        })
+      } catch (err) {
+        this.notificationShow({
+          type: 'error',
+          message: 'Unable to cancel subscription'
+        })
+
+        throw err
+      } finally {
+        this.loadingRemove.subscription = false
       }
     },
 
