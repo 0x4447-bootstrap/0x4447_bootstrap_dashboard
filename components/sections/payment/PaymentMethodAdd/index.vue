@@ -2,10 +2,10 @@
   <v-row>
     <a-column
       cols="12"
-      md="4"
-      class="mb-5 mb-md-0"
+      md="6"
+      class="mb-5 mb-md-0 d-flex flex-column"
     >
-      <v-card height="100%">
+      <v-card class="mb-5 flex-grow-1">
         <v-card-text class="plans__list">
           <button
             v-for="plan in plans"
@@ -23,7 +23,11 @@
               {{ plan.priceLabel }}
             </div>
           </button>
+        </v-card-text>
+      </v-card>
 
+      <v-card>
+        <v-card-text>
           <div class="plans__coupon">
             <v-text-field
               v-model="coupon"
@@ -51,13 +55,11 @@
 
     <a-column
       cols="12"
-      md="8"
+      md="6"
     >
       <v-row class="flex-column flex-nowrap">
         <v-col
           cols="12"
-          md="6"
-          xl="3"
         >
           <v-card>
             <v-card-text>
@@ -70,23 +72,28 @@
 
         <v-col
           cols="12"
-          md="6"
-          xl="3"
         >
           <v-card>
             <v-card-text>
               <div
                 id="cardForm"
                 style="max-width: 380px"
+                class="mb-5"
               />
+
+              <p
+                class="mb-0"
+                style="font-size: 12px;"
+              >
+                This input field is provided by © Stripe. We won't be able to see your details, we get back a
+                token representing your card, and not the card details that you type here.
+              </p>
             </v-card-text>
           </v-card>
         </v-col>
 
         <v-col
           cols="12"
-          md="6"
-          xl="3"
         >
           <v-card>
             <v-card-text>
@@ -94,7 +101,7 @@
                 class="plans__form"
                 @submit.prevent="onSave"
               >
-                <div class="mb-5">
+                <div class="flex-grow-1">
                   <a-validation
                     v-slot="{ hasError, errorMessage }"
                     :error="$v.paymentDetails.country"
@@ -114,6 +121,7 @@
                 <v-btn
                   :disabled="!planSelected"
                   :loading="loading"
+                  class="ml-5"
                   color="primary"
                   type="submit"
                 >
@@ -156,7 +164,7 @@ export default {
 
       coupon: '',
       couponApplied: false,
-      couponDiscount: 12,
+      couponDiscount: 0,
       paymentDetails: {
         ...initialForm
       },
@@ -183,14 +191,23 @@ export default {
 
       const price = selectedPlan.price
 
-      if (this.couponApplied) {
-        const isMonth = selectedPlan.unit === 'month'
-        const couponDiscount = this.couponDiscount
-        const unitCount = isMonth ? 12 : 1
-        return `(${price}x${unitCount}) - ${couponDiscount}% = $${price * unitCount * ((100 - couponDiscount) / 100)}`
-      }
+      const isMonth = selectedPlan.unit === 'month'
+      const unitCount = isMonth ? 12 : 1
+      const couponDiscount = this.couponDiscount || 0
 
-      return `${price}$`
+      const unitPrice = price * unitCount
+      const discountAmount = unitPrice * couponDiscount / 100
+
+      switch (true) {
+        // monthly with coupon
+        case isMonth:
+          return `($${price} * ${unitCount}) - ${couponDiscount}% = $${unitPrice - discountAmount}`
+        // yearly with coupon
+        case !isMonth:
+          return `$${unitPrice} - ${couponDiscount}% = $${unitPrice - discountAmount}`
+        default:
+          return `${price}$`
+      }
     }
   },
 
@@ -342,14 +359,15 @@ export default {
 <style lang="scss">
 .plans {
   &__list {
-    display: grid;
     height: 100%;
+    display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 12px;
   }
 
   &__form {
-    width: 50%;
+    display: flex;
+    align-items: center;
   }
 
   &__coupon {
@@ -361,20 +379,15 @@ export default {
   &__coupon__apply {
     margin-left: 12px;
   }
-
-  @media (max-width: 1024px) {
-    &__form {
-      width: 100%;
-    }
-  }
 }
 
 .plan-button {
   &__container {
-    flex: 1;
+    flex-grow: 1;
     outline: none;
     border-radius: 5px;
     border: 2px solid transparent;
+    padding: 24px 0;
   }
 
   &--active {

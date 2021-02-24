@@ -51,7 +51,7 @@ export const actions = {
     const dbClient = await AwsClient.dynamoDb()
     const { identityId } = await AwsClient.credentials()
 
-    const documentPayload = {
+    const subscriptionPayload = {
       pk: identityId,
       sk: `user#payment#${paymentDetails.last4}`,
       plan: paymentDetails.plan,
@@ -70,10 +70,23 @@ export const actions = {
       timestamp_created: Math.floor(Date.now() / 1000)
     }
 
-    await dbClient.put({
-      TableName: 'money',
-      Item: documentPayload
-    }).promise()
+    const pricePayload = {
+      pk: identityId,
+      sk: 'user#stripe#subscription#price',
+      price_id: paymentDetails.plan
+    }
+
+    await Promise.all([
+      dbClient.put({
+        TableName: 'money',
+        Item: subscriptionPayload
+      }).promise(),
+
+      dbClient.put({
+        TableName: 'money',
+        Item: pricePayload
+      }).promise()
+    ])
   },
 
   async paymentDetailsRemove (context, { last4 }) {
