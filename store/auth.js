@@ -59,7 +59,7 @@ export const actions = {
       TableName: 'profile',
       Key: {
         pk: identityId,
-        sk: 'user#basic'
+        sk: 'basic'
       }
     }).promise()
 
@@ -75,7 +75,7 @@ export const actions = {
 
     const documentPayload = {
       pk: identityId,
-      sk: 'user#basic',
+      sk: 'basic',
       sub,
       email
     }
