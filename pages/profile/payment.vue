@@ -21,8 +21,9 @@
           :payment-details="paymentDetails"
           :subscription-details="subscriptionDetails"
           :loading="loadingRemove"
-          @remove:payment-method="onPaymentMethodRemove"
-          @remove:subscription="onSubscriptionCancel"
+          @payment-method:remove="onPaymentMethodRemove"
+          @subscription:cancel="onSubscriptionCancel"
+          @subscription:change="onSubscriptionChange"
         />
       </div>
 
@@ -41,6 +42,12 @@
         />
       </div>
     </v-fade-transition>
+
+    <modal-subscription-change
+      :is-open.sync="isModalSubscriptionChangeOpen"
+      :plan="subscriptionPlanChange"
+      @subscription:updated="onSubscriptionUpdated"
+    />
   </v-layout>
 </template>
 
@@ -49,6 +56,7 @@ import { mapActions } from 'vuex'
 import PaymentMethodDetails from '~/components/sections/payment/PaymentMethodDetails'
 import PaymentMethodAdd from '~/components/sections/payment/PaymentMethodAdd'
 import ProgressContent from '~/components/general/ProgressContent'
+import ModalSubscriptionChange from '~/components/modals/ModalSubscriptionChange'
 
 export default {
   name: 'ViewPayment',
@@ -56,7 +64,8 @@ export default {
   components: {
     PaymentMethodAdd,
     PaymentMethodDetails,
-    ProgressContent
+    ProgressContent,
+    ModalSubscriptionChange
   },
 
   data () {
@@ -69,7 +78,10 @@ export default {
       loadingCreate: false,
 
       paymentDetails: {},
-      subscriptionDetails: {}
+      subscriptionDetails: {},
+
+      isModalSubscriptionChangeOpen: false,
+      subscriptionPlanChange: {}
     }
   },
 
@@ -146,6 +158,13 @@ export default {
       }
     },
 
+    onSubscriptionUpdated (priceId) {
+      this.subscriptionDetails = {
+        ...this.subscriptionDetails,
+        price_id: priceId
+      }
+    },
+
     async onSubscriptionCancel () {
       this.loadingRemove.subscription = true
 
@@ -192,6 +211,12 @@ export default {
       } finally {
         this.loadingCreate = false
       }
+    },
+
+    onSubscriptionChange (plan) {
+      this.subscriptionPlanChange = plan
+
+      this.isModalSubscriptionChangeOpen = true
     }
   },
 

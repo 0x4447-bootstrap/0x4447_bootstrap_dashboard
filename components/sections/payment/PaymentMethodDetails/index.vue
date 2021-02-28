@@ -3,11 +3,17 @@
     <a-column
       cols="12"
       md="6"
-      lg="4"
+      class="mb-5 mb-md-0"
     >
-      <v-card>
-        <v-card-text>
-          <div class="mb-6">
+      <v-card style="height: 100%;">
+        <v-card-text
+          class="d-flex flex-column justify-space-between align-start"
+          style="height: 100%;"
+        >
+          <div
+            class="mb-6"
+            style="width: 100%;"
+          >
             <v-simple-table
               dense
             >
@@ -30,7 +36,7 @@
             small
             @click="onRemovePaymentMethod"
           >
-            <v-icon>
+            <v-icon class="mr-1">
               mdi-delete
             </v-icon>
             Remove the card
@@ -42,7 +48,7 @@
     <a-column
       cols="12"
       md="6"
-      lg="4"
+      lg="6"
     >
       <v-card height="100%">
         <v-card-text
@@ -51,12 +57,13 @@
           <div
             v-if="subscriptionFormatted.price"
             class="d-flex flex-column justify-space-between"
+            style="height: 100%;"
           >
             <div
-              class="d-flex flex-column justify-center align-center flex-grow-1"
+              class="mb-5 mb-md-0 d-flex flex-column justify-center align-center flex-grow-1"
             >
               <div class="text-h5">
-                Subscription
+                {{ subscriptionFormatted.label }}
               </div>
 
               <div class="text-h5">
@@ -64,39 +71,81 @@
               </div>
             </div>
 
-            <v-btn
-              :loading="loading.subscription"
-              small
-              width="210px"
-              @click="onSubscriptionCancel"
+            <div class="payment-method-details__actions">
+              <v-menu
+                rounded="lg"
+                offset-y
+              >
+                <template #activator="{ attrs, on }">
+                  <v-btn
+                    class="mr-5"
+                    small
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <v-icon class="mr-1">
+                      mdi-calendar-edit
+                    </v-icon>
+                    Change pricing
+                  </v-btn>
+                </template>
+
+                <v-list>
+                  <v-list-item
+                    v-for="plan in availablePlans"
+                    :key="plan.id"
+                    link
+                    @click="onPlanChange(plan)"
+                  >
+                    <v-list-item-title v-text="plan.label" />
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+
+              <v-btn
+                :loading="loading.subscription"
+                width="210px"
+                small
+                @click="onSubscriptionCancel"
+              >
+                <v-icon class="mr-1">
+                  mdi-delete
+                </v-icon>
+                Cancel subscription
+              </v-btn>
+            </div>
+          </div>
+
+          <div
+            v-else
+          >
+            <div
+              class="plans__list mb-5"
             >
-              <v-icon>
-                mdi-delete
-              </v-icon>
-              Cancel subscription
+              <button
+                v-for="plan in plans"
+                :key="plan.id"
+                v-ripple
+                :class="classPlanButton(plan.id)"
+                class="plan-button__container elevation-3"
+                @click="onPlanSelect(plan)"
+              >
+                <div class="plan-button__name mb-5">
+                  {{ plan.label }}
+                </div>
+
+                <div class="plan-button__price">
+                  {{ plan.priceLabel }}
+                </div>
+              </button>
+            </div>
+
+            <v-btn
+              @click="onPlanChange(planSelected)"
+            >
+              Subscribe
             </v-btn>
           </div>
-        </v-card-text>
-      </v-card>
-    </a-column>
-
-    <a-column
-      cols="12"
-      lg="8"
-      class="mt-5"
-    >
-      <v-card>
-        <v-card-text>
-          <v-btn
-            :loading="loading.payment || loading.subscription"
-            block
-            @click="onRemove"
-          >
-            <v-icon>
-              mdi-delete
-            </v-icon>
-            Remove all
-          </v-btn>
         </v-card-text>
       </v-card>
     </a-column>
@@ -129,6 +178,12 @@ export default {
     }
   },
 
+  data () {
+    return {
+      planSelected: {}
+    }
+  },
+
   computed: {
     ...mapGetters({
       plans: 'payment/plans'
@@ -158,23 +213,81 @@ export default {
       const plan = this.plans.find(plan => plan.id === details.price_id)
 
       return {
-        price: plan?.priceLabel
+        price: plan?.priceLabel,
+        label: plan?.label
       }
+    },
+
+    availablePlans () {
+      return this.plans.filter(plan => plan.id !== this.subscriptionDetails.price_id)
     }
   },
 
+  beforeMount () {
+    this.planSelected = this.plans[0]
+  },
+
   methods: {
+    classPlanButton (planId) {
+      return [
+        { 'plan-button--active': this.planSelected?.id === planId }
+      ]
+    },
+
+    onPlanSelect (plan) {
+      this.planSelected = plan
+    },
+
     onRemovePaymentMethod () {
-      this.$emit('remove:payment-method')
+      this.$emit('payment-method:remove')
     },
 
     onSubscriptionCancel () {
-      this.$emit('remove:subscription')
+      this.$emit('subscription:cancel')
     },
 
-    onRemove () {
-      this.onRemovePaymentMethod()
+    onPlanChange (plan) {
+      this.$emit('subscription:change', plan)
     }
   }
 }
 </script>
+
+<style lang="scss">
+.payment-method-details {
+  &__actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.plans {
+  &__list {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 12px;
+  }
+}
+
+.plan-button {
+  &__container {
+    flex-grow: 1;
+    outline: none;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    padding: 24px 0;
+  }
+
+  &--active {
+    border-color: #2196F3;
+  }
+
+  @media (max-width: 768px) {
+    &__container {
+      padding: 30px;
+    }
+  }
+}
+</style>
