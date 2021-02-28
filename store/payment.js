@@ -40,7 +40,7 @@ export const actions = {
       },
       ExpressionAttributeValues: {
         ':pk': identityId,
-        ':sk': 'user#payment#'
+        ':sk': 'payment#'
       }
     }).promise()
 
@@ -68,7 +68,7 @@ export const actions = {
 
     const subscriptionPayload = {
       pk: identityId,
-      sk: `user#payment#${paymentDetails.last4}`,
+      sk: `payment#${paymentDetails.last4}`,
       plan: paymentDetails.plan,
       card_token: paymentDetails.cardToken,
       card_id: paymentDetails.cardId,
@@ -112,7 +112,7 @@ export const actions = {
       TableName: 'money',
       Key: {
         pk: identityId,
-        sk: 'user#payment#' + last4
+        sk: 'payment#' + last4
       }
     }).promise()
   },

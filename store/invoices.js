@@ -32,7 +32,7 @@ export const actions = {
       },
       ExpressionAttributeValues: {
         ':pk': identityId,
-        ':sk': `user#invoice#${year}`
+        ':sk': `invoice#${year}`
       },
       Limit: perPage,
       ScanIndexForward: false
@@ -66,7 +66,7 @@ export const actions = {
       FilterExpression: 'stripe_invoice_id = :stripe_invoice_id',
       ExpressionAttributeValues: {
         ':pk': identityId,
-        ':sk': 'user#invoice',
+        ':sk': 'invoice',
         ':stripe_invoice_id': invoiceId
       },
       ScanIndexForward: false
