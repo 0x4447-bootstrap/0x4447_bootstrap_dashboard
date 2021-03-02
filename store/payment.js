@@ -55,7 +55,7 @@ export const actions = {
       TableName: 'money',
       Key: {
         pk: identityId,
-        sk: 'user#stripe#subscription#price'
+        sk: 'stripe#subscription#price'
       }
     }).promise()
 
@@ -102,7 +102,7 @@ export const actions = {
 
     const pricePayload = {
       pk: identityId,
-      sk: 'user#stripe#subscription#price',
+      sk: 'stripe#subscription#price',
       price_id: priceId
     }
 
@@ -133,7 +133,7 @@ export const actions = {
       TableName: 'money',
       Key: {
         pk: identityId,
-        sk: 'user#stripe#subscription#details'
+        sk: 'stripe#subscription#details'
       }
     }).promise()
   },
