@@ -85,15 +85,10 @@ export const actions = {
       timestamp_created: Math.floor(Date.now() / 1000)
     }
 
-    await Promise.all([
-      dbClient.put({
-        TableName: 'money',
-        Item: subscriptionPayload
-      }).promise(),
-      dispatch('subscriptionPriceUpdate', {
-        priceId: paymentDetails.plan
-      })
-    ])
+    await dbClient.put({
+      TableName: 'money',
+      Item: subscriptionPayload
+    }).promise()
   },
 
   async subscriptionPriceUpdate (context, { priceId }) {

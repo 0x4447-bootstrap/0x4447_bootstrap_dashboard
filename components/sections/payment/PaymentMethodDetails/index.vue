@@ -11,36 +11,72 @@
           style="height: 100%;"
         >
           <div
-            class="mb-6"
+            v-if="hasPaymentMethod"
+            key="payment-method"
             style="width: 100%;"
           >
-            <v-simple-table
-              dense
+            <div
+              class="mb-6"
+              style="width: 100%;"
             >
-              <template #default>
-                <tbody>
-                  <tr
-                    v-for="(field, index) in cardDetailsFormatted"
-                    :key="index"
-                  >
-                    <td>{{ field.label }}</td>
-                    <td>{{ field.value }}</td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
+              <v-simple-table
+                dense
+              >
+                <template #default>
+                  <tbody>
+                    <tr
+                      v-for="(field, index) in cardDetailsFormatted"
+                      :key="index"
+                    >
+                      <td>{{ field.label }}</td>
+                      <td>{{ field.value }}</td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </div>
+
+            <v-btn
+              :loading="loading.payment"
+              small
+              @click="onRemovePaymentMethod"
+            >
+              <v-icon class="mr-1">
+                mdi-delete
+              </v-icon>
+              Remove the card
+            </v-btn>
           </div>
 
-          <v-btn
-            :loading="loading.payment"
-            small
-            @click="onRemovePaymentMethod"
+          <div
+            v-else
+            key="payment-method-setup"
           >
-            <v-icon class="mr-1">
-              mdi-delete
-            </v-icon>
-            Remove the card
-          </v-btn>
+            <h4 class="text-h6 mb-5">
+              Add payment method
+            </h4>
+
+            <div
+              id="cardForm"
+              style="max-width: 380px"
+              class="mb-5"
+            />
+
+            <p
+              class="mb-5"
+              style="font-size: 12px;"
+            >
+              This input field is provided by © Stripe. We won't be able to see your details, we get back a
+              token representing your card, and not the card details that you type here.
+            </p>
+
+            <v-btn
+              :loading="loading.payment"
+              @click="onPaymentMethodCreate"
+            >
+              Save
+            </v-btn>
+          </div>
         </v-card-text>
       </v-card>
     </a-column>
@@ -141,6 +177,7 @@
             </div>
 
             <v-btn
+              :loading="loading.subscription"
               @click="onPlanChange(planSelected)"
             >
               Subscribe
@@ -154,6 +191,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { initStripeCardWidget } from '@/components/sections/payment/subscription-helpers'
 
 export default {
   name: 'PaymentMethodDetails',
@@ -180,7 +218,10 @@ export default {
 
   data () {
     return {
-      planSelected: {}
+      planSelected: {},
+
+      stripeClient: null,
+      stripeCardField: null
     }
   },
 
@@ -188,6 +229,10 @@ export default {
     ...mapGetters({
       plans: 'payment/plans'
     }),
+
+    hasPaymentMethod () {
+      return !!this.paymentDetails?.card_token
+    },
 
     cardDetailsFormatted () {
       const details = this.paymentDetails || {}
@@ -223,6 +268,19 @@ export default {
     }
   },
 
+  watch: {
+    hasPaymentMethod: {
+      immediate: true,
+      handler (nextValue) {
+        if (!nextValue) {
+          this.initStripe()
+        } else if (this.stripeCardField) {
+          this.stripeCardField?.destroy()
+        }
+      }
+    }
+  },
+
   beforeMount () {
     this.planSelected = this.plans[0]
   },
@@ -232,6 +290,72 @@ export default {
       return [
         { 'plan-button--active': this.planSelected?.id === planId }
       ]
+    },
+
+    async initStripe () {
+      const {
+        stripeClient,
+        stripeCardField
+      } = await initStripeCardWidget({
+        stripePublicKey: this.$config.STRIPE_PUBLIC_KEY,
+        isDarkTheme: this.$vuetify.theme.dark,
+        postalCode: this.paymentDetails.postalCode
+      })
+
+      this.stripeClient = stripeClient
+      this.stripeCardField = stripeCardField
+
+      const cardSelector = '#cardForm'
+      if (!document.querySelector(cardSelector)) {
+        return
+      }
+
+      this.stripeCardField.mount(cardSelector)
+    },
+
+    async onPaymentMethodCreate () {
+      let token = ''
+      try {
+        this.$emit('update:loading', {
+          payment: true,
+          subscription: this.loading.subscription
+        })
+
+        // eslint-disable-next-line no-unreachable
+        const { token: cardToken } = await this.stripeClient.createToken(this.stripeCardField)
+
+        token = cardToken
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error('Stripe error', err)
+        this.$emit('update:loading', {
+          payment: false,
+          subscription: this.loading.subscription
+        })
+      }
+
+      if (!token) {
+        return
+      }
+
+      const { card } = token
+
+      if (this.$nuxt.context.isDev) {
+        // eslint-disable-next-line no-console
+        console.warn('Stripe card details', card)
+      }
+
+      this.$emit('payment-method:create', {
+        ...this.paymentDetails,
+        plan: this.subscriptionDetails.price_id,
+        postalCode: card.address_zip,
+        brand: card.brand,
+        cardId: card.id,
+        cardToken: token.id,
+        last4: card.last4,
+        expMonth: card.exp_month,
+        expYear: card.exp_year
+      })
     },
 
     onPlanSelect (plan) {

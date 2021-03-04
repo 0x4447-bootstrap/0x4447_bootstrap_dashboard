@@ -9,18 +9,19 @@
       />
 
       <div
-        v-else-if="hasPaymentMethod"
-        key="payment-details"
+        v-else-if="hadSubscription"
+        key="subscription-details"
       >
         <page-title
-          title="Payment method"
-          anchor="payment-method"
+          title="Subscription"
+          anchor="subscription"
         />
 
         <payment-method-details
           :payment-details="paymentDetails"
           :subscription-details="subscriptionDetails"
-          :loading="loadingRemove"
+          :loading.sync="loading"
+          @payment-method:create="onPaymentMethodCreate"
           @payment-method:remove="onPaymentMethodRemove"
           @subscription:cancel="onSubscriptionCancel"
           @subscription:change="onSubscriptionChange"
@@ -29,16 +30,16 @@
 
       <div
         v-else
-        key="payment-create"
+        key="subscription-create"
       >
         <page-title
           title="Subscription"
-          anchor="add-payment-method"
+          anchor="subscription"
         />
 
         <payment-method-add
-          :loading="loadingCreate"
-          @payment-method:create="onPaymentMethodCreate"
+          :loading.sync="loadingCreate"
+          @subscription:create="onSubscriptionCreate"
         />
       </div>
     </v-fade-transition>
@@ -71,7 +72,7 @@ export default {
   data () {
     return {
       isFetching: true,
-      loadingRemove: {
+      loading: {
         payment: false,
         subscription: false
       },
@@ -86,7 +87,7 @@ export default {
   },
 
   computed: {
-    hasPaymentMethod () {
+    hadSubscription () {
       return !!this.paymentDetails?.card_token || this.subscriptionDetails?.price_id
     }
   },
@@ -102,6 +103,7 @@ export default {
       subscriptionDetailsLoad: 'payment/subscriptionDetailsLoad',
       paymentDetailsCreate: 'payment/paymentDetailsCreate',
       paymentDetailsRemove: 'payment/paymentDetailsRemove',
+      subscriptionPriceUpdate: 'payment/subscriptionPriceUpdate',
       subscriptionCancel: 'payment/subscriptionCancel',
       notificationShow: 'notifications/show'
     }),
@@ -133,7 +135,7 @@ export default {
     },
 
     async onPaymentMethodRemove () {
-      this.loadingRemove.payment = true
+      this.loading.payment = true
 
       try {
         await this.paymentDetailsRemove({
@@ -154,7 +156,7 @@ export default {
 
         throw err
       } finally {
-        this.loadingRemove.payment = false
+        this.loading.payment = false
       }
     },
 
@@ -166,7 +168,7 @@ export default {
     },
 
     async onSubscriptionCancel () {
-      this.loadingRemove.subscription = true
+      this.loading.subscription = true
 
       try {
         await this.subscriptionCancel()
@@ -185,22 +187,51 @@ export default {
 
         throw err
       } finally {
-        this.loadingRemove.subscription = false
+        this.loading.subscription = false
+      }
+    },
+
+    async onSubscriptionCreate (paymentDetails) {
+      this.loadingCreate = true
+
+      try {
+        await Promise.all([
+          this.paymentDetailsCreate(paymentDetails),
+          this.subscriptionPriceUpdate({
+            priceId: paymentDetails.priceId
+          })
+        ])
+
+        this.notificationShow({
+          type: 'success',
+          message: 'Subscription has been created!'
+        })
+
+        this.fetchPaymentDetails()
+      } catch (err) {
+        this.notificationShow({
+          type: 'error',
+          message: 'Unable to create subscription'
+        })
+
+        throw err
+      } finally {
+        this.loadingCreate = false
       }
     },
 
     async onPaymentMethodCreate (paymentDetails) {
-      this.loadingCreate = true
+      this.loading.payment = true
 
       try {
         await this.paymentDetailsCreate(paymentDetails)
+
+        this.paymentDetails = await this.paymentDetailsLoad()
 
         this.notificationShow({
           type: 'success',
           message: 'Payment method has been created!'
         })
-
-        this.fetchPaymentDetails()
       } catch (err) {
         this.notificationShow({
           type: 'error',
@@ -209,7 +240,7 @@ export default {
 
         throw err
       } finally {
-        this.loadingCreate = false
+        this.loading.payment = false
       }
     },
 

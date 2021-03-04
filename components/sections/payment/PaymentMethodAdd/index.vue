@@ -138,8 +138,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { loadStripe } from '@stripe/stripe-js'
 import { required } from 'vuelidate/lib/validators'
+import { initStripeCardWidget } from '../subscription-helpers'
 
 const initialForm = {
   country: ''
@@ -231,30 +231,14 @@ export default {
     }),
 
     async initStripe () {
-      this.stripeClient = await loadStripe(this.$config.STRIPE_PUBLIC_KEY)
-
-      const isDarkTheme = this.$vuetify.theme.dark
-
-      this.stripeCardField = this.stripeClient.elements().create('card', {
-        style: {
-          base: {
-            color: isDarkTheme ? '#fff' : '#32325d',
-            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-            fontSmoothing: 'antialiased',
-            fontSize: '16px',
-            '::placeholder': {
-              color: '#aab7c4'
-            }
-          },
-          invalid: {
-            color: '#fa755a',
-            iconColor: '#fa755a'
-          }
-        },
-        value: {
-          postalCode: this.paymentDetails.postalCode
-        }
+      const { stripeClient, stripeCardField } = await initStripeCardWidget({
+        stripePublicKey: this.$config.STRIPE_PUBLIC_KEY,
+        isDarkTheme: this.$vuetify.theme.dark,
+        postalCode: this.paymentDetails.postalCode
       })
+
+      this.stripeClient = stripeClient
+      this.stripeCardField = stripeCardField
 
       const cardSelector = '#cardForm'
       if (!document.querySelector(cardSelector)) {
@@ -287,8 +271,20 @@ export default {
         return this.$v.paymentDetails.$touch()
       }
 
-      // eslint-disable-next-line no-unreachable
-      const { token } = await this.stripeClient.createToken(this.stripeCardField)
+      let token = ''
+      this.$emit('update:loading', true)
+
+      try {
+        // eslint-disable-next-line no-unreachable
+        const { token: cardToken } = await this.stripeClient.createToken(this.stripeCardField)
+
+        token = cardToken
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error('Stripe error', err)
+      } finally {
+        this.$emit('update:loading', false)
+      }
 
       if (!token) {
         return
@@ -301,12 +297,12 @@ export default {
         console.warn('Stripe card details', card)
       }
 
-      this.$emit('payment-method:create', {
+      this.$emit('subscription:create', {
         ...this.paymentDetails,
         ...(this.coupon && {
           coupon: this.coupon
         }),
-        plan: this.planSelected,
+        priceId: this.planSelected,
         postalCode: card.address_zip,
         brand: card.brand,
         cardId: card.id,
