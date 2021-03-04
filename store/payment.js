@@ -133,7 +133,7 @@ export const actions = {
       TableName: 'money',
       Key: {
         pk: identityId,
-        sk: 'stripe#subscription#details'
+        sk: 'stripe#subscription#price'
       }
     }).promise()
   },
