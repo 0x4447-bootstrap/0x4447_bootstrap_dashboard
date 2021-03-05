@@ -1,8 +1,30 @@
 import AwsClient from '~/services/aws/AWSClient'
+import LambdaClient from '~/services/aws/Lambda'
 
-export const state = () => ({})
+export const state = () => ({
+  plans: [
+    {
+      label: 'Yearly subscription',
+      unit: 'year',
+      id: process.env.STRIPE_PRICE_ID_YEAR,
+      price: process.env.STRIPE_PRICE_YEAR_PRICE,
+      priceLabel: `$${process.env.STRIPE_PRICE_YEAR_PRICE}/year`
+    },
+    {
+      label: 'Monthly subscription',
+      unit: 'month',
+      id: process.env.STRIPE_PRICE_ID_MONTH,
+      price: process.env.STRIPE_PRICE_MONTH_PRICE,
+      priceLabel: `$${process.env.STRIPE_PRICE_MONTH_PRICE}/month`
+    }
+  ]
+})
 
-export const getters = {}
+export const getters = {
+  plans (state) {
+    return state.plans
+  }
+}
 
 export const actions = {
   async paymentDetailsLoad () {
@@ -25,11 +47,26 @@ export const actions = {
     return response.Items[0]
   },
 
-  async paymentDetailsCreate (context, paymentDetails) {
+  async subscriptionDetailsLoad () {
     const dbClient = await AwsClient.dynamoDb()
     const { identityId } = await AwsClient.credentials()
 
-    const documentPayload = {
+    const { Item } = await dbClient.get({
+      TableName: 'money',
+      Key: {
+        pk: identityId,
+        sk: 'stripe#subscription#price'
+      }
+    }).promise()
+
+    return Item
+  },
+
+  async paymentDetailsCreate ({ dispatch }, paymentDetails) {
+    const dbClient = await AwsClient.dynamoDb()
+    const { identityId } = await AwsClient.credentials()
+
+    const subscriptionPayload = {
       pk: identityId,
       sk: `payment#${paymentDetails.last4}`,
       plan: paymentDetails.plan,
@@ -50,7 +87,23 @@ export const actions = {
 
     await dbClient.put({
       TableName: 'money',
-      Item: documentPayload
+      Item: subscriptionPayload
+    }).promise()
+  },
+
+  async subscriptionPriceUpdate (context, { priceId }) {
+    const dbClient = await AwsClient.dynamoDb()
+    const { identityId } = await AwsClient.credentials()
+
+    const pricePayload = {
+      pk: identityId,
+      sk: 'stripe#subscription#price',
+      price_id: priceId
+    }
+
+    await dbClient.put({
+      TableName: 'money',
+      Item: pricePayload
     }).promise()
   },
 
@@ -65,6 +118,42 @@ export const actions = {
         sk: 'payment#' + last4
       }
     }).promise()
+  },
+
+  async subscriptionCancel () {
+    const dbClient = await AwsClient.dynamoDb()
+    const { identityId } = await AwsClient.credentials()
+
+    await dbClient.delete({
+      TableName: 'money',
+      Key: {
+        pk: identityId,
+        sk: 'stripe#subscription#price'
+      }
+    }).promise()
+  },
+
+  async couponCheck (context, { coupon }) {
+    const { Payload } = await LambdaClient.invoke({
+      functionName: 'dashboard_profile_cupon_check',
+      payload: {
+        cupon_id: coupon
+      }
+    })
+
+    let payloadParsed
+
+    try {
+      payloadParsed = JSON.parse(Payload)
+    } catch (err) {
+      return {
+        valid: false
+      }
+    }
+
+    return {
+      valid: payloadParsed?.is_valid
+    }
   }
 }
 
