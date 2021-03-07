@@ -18,19 +18,19 @@
 
     <div>
       <v-btn
-        color="primary"
-        type="submit"
         class="mr-3"
-        @click="onNext"
-      >
-        Next
-      </v-btn>
-
-      <v-btn
         text
         @click="onBack"
       >
         Back
+      </v-btn>
+
+      <v-btn
+        color="primary"
+        type="submit"
+        @click="onNext"
+      >
+        Next
       </v-btn>
     </div>
   </div>
