@@ -4,7 +4,7 @@
       cols="12"
       sm="12"
       md="6"
-      lg="auto"
+      lg="4"
     >
       <v-card height="100%">
         <v-card-text class="profile-details-avatar__inner">
@@ -48,7 +48,9 @@
     </v-col>
 
     <v-col
-      xs="12"
+      cols="12"
+      md="6"
+      lg="4"
       class="d-flex"
     >
       <v-card class="profile-details__card">
@@ -97,6 +99,58 @@
       <modal-verify-email
         :is-open.sync="isModalVerifyEmailOpen"
       />
+    </v-col>
+
+    <v-col
+      cols="12"
+      md="6"
+      lg="4"
+    >
+      <v-card
+        height="100%"
+        min-height="224px"
+      >
+        <v-card-text />
+      </v-card>
+    </v-col>
+
+    <v-col
+      cols="12"
+      md="6"
+      lg="3"
+    >
+      <v-card
+        height="100%"
+        min-height="224px"
+      >
+        <v-card-text />
+      </v-card>
+    </v-col>
+
+    <v-col
+      cols="12"
+      md="6"
+      lg="2"
+    >
+      <v-card
+        height="100%"
+        min-height="224px"
+      >
+        <v-card-text />
+      </v-card>
+    </v-col>
+
+    <v-col
+      cols="12"
+      md="6"
+      lg="7"
+    >
+      <v-card
+        height="100%"
+        min-height="224px"
+      >
+        <v-card-text />
+      </v-card>
     </v-col>
   </v-row>
 </template>
@@ -257,6 +311,7 @@ export default {
   height: 100%;
   display: flex;
   flex-flow: column;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -279,12 +334,6 @@ export default {
 
   &__form__inner {
     width: 100%;
-  }
-
-  @media (min-width: 960px) {
-    &__form__inner {
-      max-width: 320px;
-    }
   }
 }
 </style>

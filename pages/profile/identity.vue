@@ -9,7 +9,6 @@
       <a-column
         cols="12"
         sm="12"
-        md="6"
       >
         <profile-details />
       </a-column>
