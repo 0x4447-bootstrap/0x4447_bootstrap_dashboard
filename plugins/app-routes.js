@@ -25,6 +25,12 @@ export default function appRoutesPlugin (context, inject) {
       },
       title: 'Identity'
     },
+    profileInterface: {
+      route: {
+        name: 'profile-interface'
+      },
+      title: 'Interface'
+    },
     payment: {
       route: {
         name: 'profile-payment'

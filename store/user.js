@@ -120,8 +120,8 @@ export const actions = {
     commit(types.SETTINGS_SET, settings)
   },
 
-  async settingsSave ({ dispatch }, { key, value }) {
-    await CognitoSyncClient.updateRecords({ key, value })
+  async settingsSave ({ dispatch }, keyValues) {
+    await CognitoSyncClient.updateRecords(keyValues)
 
     await dispatch('settingsFetch')
   },

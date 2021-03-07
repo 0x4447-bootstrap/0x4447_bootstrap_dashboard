@@ -180,6 +180,11 @@ export default {
           route: this.$routes.profileIdentity.route
         },
         {
+          title: this.$routes.profileInterface.title,
+          icon: 'mdi-brush',
+          route: this.$routes.profileInterface.route
+        },
+        {
           title: this.$routes.payment.title,
           icon: 'mdi-credit-card-plus-outline',
           route: this.$routes.payment.route

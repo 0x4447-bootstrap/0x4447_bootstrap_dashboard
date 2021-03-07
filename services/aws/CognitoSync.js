@@ -20,7 +20,7 @@ export default class CognitoSyncClient {
     return Records
   }
 
-  static async updateRecords ({ key, value }) {
+  static async updateRecords (keyValues) {
     const cognitoClient = await AwsClient.cognitoSync()
     const credentials = await AwsClient.credentials()
 
@@ -29,14 +29,12 @@ export default class CognitoSyncClient {
       IdentityId: credentials.identityId,
       DatasetName: 'settings_dashboard',
       SyncSessionToken: session,
-      RecordPatches: [
-        {
-          SyncCount: count,
-          Op: 'replace',
-          Key: key,
-          Value: JSON.stringify(value)
-        }
-      ]
+      RecordPatches: keyValues.map(({ key, value }) => ({
+        SyncCount: count,
+        Op: 'replace',
+        Key: key,
+        Value: JSON.stringify(value)
+      }))
     }).promise()
   }
 
