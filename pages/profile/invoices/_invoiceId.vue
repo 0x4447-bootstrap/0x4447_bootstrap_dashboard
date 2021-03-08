@@ -154,10 +154,12 @@ export default {
           label: 'Created',
           value: invoice.created ? format(parseISO(invoice.created), 'MM/dd/yyyy, hh:mm:ss a') : 'N/A'
         },
-        {
-          label: 'Amount',
-          value: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : 0
-        },
+        ...(!invoice.paid ? [] : [
+          {
+            label: 'Amount',
+            value: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : 0
+          }
+        ]),
         {
           label: 'Status',
           value: invoice.paid
