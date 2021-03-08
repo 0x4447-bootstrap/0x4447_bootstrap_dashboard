@@ -2,8 +2,17 @@ export const buildModules = [
   // https://go.nuxtjs.dev/eslint
   '@nuxtjs/eslint-module',
   // https://github.com/nuxt-community/vuetify-module
-  '@nuxtjs/vuetify'
-  // https://go.nuxtjs.dev/pwa
+  ['@nuxtjs/vuetify', {
+    customVariables: ['~/assets/styles/_config.scss'],
+    treeShake: {
+      components: [
+        'VProgressCircular'
+      ]
+    },
+    options: {
+      customProperties: true
+    }
+  }]
 ]
 
 export const modules = [
