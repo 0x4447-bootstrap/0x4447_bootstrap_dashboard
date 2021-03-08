@@ -25,19 +25,19 @@
     </a-validation>
 
     <v-btn
-      :loading="loading"
-      color="primary"
-      type="submit"
       class="mr-3"
-    >
-      Next
-    </v-btn>
-
-    <v-btn
       text
       @click="onBack"
     >
       Back
+    </v-btn>
+
+    <v-btn
+      :loading="loading"
+      color="primary"
+      type="submit"
+    >
+      Next
     </v-btn>
   </v-form>
 </template>
