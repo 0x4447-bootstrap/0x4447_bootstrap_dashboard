@@ -81,8 +81,10 @@
             <v-btn
               v-if="invoice.paid"
               :href="invoice.invoice_pdf"
+              :loading="isLoading"
               class="mt-5"
               color="info"
+              @click="onDownload"
             >
               Download
             </v-btn>
@@ -126,6 +128,8 @@ export default {
 
   data () {
     return {
+      isLoading: false,
+
       invoiceId: '',
       invoice: {}
     }
@@ -182,6 +186,14 @@ export default {
         type: 'success',
         message: `${field ? `${field} copied` : 'Copied'} to clipboard!`
       })
+    },
+
+    onDownload () {
+      this.isLoading = true
+
+      setTimeout(() => {
+        this.isLoading = false
+      }, 5000)
     }
   }
 }
