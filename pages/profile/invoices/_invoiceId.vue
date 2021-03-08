@@ -79,6 +79,7 @@
             </v-simple-table>
 
             <v-btn
+              v-if="invoice.paid"
               :href="invoice.invoice_pdf"
               class="mt-5"
               color="info"
