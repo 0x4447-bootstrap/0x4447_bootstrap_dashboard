@@ -1,158 +1,241 @@
 <template>
-  <v-row>
-    <v-col
-      cols="12"
-      sm="12"
-      md="6"
-      lg="4"
-    >
-      <v-card height="100%">
-        <v-card-text class="profile-details-avatar__inner">
-          <div class="d-flex justify-center justify-lg-start mb-4">
-            <v-avatar
-              size="160"
-            >
-              <v-img
-                :lazy-src="avatarPlaceholder"
-                :src="profile.picture"
-                alt="Profile photo"
-              />
-            </v-avatar>
-          </div>
-
-          <div class="d-flex justify-center">
-            <input
-              ref="photoSelect"
-              type="file"
-              accept="image/*"
-              hidden
-              @input="onPhotoSelected"
-            >
-
-            <v-btn
-              :loading="isLoadingPhoto"
-              color="primary"
-              @click="onSelectPhoto"
-            >
-              {{ profile.picture ? 'Change' : 'Set' }} avatar
-            </v-btn>
-          </div>
-
-          <modal-image-crop
-            :is-open.sync="isModalCropOpen"
-            :image-src.sync="selectedImageFile"
-            @done="onProfilePhotoUpdate"
-          />
-        </v-card-text>
-      </v-card>
-    </v-col>
-
-    <v-col
-      cols="12"
-      md="6"
-      lg="4"
-      class="d-flex"
-    >
-      <v-card class="profile-details__card">
-        <v-card-text class="profile-details__card__inner">
-          <form
-            class="profile-details__form"
-            @submit.prevent="onUpdateProfile"
-          >
-            <div class="profile-details__form__inner">
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
-                :error="$v.userData.givenName"
+  <div class="profile-details__container">
+    <v-row>
+      <v-col
+        cols="12"
+        sm="12"
+        md="6"
+        lg="auto"
+      >
+        <v-card
+          height="100%"
+          class="profile-details-avatar__container"
+        >
+          <v-card-text class="profile-details-avatar__inner">
+            <div class="d-flex justify-center justify-lg-start mb-4">
+              <v-avatar
+                size="160"
               >
-                <v-text-field
-                  v-model="userData.givenName"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  label="First name"
+                <v-img
+                  :lazy-src="avatarPlaceholder"
+                  :src="profile.picture"
+                  alt="Profile photo"
                 />
-              </a-validation>
-
-              <a-validation
-                v-slot="{ hasError, errorMessage }"
-                :error="$v.userData.email"
-              >
-                <v-text-field
-                  v-model="userData.email"
-                  :error="hasError"
-                  :error-messages="errorMessage"
-                  label="Email"
-                />
-              </a-validation>
+              </v-avatar>
             </div>
 
-            <v-btn
-              :loading="isLoading"
-              type="submit"
-              color="primary"
+            <div class="d-flex justify-center">
+              <input
+                ref="photoSelect"
+                type="file"
+                accept="image/*"
+                hidden
+                @input="onPhotoSelected"
+              >
+
+              <v-btn
+                :loading="isLoadingPhoto"
+                color="primary"
+                @click="onSelectPhoto"
+              >
+                {{ profile.picture ? 'Change' : 'Set' }} avatar
+              </v-btn>
+            </div>
+
+            <modal-image-crop
+              :is-open.sync="isModalCropOpen"
+              :image-src.sync="selectedImageFile"
+              @done="onProfilePhotoUpdate"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col
+        cols="12"
+        md="6"
+        lg="4"
+        class="d-flex"
+      >
+        <v-card class="profile-details__card">
+          <v-card-text class="profile-details__card__inner">
+            <form
+              class="profile-details__form"
+              @submit.prevent="onUpdateProfile"
             >
-              Save
-            </v-btn>
-          </form>
-        </v-card-text>
-      </v-card>
+              <div class="profile-details__form__inner">
+                <a-validation
+                  v-slot="{ hasError, errorMessage }"
+                  :error="$v.userData.givenName"
+                >
+                  <v-text-field
+                    v-model="userData.givenName"
+                    :error="hasError"
+                    :error-messages="errorMessage"
+                    label="First name"
+                  />
+                </a-validation>
 
-      <modal-verify-email
-        :is-open.sync="isModalVerifyEmailOpen"
-      />
-    </v-col>
+                <a-validation
+                  v-slot="{ hasError, errorMessage }"
+                  :error="$v.userData.email"
+                >
+                  <v-text-field
+                    v-model="userData.email"
+                    :error="hasError"
+                    :error-messages="errorMessage"
+                    label="Email"
+                  />
+                </a-validation>
+              </div>
 
-    <v-col
-      cols="12"
-      md="6"
-      lg="4"
-    >
-      <v-card
-        height="100%"
-        min-height="224px"
+              <v-btn
+                :loading="isLoading"
+                type="submit"
+                color="primary"
+              >
+                Save
+              </v-btn>
+            </form>
+          </v-card-text>
+        </v-card>
+
+        <modal-verify-email
+          :is-open.sync="isModalVerifyEmailOpen"
+        />
+      </v-col>
+
+      <v-col
+        cols="12"
+        lg="auto"
+        class="flex-grow-1"
       >
-        <v-card-text />
-      </v-card>
-    </v-col>
+        <v-card
+          width="100%"
+          height="100%"
+          min-height="224px"
+        >
+          <v-card-text />
+        </v-card>
+      </v-col>
+    </v-row>
 
-    <v-col
-      cols="12"
-      md="6"
-      lg="3"
-    >
-      <v-card
-        height="100%"
-        min-height="224px"
+    <v-row>
+      <v-col
+        cols="12"
+        md="6"
+        lg="3"
       >
-        <v-card-text />
-      </v-card>
-    </v-col>
+        <v-card
+          height="100%"
+          min-height="224px"
+        >
+          <v-card-text />
+        </v-card>
+      </v-col>
 
-    <v-col
-      cols="12"
-      md="6"
-      lg="2"
-    >
-      <v-card
-        height="100%"
-        min-height="224px"
+      <v-col
+        cols="12"
+        md="6"
+        lg="2"
       >
-        <v-card-text />
-      </v-card>
-    </v-col>
+        <v-card
+          height="100%"
+          min-height="224px"
+        >
+          <v-card-text />
+        </v-card>
+      </v-col>
 
-    <v-col
-      cols="12"
-      md="6"
-      lg="7"
-    >
-      <v-card
-        height="100%"
-        min-height="224px"
+      <v-col
+        cols="12"
+        lg="7"
       >
-        <v-card-text />
-      </v-card>
-    </v-col>
-  </v-row>
+        <v-card
+          height="100%"
+          min-height="224px"
+        >
+          <v-card-text />
+        </v-card>
+      </v-col>
+
+      <v-col
+        cols="12"
+        md="6"
+        lg="4"
+      >
+        <v-card
+          height="100%"
+          min-height="224px"
+        >
+          <v-card-text />
+        </v-card>
+      </v-col>
+
+      <v-col
+        cols="12"
+        md="6"
+        lg="5"
+      >
+        <v-card
+          height="100%"
+          min-height="224px"
+        >
+          <v-card-text />
+        </v-card>
+      </v-col>
+
+      <v-col
+        cols="12"
+        lg="3"
+      >
+        <v-card
+          height="100%"
+          min-height="224px"
+        >
+          <v-card-text />
+        </v-card>
+      </v-col>
+
+      <v-col
+        cols="12"
+        md="6"
+        lg="3"
+      >
+        <v-card
+          height="100%"
+          min-height="224px"
+        >
+          <v-card-text />
+        </v-card>
+      </v-col>
+
+      <v-col
+        cols="12"
+        md="6"
+        lg="3"
+      >
+        <v-card
+          height="100%"
+          min-height="224px"
+        >
+          <v-card-text />
+        </v-card>
+      </v-col>
+
+      <v-col
+        cols="12"
+        lg="6"
+      >
+        <v-card
+          height="100%"
+          min-height="224px"
+        >
+          <v-card-text />
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
@@ -307,15 +390,31 @@ export default {
 </script>
 
 <style lang="scss">
-.profile-details-avatar__inner {
-  height: 100%;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: space-between;
+.profile-details-avatar {
+  &__container {
+    width: 100%;
+  }
+
+  &__inner {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  @media (min-width: 1264px) {
+    &__container {
+      width: 192px;
+    }
+  }
 }
 
 .profile-details {
+  &__container {
+    margin-bottom: 200px;
+  }
+
   &__card {
     width: 100%;
   }
