@@ -79,9 +79,12 @@
             </v-simple-table>
 
             <v-btn
+              v-if="invoice.paid"
               :href="invoice.invoice_pdf"
+              :loading="isLoading"
               class="mt-5"
               color="info"
+              @click="onDownload"
             >
               Download
             </v-btn>
@@ -125,6 +128,8 @@ export default {
 
   data () {
     return {
+      isLoading: false,
+
       invoiceId: '',
       invoice: {}
     }
@@ -149,10 +154,12 @@ export default {
           label: 'Created',
           value: invoice.created ? format(parseISO(invoice.created), 'MM/dd/yyyy, hh:mm:ss a') : 'N/A'
         },
-        {
-          label: 'Amount',
-          value: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : 0
-        },
+        ...(!invoice.paid ? [] : [
+          {
+            label: 'Amount',
+            value: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : 0
+          }
+        ]),
         {
           label: 'Status',
           value: invoice.paid
@@ -181,6 +188,14 @@ export default {
         type: 'success',
         message: `${field ? `${field} copied` : 'Copied'} to clipboard!`
       })
+    },
+
+    onDownload () {
+      this.isLoading = true
+
+      setTimeout(() => {
+        this.isLoading = false
+      }, 5000)
     }
   }
 }
