@@ -72,7 +72,13 @@ export default {
   },
 
   beforeMount () {
-    this.listenColorThemeChange()
+    const preferredColorTheme = this.settings.colorTheme
+
+    if (!preferredColorTheme || preferredColorTheme === 'system') {
+      this.listenColorThemeChange()
+    } else {
+      this.$vuetify.theme.dark = preferredColorTheme === 'dark'
+    }
 
     if (this.$vuetify.breakpoint.lgAndUp) {
       this.isSidebarOpen = true
@@ -90,10 +96,12 @@ export default {
     toggleSidebarMinimized (value = false) {
       this.isSidebarMinimized = value
 
-      this.settingsSave({
-        key: 'sidebarMinimized',
-        value
-      })
+      this.settingsSave([
+        {
+          key: 'sidebarMinimized',
+          value
+        }
+      ])
     },
 
     onSidebarToggle () {
