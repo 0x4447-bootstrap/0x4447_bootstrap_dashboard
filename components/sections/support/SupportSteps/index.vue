@@ -160,3 +160,17 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.tab-transition-enter,
+.tab-transition-enter-active,
+.tab-transition-leave,
+.tab-transition-leave-active,
+.tab-transition-leave-to,
+.tab-reverse-transition-enter,
+.tab-reverse-transition-enter-active,
+.tab-reverse-transition-leave,
+.tab-reverse-transition-leave-to {
+  transition: 1s cubic-bezier(0.25, 0.8, 0.5, 1) !important;
+}
+</style>
