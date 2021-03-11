@@ -29,9 +29,9 @@ export default class CognitoSyncClient {
       IdentityId: credentials.identityId,
       DatasetName: 'settings_dashboard',
       SyncSessionToken: session,
-      RecordPatches: keyValues.map(({ key, value }) => ({
+      RecordPatches: keyValues.map(({ key, value, operation = 'replace' /* or 'remove' */ }) => ({
         SyncCount: count,
-        Op: 'replace',
+        Op: operation,
         Key: key,
         Value: JSON.stringify(value)
       }))
