@@ -40,7 +40,7 @@
               <template
                 #item.invoiceId="{ item } "
               >
-                {{ item.invoiceId || '-' }}
+                {{ item.invoiceId || 'N/A' }}
 
                 <v-btn
                   v-if="item.invoiceId"
@@ -58,7 +58,7 @@
               <template
                 #item.chargeId="{ item } "
               >
-                {{ item.chargeId || '-' }}
+                {{ item.chargeId || 'N/A' }}
 
                 <v-btn
                   v-if="item.chargeId"
@@ -141,7 +141,7 @@ export default {
       return this.invoices.map(invoice => ({
         created: invoice.created ? format(parseISO(invoice.created), 'MM/dd/yyyy, hh:mm:ss a') : 'N/A',
         amount_paid: invoice.amount_paid,
-        amount: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : '-',
+        amount: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : 'N/A',
         paid: invoice.paid,
         invoiceId: invoice.stripe_invoice_id,
         chargeId: invoice.charge_id,
