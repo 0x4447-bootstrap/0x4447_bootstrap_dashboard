@@ -15,6 +15,7 @@
             <div class="d-flex justify-center justify-lg-start mb-4">
               <v-avatar
                 size="160"
+                color="grey darken-1"
               >
                 <v-img
                   :lazy-src="avatarPlaceholder"
