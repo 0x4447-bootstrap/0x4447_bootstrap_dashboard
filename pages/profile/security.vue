@@ -8,8 +8,9 @@
     <v-row>
       <a-column
         cols="12"
-        sm="12"
+        sm="8"
         md="6"
+        lg="4"
       >
         <password-change />
       </a-column>

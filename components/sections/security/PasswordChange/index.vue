@@ -1,5 +1,7 @@
 <template>
-  <v-card width="100%">
+  <v-card
+    class="profile-password__container"
+  >
     <v-card-text>
       <h4 class="text-h5">
         Change password
@@ -9,7 +11,7 @@
         class="profile-password__form"
         @submit.prevent="onSubmit"
       >
-        <div>
+        <div class="mb-5">
           <a-validation
             v-slot="{ hasError, errorMessage }"
             :error="$v.passwords.current"
@@ -144,10 +146,8 @@ export default {
 
 <style lang="scss">
 .profile-password {
-  @media (min-width: 960px) {
-    &__form {
-      max-width: 320px;
-    }
+  &__container {
+    width: 100%;
   }
 }
 </style>
