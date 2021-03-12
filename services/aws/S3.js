@@ -21,12 +21,13 @@ export default class S3Client {
     }).promise()
   }
 
-  static async getUrl ({ key }) {
+  static async getUrl ({ key, params = {} }) {
     const s3Client = await AwsClient.s3()
 
     const url = await s3Client.getSignedUrl('getObject', {
       Bucket: awsConfig.s3bucket,
-      Key: key
+      Key: key,
+      ...params
     })
 
     return url
