@@ -2,18 +2,20 @@
   <div
     class="step-3__container"
   >
-    <v-progress-circular
-      indeterminate
-      size="48"
-    />
+    <progress-content />
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import ProgressContent from '~/components/general/ProgressContent'
 
 export default {
   name: 'SupportStep4',
+
+  components: {
+    ProgressContent
+  },
 
   methods: {
     ...mapActions({
