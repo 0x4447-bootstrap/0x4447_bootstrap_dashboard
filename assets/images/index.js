@@ -1,4 +1,3 @@
-import avatarPlaceholder from './avatar-placeholder.jpg'
 import logo from './logo.png'
 import logo2x from './logo@2x.png'
 import logoDark from './logo-dark.png'
@@ -9,7 +8,6 @@ import logoSquareDark from './logo-square-dark.png'
 import logoSquareDark2x from './logo-square-dark@2x.png'
 
 export {
-  avatarPlaceholder,
   logo,
   logo2x,
   logoDark,

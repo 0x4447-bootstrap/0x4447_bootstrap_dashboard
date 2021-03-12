@@ -90,7 +90,17 @@ export const actions = {
     const key = (await AwsClient.credentials()).identityId
 
     try {
-      const profilePictureUrl = await s3Client.getUrl({ key })
+      const aYearFromNow = new Date()
+      aYearFromNow.setFullYear(aYearFromNow.getFullYear() + 1)
+
+      const profilePictureUrl = await s3Client.getUrl({
+        key,
+        params: {
+          ResponseExpires: aYearFromNow,
+          ResponseCacheControl: 'public',
+          ResponseContentType: 'image/png'
+        }
+      })
 
       await dispatch('profileStateUpdate', {
         picture: profilePictureUrl
@@ -126,7 +136,10 @@ export const actions = {
     await dispatch('settingsFetch')
   },
 
-  async passwordChange (context, { current: currentPassword, new: newPassword }) {
+  async passwordChange (context, {
+    current: currentPassword,
+    new: newPassword
+  }) {
     const user = await Auth.currentAuthenticatedUser()
     return Auth.changePassword(
       user,

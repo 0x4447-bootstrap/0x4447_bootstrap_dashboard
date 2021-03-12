@@ -18,7 +18,6 @@
                 color="grey darken-1"
               >
                 <v-img
-                  :lazy-src="avatarPlaceholder"
                   :src="profile.picture"
                   alt="Profile photo"
                 />
@@ -245,7 +244,6 @@ import { pick } from 'lodash'
 import { required, email } from 'vuelidate/lib/validators'
 import ModalImageCrop from '~/components/modals/ModalImageCrop'
 import ModalVerifyEmail from '~/components/modals/ModalVerifyEmail'
-import { avatarPlaceholder } from '~/assets/images'
 
 export default {
   name: 'ProfileDetails',
@@ -259,7 +257,6 @@ export default {
     return {
       isLoading: false,
       isLoadingPhoto: false,
-      avatarPlaceholder,
 
       userData: {
         givenName: ''

@@ -123,7 +123,6 @@
       color="grey darken-1"
     >
       <v-img
-        :lazy-src="avatarPlaceholder"
         :src="profile.picture"
         alt="Profile photo"
       />
@@ -150,14 +149,12 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { avatarPlaceholder } from '~/assets/images'
 
 export default {
   name: 'AppToolbar',
 
   data () {
     return {
-      avatarPlaceholder,
       hasUnreadNotifications: false
     }
   },
