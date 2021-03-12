@@ -101,7 +101,7 @@ export default {
 
   watch: {
     'interfaceSettings.colorTheme' (colorTheme) {
-      this.$vuetify.theme.dark = colorTheme === 'system' ? window.matchMedia('(prefers-color-scheme: dark)')?.matches : colorTheme === 'dark'
+      this.$vuetify.theme.dark = !colorTheme || colorTheme === 'system' ? window.matchMedia('(prefers-color-scheme: dark)')?.matches : colorTheme === 'dark'
     }
   },
 
@@ -132,11 +132,18 @@ export default {
       this.isLoading = true
 
       try {
-        await this.settingsSave([
-          {
-            key: 'colorTheme',
+        const colorTheme = this.interfaceSettings.colorTheme
+        const colorThemeSetting = {
+          key: 'colorTheme',
+          ...(colorTheme === 'system' ? {
+            operation: 'remove'
+          } : {
             value: this.interfaceSettings.colorTheme
-          }
+          })
+        }
+
+        await this.settingsSave([
+          colorThemeSetting
         ])
 
         this.notificationShow({

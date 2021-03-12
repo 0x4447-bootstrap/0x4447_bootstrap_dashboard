@@ -74,7 +74,7 @@ export default {
   beforeMount () {
     const preferredColorTheme = this.settings.colorTheme
 
-    if (!preferredColorTheme || preferredColorTheme === 'system') {
+    if (!preferredColorTheme) {
       this.listenColorThemeChange()
     } else {
       this.$vuetify.theme.dark = preferredColorTheme === 'dark'
