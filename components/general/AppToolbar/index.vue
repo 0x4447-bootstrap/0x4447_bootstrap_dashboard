@@ -120,6 +120,7 @@
     <v-avatar
       size="36"
       class="ml-5"
+      color="grey darken-1"
     >
       <v-img
         :lazy-src="avatarPlaceholder"
