@@ -35,7 +35,7 @@
               <div
                 id="imageCropPreview"
                 style="width: 160px; height: 160px; overflow: hidden; border-radius: 50%; margin: 0 auto;"
-                class="mb-3"
+                class="mb-3 grey darken-1"
               />
 
               <div class="mb-3">
