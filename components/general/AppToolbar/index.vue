@@ -118,7 +118,7 @@
     </v-menu>
 
     <v-avatar
-      size="36"
+      size="48"
       class="ml-5"
       color="grey darken-1"
     >
