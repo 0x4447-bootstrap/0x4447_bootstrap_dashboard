@@ -72,12 +72,6 @@
                   </v-icon>
                 </v-btn>
               </template>
-
-              <template
-                #footer.page-text
-              >
-                {{ getPageText }}
-              </template>
             </v-data-table>
           </v-card-text>
         </v-card>
@@ -156,14 +150,7 @@ export default {
         headers: this.headers,
         items: this.invoicesFormatted,
         loading: this.loadingList,
-        serverItemsLength: 1,
-        footerProps: {
-          disableItemsPerPage: true,
-          itemsPerPageOptions: [-1],
-          options: {
-            page: this.page
-          }
-        }
+        serverItemsLength: this.total
       }
     },
 
@@ -174,15 +161,17 @@ export default {
     }
   },
 
-  mounted () {
+  async mounted () {
     this.loadInvoices({
       page: this.page
     })
+    this.total = await this.invoicesStatsLoad()
   },
 
   methods: {
     ...mapActions({
       invoicesLoad: 'invoices/invoicesLoad',
+      invoicesStatsLoad: 'invoices/invoicesStatsLoad',
       notificationShow: 'notifications/show'
     }),
 
@@ -193,13 +182,11 @@ export default {
 
       try {
         const {
-          invoices,
-          total
+          invoices
         } = await this.invoicesLoad({
           page
         })
         this.invoices = invoices
-        this.total = total
       } finally {
         this.loadingList = false
       }

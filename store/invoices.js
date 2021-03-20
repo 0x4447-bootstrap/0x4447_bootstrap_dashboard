@@ -19,11 +19,11 @@ export const actions = {
     const dbClient = await AwsClient.dynamoDb()
     const { identityId } = await AwsClient.credentials()
 
+    const startKey = getters.paginationKeys[page]
     // Set pagination offset for query
     // using last loaded & stored document key
-    const year = (new Date().getFullYear() + 1) - page
 
-    const { Items = [], LastEvaluatedKey = null, Count = 0 } = await dbClient.query({
+    const { Items = [], LastEvaluatedKey = null } = await dbClient.query({
       TableName: 'money',
       KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
       ExpressionAttributeNames: {
@@ -32,10 +32,13 @@ export const actions = {
       },
       ExpressionAttributeValues: {
         ':pk': identityId,
-        ':sk': `invoice#${year}`
+        ':sk': 'invoice'
       },
       Limit: perPage,
-      ScanIndexForward: false
+      ScanIndexForward: false,
+      ...(startKey && {
+        ExclusiveStartKey: startKey
+      })
     }).promise()
 
     if (LastEvaluatedKey) {
@@ -47,9 +50,23 @@ export const actions = {
     }
 
     return {
-      invoices: Items,
-      total: Count
+      invoices: Items
     }
+  },
+
+  async invoicesStatsLoad () {
+    const dbClient = await AwsClient.dynamoDb()
+    const { identityId } = await AwsClient.credentials()
+
+    const { Item } = await dbClient.get({
+      TableName: 'money',
+      Key: {
+        pk: identityId,
+        sk: 'stats#invoice#2021'
+      }
+    }).promise()
+
+    return Item?.count || 0
   },
 
   async invoiceLoad (store, { invoiceId }) {
