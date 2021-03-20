@@ -20,6 +20,8 @@
     </v-main>
 
     <app-notifications />
+
+    <modal-subscription />
   </v-app>
 </template>
 
@@ -28,6 +30,7 @@ import { mapGetters, mapActions } from 'vuex'
 import AppSidebar from '~/components/general/AppSidebar'
 import AppToolbar from '~/components/general/AppToolbar'
 import AppNotifications from '~/components/general/AppNotifications'
+import ModalSubscription from '~/components/modals/ModalSubscription'
 
 export default {
   name: 'LayoutDefault',
@@ -35,7 +38,8 @@ export default {
   components: {
     AppSidebar,
     AppToolbar,
-    AppNotifications
+    AppNotifications,
+    ModalSubscription
   },
 
   data () {
