@@ -35,7 +35,7 @@ export default function appRoutesPlugin (context, inject) {
       route: {
         name: 'profile-payment'
       },
-      title: 'Payment'
+      title: 'Subscription'
     },
     paymentInvoices: {
       route: {
