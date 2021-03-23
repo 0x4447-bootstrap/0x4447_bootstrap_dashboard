@@ -1,29 +1,13 @@
 import AwsClient from '~/services/aws/AWSClient'
 
-const types = {
-  INVOICE_PAGINATION_SET: 'INVOICE_PAGINATION_SET'
-}
-
-export const state = () => ({
-  paginationKeys: {}
-})
-
-export const getters = {
-  paginationKeys (state) {
-    return state.paginationKeys
-  }
-}
+export const state = () => ({})
 
 export const actions = {
-  async invoicesLoad ({ commit, getters }, { perPage, page }) {
+  async invoicesLoad ({ commit, getters }, { year }) {
     const dbClient = await AwsClient.dynamoDb()
     const { identityId } = await AwsClient.credentials()
 
-    const startKey = getters.paginationKeys[page]
-    // Set pagination offset for query
-    // using last loaded & stored document key
-
-    const { Items = [], LastEvaluatedKey = null } = await dbClient.query({
+    const { Items = [], Count = 0 } = await dbClient.query({
       TableName: 'money',
       KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
       ExpressionAttributeNames: {
@@ -32,29 +16,18 @@ export const actions = {
       },
       ExpressionAttributeValues: {
         ':pk': identityId,
-        ':sk': 'invoice'
+        ':sk': `invoice#${year}`
       },
-      Limit: perPage,
-      ScanIndexForward: false,
-      ...(startKey && {
-        ExclusiveStartKey: startKey
-      })
+      ScanIndexForward: false
     }).promise()
 
-    if (LastEvaluatedKey) {
-      // Store pagination key for the next page
-      commit(types.INVOICE_PAGINATION_SET, {
-        page: page + 1,
-        key: LastEvaluatedKey
-      })
-    }
-
     return {
-      invoices: Items
+      invoices: Items,
+      total: Count
     }
   },
 
-  async invoicesStatsLoad () {
+  async invoicesStatsLoad (store, { year }) {
     const dbClient = await AwsClient.dynamoDb()
     const { identityId } = await AwsClient.credentials()
 
@@ -62,7 +35,7 @@ export const actions = {
       TableName: 'money',
       Key: {
         pk: identityId,
-        sk: 'stats#invoice#2021'
+        sk: `stats#invoice#${year}`
       }
     }).promise()
 
@@ -94,11 +67,5 @@ export const actions = {
     }
 
     return Items[0]
-  }
-}
-
-export const mutations = {
-  [types.INVOICE_PAGINATION_SET] (state, { page, key }) {
-    state.paginationKeys[page] = key
   }
 }

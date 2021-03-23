@@ -15,7 +15,6 @@
               :page.sync="page"
               v-bind="bindingsTable"
               class="elevation-1 invoices__table"
-              @update:page="onPageChange"
               @click:row="onOpenInvoice"
             >
               <template
@@ -72,7 +71,45 @@
                   </v-icon>
                 </v-btn>
               </template>
+
+              <template
+                #footer.page-text
+              >
+                {{ getPageText }}
+              </template>
             </v-data-table>
+
+            <v-row class="pt-3">
+              <v-spacer />
+
+              <v-col
+                sm="auto"
+                class="d-flex align-center"
+              >
+                {{ getPageText }}
+              </v-col>
+
+              <v-col
+                sm="auto"
+                class="d-flex align-items-center"
+              >
+                <v-btn
+                  :disabled="disabledNextYear"
+                  icon
+                  @click="onNextYear"
+                >
+                  <v-icon>mdi-chevron-left</v-icon>
+                </v-btn>
+
+                <v-btn
+                  :disabled="disabledPrevYear"
+                  icon
+                  @click="onPreviousYear"
+                >
+                  <v-icon>mdi-chevron-right</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-card>
       </a-column>
@@ -126,7 +163,12 @@ export default {
           sortable: false
         }
       ],
-      invoices: []
+      invoices: [],
+
+      currentYear: new Date().getFullYear(),
+      year: new Date().getFullYear(),
+      stats: {},
+      serverItemsLength: 1
     }
   },
 
@@ -145,27 +187,37 @@ export default {
       }))
     },
 
+    statsSum () {
+      return Object.values(this.stats).reduce((sum, num) => num + sum, 0)
+    },
+
     bindingsTable () {
       return {
         headers: this.headers,
         items: this.invoicesFormatted,
         loading: this.loadingList,
-        serverItemsLength: this.total
+        serverItemsLength: 1,
+        hideDefaultFooter: true
       }
     },
 
     getPageText () {
-      const year = new Date().getFullYear()
+      return `Data for year ${this.year}`
+    },
 
-      return `Data for year ${year + 1 - this.page}`
+    disabledNextYear () {
+      return this.currentYear === this.year
+    },
+
+    disabledPrevYear () {
+      return this.stats[this.year - 1] === 0
     }
   },
 
-  async mounted () {
+  mounted () {
     this.loadInvoices({
-      page: this.page
+      year: this.year
     })
-    this.total = await this.invoicesStatsLoad()
   },
 
   methods: {
@@ -176,26 +228,49 @@ export default {
     }),
 
     async loadInvoices ({
-      page
+      year
     }) {
       this.loadingList = true
 
       try {
+        this.year = year
         const {
-          invoices
+          invoices,
+          total
         } = await this.invoicesLoad({
-          page
+          year
         })
+
+        this.stats = {
+          ...this.stats,
+          [year]: total
+        }
+
+        await this.loadNextPageStats(year - 1)
         this.invoices = invoices
       } finally {
         this.loadingList = false
       }
     },
 
-    onPageChange (page) {
-      this.loadInvoices({
-        page
+    async loadNextPageStats (year) {
+      // Next page stats
+      if (this.stats[year] > 0) {
+        return
+      }
+
+      const nextPageTotal = await this.invoicesStatsLoad({
+        year
       })
+
+      this.stats = {
+        ...this.stats,
+        [year]: nextPageTotal
+      }
+
+      if (nextPageTotal === 0) {
+        this.serverItemsLength = this.statsSum
+      }
     },
 
     onCopy (text, field) {
@@ -209,6 +284,18 @@ export default {
 
     onOpenInvoice (invoice) {
       this.$router.push(this.$routes.paymentInvoiceId(invoice.invoiceId).route)
+    },
+
+    onNextYear () {
+      this.loadInvoices({
+        year: this.year + 1
+      })
+    },
+
+    onPreviousYear () {
+      this.loadInvoices({
+        year: this.year - 1
+      })
     }
   },
 
