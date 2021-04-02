@@ -183,7 +183,7 @@ export default {
         chargeId: invoice.charge_id,
         next_payment_attempt: invoice.next_payment_attempt
           ? format(parseISO(invoice.next_payment_attempt), 'MM/dd/yyyy, hh:mm:ss a')
-          : ''
+          : 'N/A'
       }))
     },
 
