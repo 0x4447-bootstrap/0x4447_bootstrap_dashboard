@@ -44,7 +44,11 @@
             <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+      </v-list>
 
+      <v-divider />
+
+      <v-list>
         <v-list-item
           dense
           @click="onSignOut"
