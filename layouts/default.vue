@@ -12,7 +12,10 @@
     />
 
     <v-main>
-      <v-container fluid>
+      <v-container
+        class="container--layout"
+        fluid
+      >
         <v-fade-transition>
           <nuxt />
         </v-fade-transition>
@@ -140,6 +143,11 @@ export default {
 </script>
 
 <style lang="scss">
+.container--layout {
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
 .navbar {
   &__logo {
     height: 64px;
