@@ -86,13 +86,6 @@
                 sm="auto"
                 class="d-flex align-center"
               >
-                {{ getPageText }}
-              </v-col>
-
-              <v-col
-                sm="auto"
-                class="d-flex align-items-center"
-              >
                 <v-btn
                   :disabled="disabledNextYear"
                   icon
@@ -100,6 +93,10 @@
                 >
                   <v-icon>mdi-chevron-left</v-icon>
                 </v-btn>
+
+                <div class="d-flex align-center">
+                  {{ getPageText }}
+                </div>
 
                 <v-btn
                   :disabled="disabledPrevYear"
@@ -202,7 +199,7 @@ export default {
     },
 
     getPageText () {
-      return `Data for year ${this.year}`
+      return `${this.year} | ${this.year - 1}`
     },
 
     disabledNextYear () {
