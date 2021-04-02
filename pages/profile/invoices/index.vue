@@ -1,7 +1,7 @@
 <template>
   <v-layout column>
     <page-title
-      :title="$routes.paymentInvoices.title"
+      :title="pageTitle"
       anchor="invoices"
     />
 
@@ -173,6 +173,9 @@ export default {
   },
 
   computed: {
+    pageTitle () {
+      return `${this.$routes.paymentInvoices.title} for ${this.year}`
+    },
     invoicesFormatted () {
       return this.invoices.map(invoice => ({
         created: invoice.created ? format(parseISO(invoice.created), 'MM/dd/yyyy, hh:mm:ss a') : 'N/A',
