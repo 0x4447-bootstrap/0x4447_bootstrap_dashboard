@@ -182,6 +182,11 @@ export default {
           route: this.$routes.profileIdentity.route
         },
         {
+          title: this.$routes.profileSecurity.title,
+          icon: 'mdi-security',
+          route: this.$routes.profileSecurity.route
+        },
+        {
           title: this.$routes.profileInterface.title,
           icon: 'mdi-brush',
           route: this.$routes.profileInterface.route
@@ -195,11 +200,6 @@ export default {
           title: this.$routes.paymentInvoices.title,
           icon: 'mdi-receipt',
           route: this.$routes.paymentInvoices.route
-        },
-        {
-          title: this.$routes.profileSecurity.title,
-          icon: 'mdi-security',
-          route: this.$routes.profileSecurity.route
         }
       ]
     },
