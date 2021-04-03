@@ -22,13 +22,7 @@
             <a
               href="#"
               @click.prevent="onRefresh"
-            >Refresh</a> the page or return to
-            <nuxt-link
-              :to="$routes.dashboard.route"
-            >
-              {{ $routes.dashboard.title }}
-            </nuxt-link>
-            page
+            >Refresh</a> the page or return to <nuxt-link :to="$routes.dashboard.route">{{ $routes.dashboard.title }}</nuxt-link>
           </p>
         </div>
       </v-card-text>
@@ -60,6 +54,10 @@ export default {
   &__inner {
     padding: 120px 0;
     text-align: center;
+
+    a {
+      color: #fff !important;
+    }
   }
 
   &__icon {
