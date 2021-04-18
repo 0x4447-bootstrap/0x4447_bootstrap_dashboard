@@ -239,8 +239,8 @@ export default {
 
       return [
         {
-          label: 'Card number',
-          value: `**${details.last4}`
+          label: 'Last 4',
+          value: details.last4
         },
         {
           label: 'Expiration date',
