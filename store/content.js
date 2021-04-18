@@ -1,4 +1,4 @@
-import articles from '~/content/articles.json'
+import articles from '~/assets/content/articles.json'
 
 export const state = () => ({
   articles

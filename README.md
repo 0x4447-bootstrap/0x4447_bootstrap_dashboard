@@ -7,6 +7,7 @@ Contents:
 3) [Authentication & auth middleware](#3-authentication--auth-middleware)
 4) [Styling & UI](#4-styling--ui)
 5) [Serverless and AWS integration](#5-serverless-and-aws-integration)
+6) [Static content](#6-static-content)
 
 ## 1) Build setup
 
@@ -139,3 +140,20 @@ Current list of AWS services:
   Storage of account specific UI preferences: preferred color theme, minimized sidebar, etc.  
   
 Every new services should be declared in [AWSClient.js](/services/aws/AWSClient.js) following existing services examples. If new services requires an additional payload formatting layer, it should be put in a separate module inside `~/services/aws` to prevent clogging of main AWS client configuration module.
+
+## 6) Static content
+
+Main folder for storage of editable static content is [/assets/content](/assets/content) folder.  
+
+#### Help page articles
+
+Location: [/assets/content/articles.json](/assets/content/articles.json)
+
+Every article in `articles.json` requires 3 fields to be filled:
+
+- `title` - Article title to be displayed in Help section list
+- `slug` - URL friendly representation of article title or id. Should be **unique** across Help page articles list. Supports URL friendly characters - alphabetical, numerical, dash and underscore.
+- `description` - Article content that contains text or valid HTML.
+
+Articles order on Help page will be mirrored from `articles.json` file.
+
