@@ -39,7 +39,7 @@
             <v-btn
               :loading="loading.payment"
               small
-              @click="onRemovePaymentMethod"
+              @click="onRemovePaymentMethodConfirm"
             >
               <v-icon class="mr-1">
                 mdi-delete
@@ -142,7 +142,7 @@
                 :loading="loading.subscription"
                 width="210px"
                 small
-                @click="onSubscriptionCancel"
+                @click="subscriptionCancelConfirm"
               >
                 <v-icon class="mr-1">
                   mdi-delete
@@ -185,16 +185,39 @@
           </div>
         </v-card-text>
       </v-card>
+
+      <modal-confirm
+        :is-open.sync="isOpenSubscriptionCancel"
+        @confirm="onSubscriptionCancel"
+      >
+        <template #message>
+          You are about to cancel your subscription.
+        </template>
+      </modal-confirm>
+
+      <modal-confirm
+        :is-open.sync="isOpenPaymentMethodRemove"
+        @confirm="onRemovePaymentMethod"
+      >
+        <template #message>
+          You are about to remove your payment method.
+        </template>
+      </modal-confirm>
     </a-column>
   </v-row>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { initStripeCardWidget } from '@/components/sections/payment/subscription-helpers'
+import { initStripeCardWidget } from '~/components/sections/payment/subscription-helpers'
+import ModalConfirm from '~/components/modals/ModalConfirm'
 
 export default {
   name: 'PaymentMethodDetails',
+
+  components: {
+    ModalConfirm
+  },
 
   props: {
     paymentDetails: {
@@ -221,7 +244,10 @@ export default {
       planSelected: {},
 
       stripeClient: null,
-      stripeCardField: null
+      stripeCardField: null,
+
+      isOpenSubscriptionCancel: false,
+      isOpenPaymentMethodRemove: false
     }
   },
 
@@ -362,8 +388,16 @@ export default {
       this.planSelected = plan
     },
 
+    onRemovePaymentMethodConfirm () {
+      this.isOpenPaymentMethodRemove = true
+    },
+
     onRemovePaymentMethod () {
       this.$emit('payment-method:remove')
+    },
+
+    subscriptionCancelConfirm () {
+      this.isOpenSubscriptionCancel = true
     },
 
     onSubscriptionCancel () {
