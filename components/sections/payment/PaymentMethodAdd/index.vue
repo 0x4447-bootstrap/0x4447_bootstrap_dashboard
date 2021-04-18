@@ -15,12 +15,12 @@
             class="plan-button__container elevation-3"
             @click="onPlanSelect(plan.id)"
           >
-            <div class="plan-button__name mb-5">
-              {{ plan.label }}
+            <div class="plan-button__price mb-5">
+              {{ plan.priceLabel }}
             </div>
 
-            <div class="plan-button__price">
-              {{ plan.priceLabel }}
+            <div class="plan-button__name">
+              {{ plan.label }}
             </div>
           </button>
         </v-card-text>
@@ -377,6 +377,15 @@ export default {
   &__coupon__apply {
     margin-left: 12px;
   }
+
+  @media (max-width: 480px) {
+    &__list {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-row-gap: 12px;
+    }
+  }
 }
 
 .plan-button {
@@ -388,6 +397,10 @@ export default {
     padding: 24px 0;
   }
 
+  &__price {
+    font-size: 24px;
+  }
+
   &--active {
     border-color: #2196F3;
   }
@@ -395,6 +408,10 @@ export default {
   @media (max-width: 768px) {
     &__container {
       padding: 30px;
+    }
+
+    &__price {
+      font-size: 20px;
     }
   }
 }
