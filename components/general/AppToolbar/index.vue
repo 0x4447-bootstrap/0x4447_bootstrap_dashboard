@@ -126,9 +126,20 @@
       class="ml-5"
       color="grey darken-1"
     >
+      <v-progress-circular
+        v-if="avatarLoading"
+        key="loading"
+        size="30"
+        width="2"
+        indeterminate
+      />
+
       <v-img
+        v-else
+        key="avatar"
         :src="profile.picture"
         alt="Profile photo"
+        @error="onAvatarImageError"
       />
     </v-avatar>
 
@@ -159,7 +170,9 @@ export default {
 
   data () {
     return {
-      hasUnreadNotifications: false
+      hasUnreadNotifications: false,
+      avatarLoading: false,
+      avatar: 'https://documentreport-production-us-east-1-profile-photo.s3.amazonaws.com/us-east-1%3Aa13a6979-2aac-484f-9166-bcd3857ce26b?AWSAccessKeyId=ASIATXYZMZKR6NY3UF6I&Expires=1618741113&Signature=GZBJePVCYNRWthfKVcEP%2BvGkuyc%3D&response-cache-control=public&response-content-type=image%2Fpng&response-expires=2022-04-18T10%3A03%3A33Z&x-amz-security-token=IQoJb3JpZ2luX2VjEPL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIE3xFCSK3Faj12ZrzTPhwwuthPfKy6RuwA8STm4eU0rSAiBvqjTfM3Qo2jShYP2Nu14QgDBK4ZoqpbJOzVlVd9twzyrEBAhbEAIaDDI1NzIxNDQzMzk1NSIMtUDD0sePE6GDH%2FLMKqEEoGNKF6Q%2BUAcLAWrJRR5yDsLju9f%2BcOpaX3HkjG1TvqDmR%2F2CfBzbJ3MLgZ4R1xWurMUU6ma2MHFxE%2BApeyAFojRtGuPGw%2Feh7bXotBHDWDY7zZo%2BGxfaCyMuw2ASHDzHa0%2BL%2FaDsAViiF0uWHAtf9kAO9yqW%2BYCi2KKHFEq9g68SvGEWCSYHhL%2BKEtUobBI3CTBDKf1UTHELGSa5ttu7MzbeKj6jDRIRHOS9K8jIIIbLp1wed7hAEMYLTti0eXT5ZA3gMsuqglfAK1G6Kl18Ev4vmG5vPs6FT8VGOiFZrU2FfsAO9m7Z8cba%2FPFRD1DbqEBAQVvZGfJct43sHLYe0v2uzc1tTr1ENBTkjW764cz%2B9swXnXsUNIsWiGsy4HbZjdRUq4qci2E%2Bji5lPr%2BZfwZXxc7jnt9waBsYJuIlJWghqSdNdTtJuIUBzdfbV5vN%2B%2Fo0PFauHh6wfxu5AoTdds%2Br2S95iL1U3JLG1nN5InwFOlvce9WqmU7OpWtpYCtV37qOk5uPDH20%2B2GSLliGsAtI1JYA0KN0O%2Fc8Yu4YMSOaLINx3XHgRbnncfZcta6ixBasSXW7u9xuK7zfpQA3Crw2Ixwj8kbgAplz2EWy8s4JQBLHcyZE7G9i1xBxxOPEEo3lYWqh%2BbT%2FpLIvybFkPM2DzJ%2BHAzf6whJ1kPc5neD9nnG9M61tpPIeKevH0mvT3PuqXXU0snSzMe5g7zckA7Iw9IfwgwY6hgIIVc32S3efL6%2Fc%2B0d07T9jGtB4tFLLPlNbPcOF5lEYXQkRcLteOBQYOmhAnkPEOIdlWJRG5h8IdMLxT%2FyYI5NeGev566N1mHmLPZZDl9ygYTbVSYT0dW%2FmxZYmakBTzJe3bFqZdolIWN6YXRL%2BNiBo41Y54d%2BmuGMzFxlgcMg15WkLfFI%2FSh0H7e1O8QBZdyerYHuhQhsmlcYKrEbdRVEJr4hFi3JWKDXOJ2mGGsjwmaQLfndedPBgFfLN%2B5Hh0%2F78T5ovf%2FeNFtYvEvcHFikA7wpC9QJuRcGoxkuZljy0QJhdRm4uTrSmBcK5JpwEWCyZUYuS9E%2F9wp80Wr0Y5A8Urd8DKqbZ11111'
     }
   },
 
@@ -244,6 +257,43 @@ export default {
 
     onNotificationsMarkRead () {
       this.hasUnreadNotifications = false
+    },
+
+    // Attempt to load avatar multiple times to cover the case of first user login, when avatar is not yet generated.
+    // Loader while be displayed in place
+    async onAvatarImageError () {
+      const RELOAD_ATTEMPTS = 5
+      const RELOAD_TIMEOUT = 1500
+      const avatarUrl = this.profile.picture
+
+      this.avatarLoading = true
+
+      // eslint-disable-next-line no-unused-vars
+      for (const i of new Array(RELOAD_ATTEMPTS)) {
+        const loaded = await this.reloadAvatar(avatarUrl, RELOAD_TIMEOUT)
+        if (loaded) {
+          this.avatarLoading = false
+          break
+        }
+      }
+    },
+
+    reloadAvatar (avatarUrl, timeoutMs = 1500) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const img = new Image()
+
+          img.addEventListener('load', () => {
+            resolve(true)
+          })
+
+          img.addEventListener('error', () => {
+            resolve(false)
+          })
+
+          img.src = avatarUrl
+        }, timeoutMs)
+      })
     }
   }
 }
