@@ -126,9 +126,20 @@
       class="ml-5"
       color="grey darken-1"
     >
+      <v-progress-circular
+        v-if="avatarLoading"
+        key="loading"
+        size="30"
+        width="2"
+        indeterminate
+      />
+
       <v-img
+        v-else
+        key="avatar"
         :src="profile.picture"
         alt="Profile photo"
+        @error="onAvatarImageError"
       />
     </v-avatar>
 
@@ -159,7 +170,8 @@ export default {
 
   data () {
     return {
-      hasUnreadNotifications: false
+      hasUnreadNotifications: false,
+      avatarLoading: false
     }
   },
 
@@ -244,6 +256,43 @@ export default {
 
     onNotificationsMarkRead () {
       this.hasUnreadNotifications = false
+    },
+
+    // Attempt to load avatar multiple times to cover the case of first user login, when avatar is not yet generated.
+    // Loader while be displayed in place
+    async onAvatarImageError () {
+      const RELOAD_ATTEMPTS = 5
+      const RELOAD_TIMEOUT = 1500
+      const avatarUrl = this.profile.picture
+
+      this.avatarLoading = true
+
+      // eslint-disable-next-line no-unused-vars
+      for (const i of new Array(RELOAD_ATTEMPTS)) {
+        const loaded = await this.reloadAvatar(avatarUrl, RELOAD_TIMEOUT)
+        if (loaded) {
+          this.avatarLoading = false
+          break
+        }
+      }
+    },
+
+    reloadAvatar (avatarUrl, timeoutMs = 1500) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const img = new Image()
+
+          img.addEventListener('load', () => {
+            resolve(true)
+          })
+
+          img.addEventListener('error', () => {
+            resolve(false)
+          })
+
+          img.src = avatarUrl
+        }, timeoutMs)
+      })
     }
   }
 }
