@@ -1,5 +1,8 @@
 <template>
-  <v-stepper v-model="step">
+  <v-stepper
+    v-model="step"
+    class="support-steps__container"
+  >
     <v-stepper-header>
       <v-stepper-step
         :complete="isStepComplete(1)"
@@ -110,6 +113,12 @@ export default {
     }
   },
 
+  mounted () {
+    setTimeout(() => {
+      this.$el.classList.add('support-steps--animate')
+    }, 200)
+  },
+
   methods: {
     ...mapActions({
       notificationShow: 'notifications/show',
@@ -162,15 +171,33 @@ export default {
 </script>
 
 <style lang="scss">
-.tab-transition-enter,
-.tab-transition-enter-active,
-.tab-transition-leave,
-.tab-transition-leave-active,
-.tab-transition-leave-to,
-.tab-reverse-transition-enter,
-.tab-reverse-transition-enter-active,
-.tab-reverse-transition-leave,
-.tab-reverse-transition-leave-to {
-  transition: 1s cubic-bezier(0.25, 0.8, 0.5, 1) !important;
+.support-steps {
+  &--container {
+    .tab-transition-enter,
+    .tab-transition-enter-active,
+    .tab-transition-leave,
+    .tab-transition-leave-active,
+    .tab-transition-leave-to,
+    .tab-reverse-transition-enter,
+    .tab-reverse-transition-enter-active,
+    .tab-reverse-transition-leave,
+    .tab-reverse-transition-leave-to {
+      transition: none !important;
+    }
+  }
+
+  &--animate {
+    .tab-transition-enter,
+    .tab-transition-enter-active,
+    .tab-transition-leave,
+    .tab-transition-leave-active,
+    .tab-transition-leave-to,
+    .tab-reverse-transition-enter,
+    .tab-reverse-transition-enter-active,
+    .tab-reverse-transition-leave,
+    .tab-reverse-transition-leave-to {
+      transition: 1s cubic-bezier(0.25, 0.8, 0.5, 1) !important;
+    }
+  }
 }
 </style>
