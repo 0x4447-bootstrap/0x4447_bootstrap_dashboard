@@ -14,6 +14,11 @@
       slot="sign-in"
       :form-fields.prop="signInFields"
     />
+
+    <amplify-forgot-password
+      slot="forgot-password"
+      :form-fields.prop="forgotPasswordFields"
+    />
   </amplify-authenticator>
 </template>
 
@@ -55,6 +60,12 @@ export default {
         },
         {
           type: 'password'
+        }
+      ],
+      forgotPasswordFields: [
+        {
+          label: 'Email *',
+          type: 'username'
         }
       ]
     }
