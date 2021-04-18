@@ -46,7 +46,7 @@
               small
               @click="onCouponApply"
             >
-              Apply
+              Check
             </v-btn>
           </div>
         </v-card-text>
