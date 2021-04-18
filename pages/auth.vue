@@ -7,6 +7,12 @@
 
     <amplify-confirm-sign-up
       slot="confirm-sign-up"
+      :form-fields.prop="signUpConfirmFields"
+    />
+
+    <amplify-sign-in
+      slot="sign-in"
+      :form-fields.prop="signInFields"
     />
   </amplify-authenticator>
 </template>
@@ -24,8 +30,32 @@ export default {
   data () {
     return {
       signUpFields: [
-        { type: 'username' },
-        { type: 'password' }
+        {
+          label: 'Email *',
+          type: 'username'
+        },
+        {
+          type: 'password'
+        }
+      ],
+      signUpConfirmFields: [
+        {
+          label: 'Email *',
+          type: 'username'
+        },
+        {
+          label: 'Confirmation Code *',
+          type: 'code'
+        }
+      ],
+      signInFields: [
+        {
+          label: 'Email *',
+          type: 'username'
+        },
+        {
+          type: 'password'
+        }
       ]
     }
   },
