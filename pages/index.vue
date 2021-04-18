@@ -2,6 +2,7 @@
   <v-layout column>
     <page-title
       :title="$routes.dashboard.title"
+      anchor="home"
     />
 
     <v-row>
