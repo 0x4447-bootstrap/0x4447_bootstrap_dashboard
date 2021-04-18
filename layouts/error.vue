@@ -22,7 +22,10 @@
             <a
               href="#"
               @click.prevent="onRefresh"
-            >Refresh</a> the page or return to <nuxt-link :to="$routes.dashboard.route">{{ $routes.dashboard.title }}</nuxt-link>
+            >Refresh</a> the page or return to
+            <nuxt-link :to="$routes.dashboard.route">
+              {{ $routes.dashboard.title }}
+            </nuxt-link>
           </p>
         </div>
       </v-card-text>
