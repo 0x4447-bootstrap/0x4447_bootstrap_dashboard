@@ -17,60 +17,6 @@
     >
       <template #activator="{ on }">
         <v-btn
-          class="ml-5"
-          small
-          v-on="on"
-        >
-          Menu
-        </v-btn>
-      </template>
-
-      <v-list
-        dense
-      >
-        <v-list-item
-          v-for="menuItem in accountMenu"
-          :key="menuItem.title"
-          :to="menuItem.route"
-          link
-          exact
-          dense
-        >
-          <v-list-item-icon>
-            <v-icon>{{ menuItem.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-
-      <v-divider />
-
-      <v-list>
-        <v-list-item
-          dense
-          @click="onSignOut"
-        >
-          <v-list-item-icon>
-            <v-icon>mdi-logout</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>Sign out</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-
-    <v-menu
-      bottom
-      left
-      offset-y
-    >
-      <template #activator="{ on }">
-        <v-btn
           icon
           class="ml-5"
           v-on="on"
@@ -121,27 +67,89 @@
       </v-sheet>
     </v-menu>
 
-    <v-avatar
-      size="48"
-      class="ml-5"
-      color="grey darken-1"
+    <v-menu
+      bottom
+      left
+      offset-y
     >
-      <v-progress-circular
-        v-if="avatarLoading"
-        key="loading"
-        size="30"
-        width="2"
-        indeterminate
-      />
+      <template #activator="{ on }">
+        <v-btn
+          class="ml-5"
+          small
+          v-on="on"
+        >
+          Menu
+        </v-btn>
+      </template>
 
-      <v-img
-        v-else
-        key="avatar"
-        :src="profile.picture"
-        alt="Profile photo"
-        @error="onAvatarImageError"
-      />
-    </v-avatar>
+      <v-list
+        dense
+      >
+        <v-list-item>
+          <v-list-item-avatar
+            size="24"
+            color="grey darken-1"
+            class="mr-8"
+          >
+            <v-progress-circular
+              v-if="avatarLoading"
+              key="loading"
+              size="24"
+              width="2"
+              indeterminate
+            />
+
+            <v-img
+              v-else
+              key="avatar"
+              :src="profile.picture"
+              alt="Profile photo"
+              @error="onAvatarImageError"
+            />
+          </v-list-item-avatar>
+
+          <v-list-item-content>
+            {{ profile.givenName || profile.email }}
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider />
+
+        <v-list-item
+          v-for="menuItem in accountMenu"
+          :key="menuItem.title"
+          :to="menuItem.route"
+          link
+          exact
+          dense
+        >
+          <v-list-item-icon>
+            <v-icon>{{ menuItem.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider />
+
+      <v-list>
+        <v-list-item
+          dense
+          @click="onSignOut"
+        >
+          <v-list-item-icon>
+            <v-icon>mdi-logout</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Sign out</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-menu>
 
     <template
       v-if="showAccountMenu"
