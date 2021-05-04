@@ -52,15 +52,21 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'ViewHelp',
 
-  computed: {
-    ...mapGetters({
-      articles: 'content/articles'
-    })
+  async asyncData ({ $content }) {
+    const articles = await $content('articles').fetch()
+
+    return {
+      articles
+    }
+  },
+
+  data () {
+    return {
+      articles: []
+    }
   },
 
   head () {

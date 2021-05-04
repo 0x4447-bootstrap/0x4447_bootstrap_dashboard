@@ -12,7 +12,8 @@ export const buildModules = [
     options: {
       customProperties: true
     }
-  }]
+  }],
+  ['@nuxt/content', {}]
 ]
 
 export const modules = [

@@ -1,0 +1,65 @@
+.nuxt-content {
+  margin-bottom: 200px;
+
+  h1 {
+    margin-bottom: 16px;
+    font-size: 6rem !important;
+    font-weight: 300;
+    line-height: 6rem;
+    letter-spacing: -0.015625em !important;
+  }
+
+  h2 {
+    margin-bottom: 16px;
+    font-size: 3.75rem !important;
+    font-weight: 300;
+    line-height: 3.75rem;
+    letter-spacing: -0.0083333333em !important;
+  }
+
+  h3 {
+    margin-bottom: 16px;
+    font-size: 3rem !important;
+    font-weight: 400;
+    line-height: 3.125rem;
+    letter-spacing: normal !important;
+  }
+
+  h4 {
+    margin-bottom: 16px;
+    font-size: 2.125rem !important;
+    font-weight: 400;
+    line-height: 2.5rem;
+    letter-spacing: 0.0073529412em !important;
+  }
+
+  h5 {
+    margin-bottom: 16px;
+    font-size: 1.5rem !important;
+    font-weight: 400;
+    line-height: 2rem;
+    letter-spacing: normal !important;
+  }
+
+  h6 {
+    margin-bottom: 16px;
+    font-size: 1.25rem !important;
+    font-weight: 500;
+    line-height: 2rem;
+    letter-spacing: 0.0125em !important;
+  }
+
+  p,
+  ul,
+  ol {
+    font-size: 1rem !important;
+    font-weight: 400;
+    line-height: 1.5rem;
+    letter-spacing: 0.03125em !important;
+  }
+
+  iframe {
+    margin: 16px auto;
+    display: block;
+  }
+}
