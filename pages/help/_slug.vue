@@ -8,10 +8,7 @@
       </h2>
     </title-anchored>
 
-    <div
-      class="article-slug__content"
-      v-html="article.content"
-    />
+    <nuxt-content :document="article" />
   </div>
 </template>
 
@@ -19,16 +16,20 @@
 export default {
   name: 'ViewHelpSlug',
 
-  asyncData ({
+  async asyncData ({
     params,
-    store,
+    $content,
     error
   }) {
     if (!params.slug) {
       return error(404, 'Article not found')
     }
 
-    const article = store.getters['content/articleBySlug'](params.slug)
+    const article = await $content('articles', params.slug).fetch()
+
+    if (!article) {
+      return error(404, 'Article not found')
+    }
 
     return {
       article
