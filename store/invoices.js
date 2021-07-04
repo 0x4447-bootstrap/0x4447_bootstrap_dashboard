@@ -16,7 +16,7 @@ export const actions = {
       },
       ExpressionAttributeValues: {
         ':pk': identityId,
-        ':sk': `invoice#${year}`
+        ':sk': `invoice#summary#${year}`
       },
       ScanIndexForward: false
     }).promise()
@@ -35,7 +35,7 @@ export const actions = {
       TableName: 'money',
       Key: {
         pk: identityId,
-        sk: `stats#invoice#${year}`
+        sk: `stats#invoice#summary#${year}`
       }
     }).promise()
 

@@ -72,6 +72,16 @@
                 </v-btn>
               </template>
 
+              <template #item.invoicePdf="{ item }">
+                <v-btn
+                  v-if="item.invoicePdf"
+                  :href="item.invoicePdf"
+                  icon
+                >
+                  <v-icon>mdi-download</v-icon>
+                </v-btn>
+              </template>
+
               <template
                 #footer.page-text
               >
@@ -118,6 +128,19 @@
 import { mapActions } from 'vuex'
 import parseISO from 'date-fns/parseISO'
 import format from 'date-fns/format'
+import { v4 as uuid } from 'uuid'
+
+function formatInvoiceType (invoiceType) {
+  let type = invoiceType.split('.')[1]
+
+  if (!type) {
+    return 'N/A'
+  }
+
+  type = type.replace(/_/g, ' ')
+
+  return type.charAt(0).toUpperCase() + type.slice(1)
+}
 
 export default {
   name: 'ViewPaymentIndex',
@@ -145,18 +168,13 @@ export default {
           sortable: false
         },
         {
-          text: 'Invoice ID',
-          value: 'invoiceId',
+          text: 'Type',
+          value: 'type',
           sortable: false
         },
         {
-          text: 'Charge ID',
-          value: 'chargeId',
-          sortable: false
-        },
-        {
-          text: 'Next Payment Attempt',
-          value: 'next_payment_attempt',
+          text: '',
+          value: 'invoicePdf',
           sortable: false
         }
       ],
@@ -176,14 +194,12 @@ export default {
     invoicesFormatted () {
       return this.invoices.map(invoice => ({
         created: invoice.created ? format(parseISO(invoice.created), 'MM/dd/yyyy, hh:mm:ss a') : 'N/A',
-        amount_paid: invoice.amount_paid,
-        amount: invoice.amount_paid ? `${invoice.amount_paid / 100} ${invoice.currency}` : 'N/A',
-        paid: invoice.paid,
-        invoiceId: invoice.stripe_invoice_id,
-        chargeId: invoice.charge_id,
-        next_payment_attempt: invoice.next_payment_attempt
-          ? format(parseISO(invoice.next_payment_attempt), 'MM/dd/yyyy, hh:mm:ss a')
-          : 'N/A'
+        amountDue: invoice.amount_due,
+        amount: invoice.amount_due ? `${invoice.amount_due / 100}` : 'N/A',
+        paid: invoice.amount_paid === invoice.amount_due,
+        invoiceId: uuid(),
+        invoicePdf: invoice.invoice_pdf,
+        type: formatInvoiceType(invoice.type)
       }))
     },
 
@@ -283,7 +299,7 @@ export default {
     },
 
     onOpenInvoice (invoice) {
-      this.$router.push(this.$routes.paymentInvoiceId(invoice.invoiceId).route)
+      // this.$router.push(this.$routes.paymentInvoiceId(invoice.invoiceId).route)
     },
 
     onNextYear () {
